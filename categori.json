@@ -1,0 +1,214 @@
+{
+  "categori": [
+    {
+      "id": 1,
+      "name": "item one",
+      "slug": "child-category",
+      "img": "https://sporteto.com/wp-content/uploads/2021/08/chelsea-100x100.png",
+      "ancestors": [
+        {
+          "id": 1,
+          "name": "child category",
+          "slug": "child-category",
+          "img": "https://sporteto.com/wp-content/uploads/2021/08/chelsea-100x100.png",
+          "ancestors": [
+            {
+              "id": 1,
+              "name": "cilde category",
+              "slug": "child-category",
+              "img": "https://sporteto.com/wp-content/uploads/2021/08/chelsea-100x100.png"
+            },
+            {
+              "id": 2,
+              "name": "Gogogle category",
+              "slug": "first-category",
+              "img": "https://sporteto.com/wp-content/uploads/2021/08/chelsea-100x100.png",
+              "ancestors": [
+                {
+                  "id": 1,
+                  "name": "ffgfdfd category",
+                  "slug": "child-category",
+                  "img": "https://sporteto.com/wp-content/uploads/2021/08/chelsea-100x100.png"
+                },
+                {
+                  "id": 2,
+                  "name": "Gogogle category",
+                  "slug": "fidfdrst-category",
+                  "img": "https://sporteto.com/wp-content/uploads/2021/08/chelsea-100x100.png"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "name": "first category",
+          "slug": "first-category",
+          "img": "https://sporteto.com/wp-content/uploads/2021/08/chelsea-100x100.png"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "item two",
+      "slug": "child-category",
+      "img": "https://sporteto.com/wp-content/uploads/2021/08/chelsea-100x100.png",
+      "ancestors": [
+        {
+          "name": "child category",
+          "slug": "child-category",
+          "img": "https://sporteto.com/wp-content/uploads/2021/08/chelsea-100x100.png"
+        },
+        {
+          "name": "first category",
+          "slug": "first-category",
+          "img": "https://sporteto.com/wp-content/uploads/2021/08/chelsea-100x100.png"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "item tree",
+      "slug": "child-category",
+      "img": "https://sporteto.com/wp-content/uploads/2021/08/chelsea-100x100.png",
+      "ancestors": [
+        {
+          "name": "child category",
+          "slug": "child-category",
+          "img": "https://sporteto.com/wp-content/uploads/2021/08/chelsea-100x100.png"
+        },
+        {
+          "name": "first category",
+          "slug": "first-category",
+          "img": "https://sporteto.com/wp-content/uploads/2021/08/chelsea-100x100.png"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "item for",
+      "slug": "child-category",
+      "img": "https://sporteto.com/wp-content/uploads/2021/08/chelsea-100x100.png",
+      "ancestors": [
+        {
+          "name": "child category",
+          "slug": "child-category",
+          "img": "https://sporteto.com/wp-content/uploads/2021/08/chelsea-100x100.png"
+        },
+        {
+          "name": "first category",
+          "slug": "first-category",
+          "img": "https://sporteto.com/wp-content/uploads/2021/08/chelsea-100x100.png"
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "name": "item one",
+      "slug": "child-category",
+      "img": "https://sporteto.com/wp-content/uploads/2021/08/chelsea-100x100.png",
+      "ancestors": [
+        {
+          "id": 1,
+          "name": "child category",
+          "slug": "child-category",
+          "img": "https://sporteto.com/wp-content/uploads/2021/08/chelsea-100x100.png",
+          "ancestors": [
+            {
+              "id": 1,
+              "name": "cilde category",
+              "slug": "child-category",
+              "img": "https://sporteto.com/wp-content/uploads/2021/08/chelsea-100x100.png"
+            },
+            {
+              "id": 2,
+              "name": "Gogogle category",
+              "slug": "first-category",
+              "img": "https://sporteto.com/wp-content/uploads/2021/08/chelsea-100x100.png",
+              "ancestors": [
+                {
+                  "id": 1,
+                  "name": "ffgfdfd category",
+                  "slug": "child-category",
+                  "img": "https://sporteto.com/wp-content/uploads/2021/08/chelsea-100x100.png"
+                },
+                {
+                  "id": 2,
+                  "name": "Gogogle category",
+                  "slug": "fidfdrst-category",
+                  "img": "https://sporteto.com/wp-content/uploads/2021/08/chelsea-100x100.png"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "name": "first category",
+          "slug": "first-category",
+          "img": "https://sporteto.com/wp-content/uploads/2021/08/chelsea-100x100.png"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "item two",
+      "slug": "child-category",
+      "img": "https://sporteto.com/wp-content/uploads/2021/08/chelsea-100x100.png",
+      "ancestors": [
+        {
+          "name": "child category",
+          "slug": "child-category",
+          "img": "https://sporteto.com/wp-content/uploads/2021/08/chelsea-100x100.png"
+        },
+        {
+          "name": "first category",
+          "slug": "first-category",
+          "img": "https://sporteto.com/wp-content/uploads/2021/08/chelsea-100x100.png"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "item tree",
+      "slug": "child-category",
+      "img": "https://sporteto.com/wp-content/uploads/2021/08/chelsea-100x100.png",
+      "ancestors": [
+        {
+          "name": "child category",
+          "slug": "child-category",
+          "img": "https://sporteto.com/wp-content/uploads/2021/08/chelsea-100x100.png"
+        },
+        {
+          "name": "first category",
+          "slug": "first-category",
+          "img": "https://sporteto.com/wp-content/uploads/2021/08/chelsea-100x100.png"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "item for",
+      "slug": "child-category",
+      "img": "https://sporteto.com/wp-content/uploads/2021/08/chelsea-100x100.png",
+      "ancestors": [
+        {
+          "name": "child category",
+          "slug": "child-category",
+          "img": "https://sporteto.com/wp-content/uploads/2021/08/chelsea-100x100.png"
+        },
+        {
+          "name": "first category",
+          "slug": "first-category",
+          "img": "https://sporteto.com/wp-content/uploads/2021/08/chelsea-100x100.png"
+        }
+      ]
+    },
+    {
+      "name": "salam",
+      "slug": "salam-test",
+      "date": "10-10-2021",
+      "id": 5
+    }
+  ]
+}

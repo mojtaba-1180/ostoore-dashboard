@@ -1,0 +1,39 @@
+/* modaal style component */
+#modals{
+position: fixed;
+top: 0;
+right: 0;
+background-color: #0002;
+width: 100%;
+min-height: 100vh;
+max-height: 100vh;
+display: flex;
+ justify-content: center;
+ align-items: center;
+ display: none;
+ animation: modalOpen 1s ease-in-out;
+}
+
+.modal{
+    position: absolute;
+    background-color: #fff;
+    border-radius: 20px;
+    top: top;
+    right: 50%;
+    height: 40%;
+    width: 60%;
+    transform: translate( 50%, -50%);
+    z-index: 99999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@keyframes modalOpen {
+    0%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}

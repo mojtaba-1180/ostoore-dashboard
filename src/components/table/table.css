@@ -1,0 +1,90 @@
+.table-wrapper {
+    overflow-y: auto;
+}
+
+table {
+    width: 100%;
+    min-width: 400px;
+    border-spacing: 0;
+}
+
+thead {
+    background-color: var(--second-bg);
+}
+
+tr {
+    text-align: right;
+}
+
+th,
+td {
+    text-transform: capitalize;
+    padding: 15px 10px;
+}
+
+tbody > tr:hover {
+    background-color: var(--main-color);
+    color: var(--txt-white);
+}
+
+.table__pagination {
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.table__pagination-item ~ .table__pagination-item {
+    margin-left: 10px;
+}
+
+.table__pagination-item {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.table__pagination-item.active,
+.table__pagination-item.active:hover {
+    background-color: var(--main-color);
+    color: var(--txt-white);
+    font-weight: 600;
+    transition: .4s;
+}
+
+.table__pagination-item:hover {
+    color: var(--txt-white);
+    background-color: var(--second-color);
+    transition: .4s;
+
+}
+
+.panel_item_button{
+    padding:8px;
+    margin: 0 5px;
+    border-radius: 3px;
+    background-color: unset;
+    transition: .2s;
+}
+.panel_item_button:hover {
+    background-color: #0004;
+
+}
+.panel_item_button i{
+    font-size: 18px;
+}
+.panel_item_button_edit{
+    color: var(--second-color);
+}
+.table__pagination-item.active:hover .panel_item_button_edit {
+    color: var(--main-width);
+
+}
+.panel_item_button_trash{
+    color: var(--main-color-red);
+}
