@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { Component } from 'react'
 
-const Edit = () => {
-    return (
-        <div>
-            Edit Page     sdsdss 
-        </div>
-    )
+export default class EditCategoris extends Component {
+    render() {
+        return (
+            <div>
+                
+            </div>
+        )
+    }
 }
-
-export default Edit

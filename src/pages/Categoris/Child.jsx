@@ -1,101 +1,132 @@
-import React from 'react'
+
+import React, { Component } from 'react'
 
 import Table from '../../components/table/Table'
+
+import Loader from '../../components/Loaders/ProductLoaders'
 
 import { Link } from 'react-router-dom'
 
 
-const customerTableHead = [
-    'id',
-    'عکس',
-    'نام',
-    ' نامک ',
-    ' اکشن ',
-]
+export default class ChildCategoris extends Component {
 
-const handleEdit = item => {
-    console.log(item)
-}
-const handleTrash = id => {
-    alert('click' + id)
-}
+    constructor(){
+        super();
+        this.state = {
+            loaded : false
+        }
+    }
 
-const renderHead = (item, index) => <th key={index}>{item}</th>
+    componentDidUpdate(){
+        if(this.state.loaded === true){
+            setTimeout(()=> {
+                this.setState({
+                    loaded: false
+                })
+            },1000)
+        }
+    }
 
-const renderBody = (item, index, slug) => (
-    <>
-    {
+    customerTableHead = [
+        'id',
+        'عکس',
+        'نام',
+        ' نامک ',
+        ' اکشن ',
+        ' زیر مجموعه ',
+    ]
+
+    handleEdit = item => {
         console.log(item)
     }
-    <tr key={index}>
-        <td>{item.id}</td>
-        <td> <img src={item.img} alt="img" width="50px" srcset="" /> </td>
-        <td>{item.name}</td>
-        <td>{item.slug}</td>
-        <td>
-            <button className="panel_item_button" onClick={() => handleEdit(item.id)} >
-                <i className='bx bx-edit panel_item_button_edit' ></i>
-            </button>
-            <button className="panel_item_button" onClick={() => handleTrash(item.id)} >
-                <i className='bx bx-trash panel_item_button_trash' ></i>
-            </button>
-        </td>
-        <td>
-        {
-                            item.ancestors ? (
-                                <span className="btn_toggle">
-                                    <Link to={{
-                                        pathname: `/categories/${item.slug}`,
-                                        state: item.ancestors,
-                                        old: {
-                                            title: item.name
-                                        }
-                                    }}>
-                                        <span>
-                                        زیر مجموعه 
+    handleTrash = id => {
+        alert('click' + id)
+    }
 
-                                        </span>
-                                       <i className='bx bx-chevron-left'></i>
-                                      
-                                    </Link>
-                                </span>
-                            ) :
-                                null
-                        }
-        </td>
-    </tr>
-    </>
-)
+    renderHead = (item, index) => <th key={index}>{item}</th>
 
-const Customers = props => {
-    return (
-        <div>
-            <h2 className="page-header">
-                دسته بندی 
-            </h2>
-            <div className="row">
-                <div className="col-12">
-                    <div className="card">
-                    <button className="button_goback" onClick={() => props.history.go(-1) } >
-                    بازگشت
-                </button>
-                        <div className="card__body">
-                            {
-                                console.log('render' , props.location.state )
-                            }
-                            <Table
-                                limit='5'
-                                headData={customerTableHead}
-                                renderHead={(item, index) => renderHead(item, index)}
-                                bodyData={ props.location.state }
-                                renderBody={(item, index) => renderBody(item, index, props.location.pathname)}
-                            />
+    renderBody = (item, slug) => (
+        <>
+
+            <tr key={item.id}>
+                <td>{item.id}</td>
+                <td> <img src={item.img} className="img-table" alt="img" /> </td>
+                <td>{item.name}</td>
+                <td>{item.slug}</td>
+                <td>
+                    <button className="panel_item_button" onClick={() => this.handleEdit(item.id)} >
+                        <i className='bx bx-edit panel_item_button_edit' ></i>
+                    </button>
+                    <button className="panel_item_button" onClick={() => this.handleTrash(item.id)} >
+                        <i className='bx bx-trash panel_item_button_trash' ></i>
+                    </button>
+                </td>
+                <td>
+                    {
+                        item.ancestors ? (
+                            <span className="btn_toggle">
+                                <Link to={{
+                                    pathname: `/categories/${item.slug}`,
+                                    state: item.ancestors,
+                                    old: {
+                                        title: item.name
+                                    }
+                                }} onClick={() => {this.setState({loaded: true})} } >
+                                    <span>
+                                        زیر مجموعه
+
+                                    </span>
+                                    <i className='bx bx-chevron-left'></i>
+
+                                </Link>
+                            </span>
+                        ) :
+                            null
+                    }
+                </td>
+            </tr>
+        </>
+    )
+
+    render() {
+        return (
+            <div>
+                <h2 className="page-header">
+                    دسته بندی
+                </h2>
+                <div className="row">
+                    <div className="col-12">
+                        <div className="card animate-top">
+                            <button className="button"
+                             onClick={() => {
+                                 this.props.history.go(-1)
+                                 this.setState({loaded: true})
+                                 }} >
+                                بازگشت
+                            </button>
+                            <div className="card__body">
+                                {
+                                    this.state.loaded === true ? (
+                                        <>
+                                        <Loader/>
+                                        <Loader/>
+                                        </>
+                                    ) : (
+                                        <Table
+                                        limit='5'
+                                        headData={this.customerTableHead}
+                                        renderHead={(item, index) => this.renderHead(item, index)}
+                                        bodyData={this.props.location.state}
+                                        renderBody={(item) => this.renderBody(item)}
+                                    />
+                                    )
+                                }
+                               
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    )
+        )
+    }
 }
-
-export default Customers

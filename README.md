@@ -1,16 +1,3 @@
-# React Admin Dashboard with Multiple Themes
+# React Admin Dashboard Youna
 
-    Build React Admin Dashboard with Multiple Themes | React Admin Panel CSS | ReactJS
-
-
-# Description
-
-    We will Build React Admin Dashboard with Multiple Themes | React Admin Panel CSS | ReactJS
-
-# Resource
-
-    Google font: https://fonts.google.com/
-
-    Boxicons: https://boxicons.com/
-
-    Images: https://unsplash.com/
+    Build React Admin Dashboard Youna 

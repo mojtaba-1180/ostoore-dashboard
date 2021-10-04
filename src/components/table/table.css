@@ -14,8 +14,8 @@ thead {
 
 tr {
     text-align: right;
+    transition: .2s;
 }
-
 th,
 td {
     text-transform: capitalize;
@@ -86,5 +86,9 @@ tbody > tr:hover {
 
 }
 .panel_item_button_trash{
-    color: var(--main-color-red);
+    color: #f00;
+}
+.img-table{
+    width: 50px;
+    height: 50px;
 }

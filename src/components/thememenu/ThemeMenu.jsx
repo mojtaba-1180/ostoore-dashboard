@@ -9,13 +9,13 @@ import ThemeAction from '../../redux/actions/ThemeAction'
 const mode_settings = [
     {
         id: 'light',
-        name: 'Light',
+        name: 'روز',
         background: 'light-background',
         class: 'theme-mode-light'
     },
     {
         id: 'dark',
-        name: 'Dark',
+        name: 'شب',
         background: 'dark-background',
         class: 'theme-mode-dark'
     }
@@ -24,31 +24,31 @@ const mode_settings = [
 const color_settings = [
     {
         id: 'blue',
-        name: 'Blue',
+        name: 'ابی',
         background: 'blue-color',
         class: 'theme-color-blue'
     },
     {
         id: 'red',
-        name: 'Red',
+        name: 'قرمز',
         background: 'red-color',
         class: 'theme-color-red'
     },
     {
         id: 'cyan',
-        name: 'Cyan',
+        name: ' فیروزه ای',
         background: 'cyan-color',
         class: 'theme-color-cyan'
     },
     {
         id: 'green',
-        name: 'Green',
+        name: 'سبز',
         background: 'green-color',
         class: 'theme-color-green'
     },
     {
         id: 'orange',
-        name: 'Orange',
+        name: 'نارنجی',
         background: 'orange-color',
         class: 'theme-color-orange'
     },
@@ -114,12 +114,12 @@ const ThemeMenu = () => {
                 <i className='bx bx-palette'></i>
             </button>
             <div ref={menu_ref} className="theme-menu">
-                <h4>Theme settings</h4>
+                <h4> تنظیمات  داشبورد</h4>
                 <button className="theme-menu__close" onClick={() => closeMenu()}>
                     <i className='bx bx-x'></i>
                 </button>
                 <div className="theme-menu__select">
-                    <span>Choose mode</span>
+                    <span> انتخاب مدل </span>
                     <ul className="mode-list">
                         {
                             mode_settings.map((item, index) => (
@@ -134,7 +134,7 @@ const ThemeMenu = () => {
                     </ul>
                 </div>
                 <div className="theme-menu__select">
-                    <span>Choose color</span>
+                    <span>  انتخاب رنگ  </span>
                     <ul className="mode-list">
                         {
                             color_settings.map((item, index) => (

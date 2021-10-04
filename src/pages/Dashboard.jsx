@@ -167,7 +167,7 @@ const Dashboard = () => {
     const themeReducer = useSelector(state => state.ThemeReducer.mode)
 
     return (
-        <div>
+        <div className="animate-top">
             <h2 className="page-header">داشبورد</h2>
             <div className="row">
                 <div className="col-6">

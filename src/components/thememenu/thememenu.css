@@ -1,6 +1,6 @@
 .theme-menu {
     position: fixed;
-    right: -300px;
+    left: -300px;
     top: 0;
     width: 300px;
     height: 100vh;
@@ -8,11 +8,12 @@
     z-index: 99;
     background-color: var(--main-bg);
     box-shadow: var(--box-shadow);
-    transition: right 0.3s var(--transition-cubic);
+    transition: left 0.3s var(--transition-cubic);
+    text-align: left;
 }
 
 .theme-menu.active {
-    right: 0;
+    left: 0;
 }
 
 .theme-menu__close {
@@ -29,6 +30,7 @@
 
 .mode-list {
     margin-top: 20px;
+    direction: ltr;
 }
 
 .mode-list > li {

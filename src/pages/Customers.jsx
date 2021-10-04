@@ -31,12 +31,21 @@ const renderBody = (item, index) => (
 const Customers = () => {
     return (
         <div>
-            <h2 className="page-header">
-                یوزر ها
-            </h2>
+           <h2 className="page-header">
+                <div className="d-flex justify-between align-center">
+                    <span className="animate">
+                    یوزر ها 
+                    </span>
+                    <span>
+                    <button className="button" onClick={() => this.props.history.go(-1) } >
+                        افزودن
+                    </button>
+                    </span>
+                </div>
+                </h2>
             <div className="row">
                 <div className="col-12">
-                    <div className="card">
+                    <div className="card animate-top">
                         <div className="card__body">
                             <Table
                                 limit='10'
