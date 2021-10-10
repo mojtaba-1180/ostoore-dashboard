@@ -1,0 +1,17 @@
+.item{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 5px;
+    padding: 8px 10px;
+    color: var( --txt-color-dark );
+    transition: .2s;
+}
+.item:hover , .item.active{
+    background-color: #ccc7;
+    color: var( --main-color );
+    
+}
+.item{
+    margin-top: 10px;
+}

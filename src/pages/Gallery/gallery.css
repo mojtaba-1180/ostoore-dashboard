@@ -1,0 +1,55 @@
+.tabs-content {
+    display: none;
+}
+
+.tabs-content.active {
+    display: flex;
+    justify-content: start;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    animation: show-top .5s;
+}
+
+.box {
+    padding: 4px;
+    box-shadow: var(--box-shadow);
+    width: 6rem;
+    height: 7rem;
+    margin: 2px 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.box .action {
+    position: absolute;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: inherit;
+    width: inherit;
+    background-color: #4449;
+    visibility: hidden;
+    transition: .2s;
+    opacity: 0;
+    overflow: hidden;
+}
+
+.box:hover .action {
+    opacity: 1;
+    visibility: visible;
+}
+
+.box .action .btn-sm {
+    padding: 5px;
+    border-radius: 4px;
+}
+
+.box .action .btn-sm.trash-btn {
+    background-color: var(--main-color-red);
+}
+
+.box .action .btn-sm.open-btn {
+    background-color: var(--main-color-blue);
+    color: #000;
+}

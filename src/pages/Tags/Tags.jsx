@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import axios from 'axios'
 
-export default class Categoris extends Component {
+export default class Tags extends Component {
 
     constructor() {
         super();
@@ -20,7 +20,7 @@ export default class Categoris extends Component {
 
       // Geting Data server
       getData() {
-        axios.get('http://localhost:5000/categori').then(
+        axios.get('http://localhost:5000/tags').then(
             (res) => {
                 this.setState({
                     categoris: res.data
@@ -36,7 +36,7 @@ export default class Categoris extends Component {
   
     HandleEdit = item => {
         this.props.history.push({
-            pathname: `/edit/categori/${item.slug}`,
+            pathname: `/tags/edit/${item.slug}`,
             state: { detail: item }
         })
     }
@@ -51,7 +51,7 @@ export default class Categoris extends Component {
             cancelButtonText: 'خیر'
         }).then((result) => {
             if (result.isConfirmed) {
-                axios.delete(`http://localhost:5000/categori/${id}`).then((res) => {
+                axios.delete(`http://localhost:5000/tags/${id}`).then((res) => {
                     Swal.fire(
                         'حذف شد !',
                         'دسته بندی مورد نظر با موفقیت پاک شد ',
@@ -75,12 +75,10 @@ export default class Categoris extends Component {
     // Table Data Configs
 
     customerTableHead = [
-        'id',
-        'عکس',
+        'ردیف',
         'نام',
         ' نامک ',
-        ' اکشن ',
-        'زیر مجموعه'
+        ' اکشن '
     ]
  
     renderHead = (item, index) => <th key={index}>{item}</th>
@@ -89,7 +87,6 @@ export default class Categoris extends Component {
         <>
             <tr key={index}>
                 <td>{item.id}</td>
-                <td> <img src={item.img} alt="عکس محصول" className="img-table" /> </td>
                 <td>{item.name}</td>
                 <td>{item.slug}</td>
                 <td>
@@ -100,29 +97,6 @@ export default class Categoris extends Component {
                         <i className='bx bx-trash panel_item_button_trash' ></i>
                     </button>
 
-                </td>
-                <td>
-                    {
-                        item.ancestors ? (
-                            <span className="btn_toggle">
-                                <Link to={{
-                                    pathname: `/categories/${item.slug}`,
-                                    state: item.ancestors,
-                                    old: {
-                                        title: item.name
-                                    }
-                                }}>
-                                    <span>
-                                        زیر مجموعه
-
-                                    </span>
-                                    <i className='bx bx-chevron-left'></i>
-
-                                </Link>
-                            </span>
-                        ) :
-                            null
-                    }
                 </td>
             </tr>
         </>
@@ -135,10 +109,10 @@ export default class Categoris extends Component {
                 <h2 className="page-header">
                     <div className="d-flex justify-between align-center">
                         <span className="animate">
-                            دسته بندی ها
+                            برچسب ها
                         </span>
                         <span>
-                            <button className="button" >
+                            <button className="button" onClick={()=> this.props.history.push('/tags/add')} >
                                 افزودن جدید
                             </button>
                         </span>
@@ -155,7 +129,7 @@ export default class Categoris extends Component {
                                             <Loader />
                                         </>
                                     ) : this.state.categoris.length === 0 ? (
-                                        <span> دسته بندی وجود ندارد</span>
+                                        <span> برچسبی وجود ندارد</span>
 
                                     ) : (
                                         <Table

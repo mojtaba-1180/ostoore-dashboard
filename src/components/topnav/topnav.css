@@ -15,6 +15,7 @@
     box-shadow: var(--box-shadow);
     border-radius: var(--border-radius);
     overflow: hidden;
+    right: 30px;
 }
 
 .topnav__search > input {

@@ -5,9 +5,9 @@
         "icon": "bx bx-category-alt"
     },
     {
-        "display_name": "یوزر ها",
-        "route": "/customers",
-        "icon": "bx bx-user-pin"
+        "display_name": " گالری ",
+        "route": "/gallery",
+        "icon": "bx bx-package"
     },
     {
         "display_name": "محصولات",
@@ -15,33 +15,18 @@
         "icon": "bx bx-package"
     },
     {
-        "display_name": " سفارشات",
-        "route": "/orders",
-        "icon": "bx bx-cart"
-    },
-    {
-        "display_name": "انالیز",
-        "route": "/analytics",
-        "icon": "bx bx-bar-chart-alt"
-    },
-    {
         "display_name": "دسته بندی",
         "route": "/categories",
         "icon": "bx bx-list-ol"
     },
     {
-        "display_name": "تخفیف ها",
-        "route": "/discount",
-        "icon": "bx bx-gift"
+        "display_name": " برچسب ها ",
+        "route": "/tags",
+        "icon": "bx bx-list-ol"
     },
     {
         "display_name": "inventory",
         "route": "/inventory",
         "icon": "bx bx-store-alt"
-    },
-    {
-        "display_name": "تنظیمات",
-        "route": "/settings",
-        "icon": "bx bx-cog"
     }
 ]
