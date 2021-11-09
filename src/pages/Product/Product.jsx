@@ -1,40 +1,36 @@
-import React, { Component } from 'react'
+import React, { useState, useLayoutEffect } from 'react'
 import Table from '../../components/table/Table'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import Loader from '../../components/Loaders/ProductLoaders'
-export default class Product extends Component {
-    constructor() {
-        super();
-        this.state = {
-            product: null
-        }
-    }
-     getData = async () =>{
-       await axios.get('http://localhost:5000/products').then((res) => {
+import {useHistory} from 'react-router-dom'
+const Product = () => {
+    const history = useHistory();
+    const [product, setProduct] = useState(null);    
+     const getData = async () =>{
+       await axios.get('https://ostoore-sport.ir/api/v1/admin/product').then((res) => {
             console.log(res)
             setTimeout(() => {
-                this.setState({
-                    product: res.data
-                })
+                setProduct(res.data.result)
             }, 500
             )
         }).catch((err) => {
             console.log(err)
         })
     }
-    componentDidMount() {
-       this.getData()
-    }
+    useLayoutEffect(() => {
+        getData()
+    }, [])
+       
     
     
-    HandleEdit = item => {
+    const HandleEdit = item => {
         this.props.history.push({
             pathname: `/products/edit/${item.slug}`,
             state: { detail: item }
         })
     }
-    handleTrash = id => {
+    const handleTrash = id => {
         Swal.fire({
             title: ' ایا مطمعن هستید میخواهید حذف کنید',
             icon: 'warning',
@@ -45,7 +41,7 @@ export default class Product extends Component {
             cancelButtonText: 'خیر'
         }).then((result) => {
             if (result.isConfirmed) {
-                axios.delete(`http://localhost:5000/products/${id}`).then((res) => {
+                axios.delete(`https://ostoore-sport.ir/api/v1/admin/product/${id}`).then((res) => {
                     Swal.fire(
                         'حذف شد !',
                         'محصول مورد نظر با موفقیت پاک شد ',
@@ -62,16 +58,16 @@ export default class Product extends Component {
         })
     }
 
-    customerTableHead = [
+   const customerTableHead = [
         'id',
         'عکس',
         'نام',
         ' نامک ',
         ' اکشن '
     ]
-    renderHead = (item, index) => <th key={index}>{item}</th>
+   const renderHead = (item, index) => <th key={index}>{item}</th>
 
-    renderBody = (item, index) => (
+    const  renderBody = (item, index) => (
         <>
             <tr key={item.id} >
                 <td>{item.id}</td>
@@ -79,18 +75,16 @@ export default class Product extends Component {
                 <td>{item.name}</td>
                 <td>{item.slug}</td>
                 <td>
-                    <button className="panel_item_button" onClick={() => this.HandleEdit(item)} >
+                    <button className="panel_item_button" onClick={() => HandleEdit(item)} >
                         <i className='bx bx-edit panel_item_button_edit' ></i>
                     </button>
-                    <button className="panel_item_button" onClick={() => this.handleTrash(item.id)} >
+                    <button className="panel_item_button" onClick={() => handleTrash(item.id)} >
                         <i className='bx bx-trash panel_item_button_trash' ></i>
                     </button>
                 </td>
             </tr>
         </>
     )
-
-    render() {
 
         return (
             <>
@@ -100,7 +94,7 @@ export default class Product extends Component {
                             <span className="animate">
                                 محصولات
                             </span>
-                            <button className="button" onClick={() => this.props.history.push('/products/add')} >
+                            <button className="button" onClick={() => history.push('/products/add/')} >
                                 افزودن محصول
                             </button>
                         </div>
@@ -110,22 +104,23 @@ export default class Product extends Component {
                             <div className="card animate-top">
                                 <div className="card__body">
                                     {
-                                        this.state.product === null ? (
+                                        product === null ? (
                                             <>
                                                 <Loader />
                                                 <Loader />
                                             </>
-                                        ) : this.state.product.length === 0 ? (
+                                        ) : product.length === 0 ? (
                                             <p> محصولی یافت نشد </p>
                                         ): (
-                                            
-                                            <Table
+                                            <>
+                                           <Table
                                                 limit='5'
-                                                headData={this.customerTableHead}
+                                                headData={customerTableHead}
                                                 renderHead={(item, index) => this.renderHead(item, index)}
-                                                bodyData={this.state.product}
+                                                bodyData={product}
                                                 renderBody={(item, index) => this.renderBody(item, index)}
                                             />
+                                            </>
                                         )
                                     }
                                 </div>
@@ -136,5 +131,6 @@ export default class Product extends Component {
 
             </>
         )
-    }
 }
+
+export default Product;

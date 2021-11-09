@@ -1,4 +1,5 @@
-import React, { Component } from 'react'
+import { useState, useLayoutEffect } from 'react'
+import { useHistory } from 'react-router'
 
 import Table from '../../components/table/Table'
 
@@ -7,25 +8,23 @@ import Loader from '../../components/Loaders/ProductLoaders'
 import { Link } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import axios from 'axios'
-
-export default class Categoris extends Component {
-
-    constructor() {
-        super();
-        this.state = {
-            categoris: null
-        }
-    }
+import Api from '../../util/AxiosConfig'
 
 
-      // Geting Data server
-      getData() {
-        axios.get('http://localhost:5000/categori').then(
+const Categoris = () => {
+
+    const history = useHistory();
+
+    const [Categoris, setCategoris] = useState(null)
+
+    // Geting Data server
+    const getData = () => {
+        console.log('get data check')
+        Api.get('category').then(
             (res) => {
-                this.setState({
-                    categoris: res.data
-                })
-            }
+                console.log({ catehoris: res.data})
+                // setCategoris(res.data)
+        }
         ).catch(
             (err) => {
                 console.log(err)
@@ -33,14 +32,18 @@ export default class Categoris extends Component {
         )
     }
 
-  
-    HandleEdit = item => {
-        this.props.history.push({
-            pathname: `/edit/categori/${item.slug}`,
+
+    const HandleEdit = item => {
+        history.push({
+            pathname: `/edit/categories/${item.slug}`,
             state: { detail: item }
         })
     }
-    HandleTrash = id => {
+
+    const HandleAddNew = () => {
+        history.push('/add/categories/');
+    }
+    const HandleTrash = id => {
         Swal.fire({
             title: ' ایا مطمعن هستید میخواهید حذف کنید',
             icon: 'warning',
@@ -58,8 +61,8 @@ export default class Categoris extends Component {
                         'success',
                         'بستن'
                     )
-                    this.setState({categoris: null})
-                    this.getData()
+                    setCategoris( null )
+                    getData()
                 })
                     .catch((err) => {
                         console.log(err)
@@ -68,13 +71,13 @@ export default class Categoris extends Component {
         })
     }
 
-  
-    componentDidMount() {
-        this.getData()
-    }
+
+    useLayoutEffect(() => {
+        getData()
+    }, [])
     // Table Data Configs
 
-    customerTableHead = [
+   const customerTableHead = [
         'id',
         'عکس',
         'نام',
@@ -82,10 +85,10 @@ export default class Categoris extends Component {
         ' اکشن ',
         'زیر مجموعه'
     ]
- 
-    renderHead = (item, index) => <th key={index}>{item}</th>
 
-    renderBody = (item, index) => (
+    const renderHead = (item, index) => <th key={index}>{item}</th>
+
+    const renderBody = (item, index) => (
         <>
             <tr key={index}>
                 <td>{item.id}</td>
@@ -93,10 +96,10 @@ export default class Categoris extends Component {
                 <td>{item.name}</td>
                 <td>{item.slug}</td>
                 <td>
-                    <button className="panel_item_button" onClick={() => this.HandleEdit(item)} >
+                    <button className="panel_item_button" onClick={() => HandleEdit(item)} >
                         <i className='bx bx-edit panel_item_button_edit' ></i>
                     </button>
-                    <button className="panel_item_button" onClick={() => this.HandleTrash(item.id)} >
+                    <button className="panel_item_button" onClick={() => HandleTrash(item.id)} >
                         <i className='bx bx-trash panel_item_button_trash' ></i>
                     </button>
 
@@ -129,51 +132,51 @@ export default class Categoris extends Component {
     )
 
 
-    render() {
-        return (
-            <>
-                <h2 className="page-header">
-                    <div className="d-flex justify-between align-center">
-                        <span className="animate">
-                            دسته بندی ها
-                        </span>
-                        <span>
-                            <button className="button" >
-                                افزودن جدید
-                            </button>
-                        </span>
-                    </div>
-                </h2>
-                <div className="row">
-                    <div className="col-12">
-                        <div className="card animate-top">
-                            <div className="card__body">
-                                {
-                                    this.state.categoris === null ? (
-                                        <>
-                                            <Loader />
-                                            <Loader />
-                                        </>
-                                    ) : this.state.categoris.length === 0 ? (
-                                        <span> دسته بندی وجود ندارد</span>
 
-                                    ) : (
-                                        <Table
-                                            limit='5'
-                                            headData={this.customerTableHead}
-                                            renderHead={(item, index) => this.renderHead(item, index)}
-                                            bodyData={this.state.categoris}
-                                            renderBody={(item, index) => this.renderBody(item, index)}
-                                        />
-                                    )
-                                }
+    return (
+        <>
+            <h2 className="page-header">
+                <div className="d-flex justify-between align-center">
+                    <span className="animate">
+                        دسته بندی ها
+                    </span>
+                    <span>
+                        <button className="button" onClick={() => HandleAddNew()} >
+                            افزودن جدید
+                        </button>
+                    </span>
+                </div>
+            </h2>
+            <div className="row">
+                <div className="col-12">
+                    <div className="card animate-top">
+                        <div className="card__body">
+                            {
+                                Categoris === null ? (
+                                    <>
+                                        <Loader />
+                                        <Loader />
+                                    </>
+                                ) : Categoris.length === 0 ? (
+                                    <span> دسته بندی وجود ندارد</span>
 
-                            </div>
+                                ) : (
+                                    <Table
+                                        limit='5'
+                                        headData={customerTableHead}
+                                        renderHead={(item, index) => renderHead(item, index)}
+                                        bodyData={Categoris}
+                                        renderBody={(item, index) => renderBody(item, index)}
+                                    />
+                                )
+                            }
+
                         </div>
                     </div>
                 </div>
-            </>
-        )
-    }
+            </div>
+        </>
+    )
 }
 
+export default Categoris

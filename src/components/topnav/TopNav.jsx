@@ -1,8 +1,8 @@
-import React from 'react'
+import React, {useState, useLayoutEffect} from 'react'
 
 import './topnav.css'
 
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 
 import Dropdown from '../dropdown/Dropdown'
 
@@ -47,8 +47,18 @@ const renderUserMenu =(item, index) => (
 )
 
 const Topnav = () => {
+    const [isLogin, setIsLogin] = useState(false);
+    const { pathname } = useLocation();
+    useLayoutEffect(() => {
+      if (pathname === "/login") {
+        setIsLogin(true);
+      } else {
+        setIsLogin(false);
+      }
+    }, [pathname]);
+
     return (
-        <div className='topnav'>
+        <div className={isLogin ? 'hidden' : 'topnav'}>
             
             <div className="topnav__search">
                 <input type="text" placeholder=' جست جو ....' />

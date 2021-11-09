@@ -1,6 +1,6 @@
-import React, {useRef} from 'react'
+import React, {useRef, useState, useLayoutEffect } from 'react'
 
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 
 import './sidebar.css'
 
@@ -33,6 +33,16 @@ const SidebarItem = props => {
 
 
 const Sidebar = props => {
+    const authUser = React.createContext(false)
+    const [isLogin, setIsLogin] = useState(false);
+    const { pathname } = useLocation();
+    useLayoutEffect(() => {
+      if (pathname === "/login") {
+        setIsLogin(true);
+      } else {
+        setIsLogin(false);
+      }
+    }, [pathname]);
     const sidebar_toggle_ref = useRef(null)
 
     const activeItem = sidebar_items.findIndex(item => item.route === props.location.pathname)
@@ -40,7 +50,7 @@ const Sidebar = props => {
         sidebar_toggle_ref.current.classList.toggle('active')
     }
     return (
-        <div className='sidebar' ref={sidebar_toggle_ref}>
+        <div className={isLogin ? 'hidden' :'sidebar'} ref={sidebar_toggle_ref}>
              <button className="sidebar_button" onClick={() => toggleMenu()}>
                 <i className='bx bx-menu'></i>
             </button>

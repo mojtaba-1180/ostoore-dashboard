@@ -42,7 +42,7 @@ export default class Add extends Component {
             })
         }else {
          
-            axios.post('http://localhost:5000/products', this.state.detail).then(() => {
+            axios.post('https://ostoore-sport.ir/api/v1/admin/product', this.state.detail).then(() => {
             Swal.fire({
                 icon: 'success',
                 title: ' محصول شما اضافه شد  ',

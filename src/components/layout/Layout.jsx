@@ -1,24 +1,29 @@
-import React, {useEffect} from 'react'
+import React, { useEffect , useLayoutEffect, useState } from 'react'
 
 import './layout.css'
 
 import Sidebar from '../sidebar/Sidebar'
 import TopNav from '../topnav/TopNav'
 import Routes from '../Routes'
-
-import { BrowserRouter, Route } from 'react-router-dom'
+import { BrowserRouter, Route, useLocation } from 'react-router-dom'
 
 import { useSelector, useDispatch } from 'react-redux'
 
 import ThemeAction from '../../redux/actions/ThemeAction'
 
-
 const Layout = () => {
+    // const [isLogin, setIsLogin] = useState(false);
+
+    // useLayoutEffect(() => {
+    //   if (pathname === "/login") {
+    //     setIsLogin(true);
+    //   } else {
+    //     setIsLogin(false);
+    //   }
+    // }, [pathname]);
 
     const themeReducer = useSelector(state => state.ThemeReducer)
-
     const dispatch = useDispatch()
-
     useEffect(() => {
         const themeClass = localStorage.getItem('themeMode', 'theme-mode-light')
 
@@ -30,19 +35,27 @@ const Layout = () => {
     }, [dispatch])
 
     return (
+      
+
+      
         <BrowserRouter>
-            <Route render={(props) => (
-                <div className={`layout ${themeReducer.mode} ${themeReducer.color}`}>
-                    <Sidebar {...props}/>
-                    <div className="layout__content">
-                        <TopNav/>
-                        <div className="layout__content-main">
-                            <Routes/>
+            <Route render={
+                (props) => (
+
+                    <div className={`layout ${themeReducer.mode} ${themeReducer.color}`}>
+                        <Sidebar {...props}  />
+                  
+                        <div className="layout__content">
+                            <TopNav/>
+                            <div className="layout__content-main">
+                                <Routes />
+                            </div>
                         </div>
                     </div>
-                </div>
-            )}/>
-        </BrowserRouter>
+                )} />
+        </BrowserRouter >
+
+
     )
 }
 

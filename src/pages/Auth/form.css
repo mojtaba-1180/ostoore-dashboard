@@ -1,0 +1,38 @@
+
+form {
+    height: 45vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 16px 0 0px 0;
+}
+form label {
+    font-size: 14px;
+}
+form button {
+    width: 60%;
+}
+form span {
+    font-size: 13px;
+}
+
+.bottom-bar{
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+align-items: center;
+}
+.bottom-bar span {
+    line-height: 0px;
+}
+.bg-image{
+   background-image: url('../../assets/images/slide_2.png');
+    background-size: 80%;
+    background-repeat: no-repeat;
+
+}
+@media screen and (max-width: 1023px) {
+    .card-parent{
+        justify-content: center;
+    }
+}
