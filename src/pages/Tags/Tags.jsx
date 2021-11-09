@@ -1,29 +1,22 @@
-import React, { Component } from 'react'
-
+import React, { useLayoutEffect, useState } from 'react'
+import { useHistory } from 'react-router'
 import Table from '../../components/table/Table'
-
 import Loader from '../../components/Loaders/ProductLoaders'
-
-import { Link } from 'react-router-dom'
 import Swal from 'sweetalert2'
-import axios from 'axios'
-
-export default class Tags extends Component {
-
-    constructor() {
-        super();
-        this.state = {
-            categoris: null
-        }
-    }
+import Api from '../../util/AxiosConfig'
+const Tags = () => {
+    const history = useHistory();
+    const [Tags, setTags] = useState(null)
 
 
-      // Geting Data server
-      getData() {
-        axios.get('http://localhost:5000/tags').then(
+
+
+    // Geting Data server
+    const getData = () => {
+        Api.get('hashtag').then(
             (res) => {
-                this.setState({
-                    categoris: res.data
+                setTags({
+                    tags: res.data
                 })
             }
         ).catch(
@@ -33,14 +26,14 @@ export default class Tags extends Component {
         )
     }
 
-  
-    HandleEdit = item => {
-        this.props.history.push({
+
+    const HandleEdit = item => {
+        history.push({
             pathname: `/tags/edit/${item.slug}`,
             state: { detail: item }
         })
     }
-    HandleTrash = id => {
+    const HandleTrash = id => {
         Swal.fire({
             title: ' ایا مطمعن هستید میخواهید حذف کنید',
             icon: 'warning',
@@ -51,15 +44,15 @@ export default class Tags extends Component {
             cancelButtonText: 'خیر'
         }).then((result) => {
             if (result.isConfirmed) {
-                axios.delete(`http://localhost:5000/tags/${id}`).then((res) => {
+                Api.delete(`hashtag/${id}`).then((res) => {
                     Swal.fire(
                         'حذف شد !',
                         'دسته بندی مورد نظر با موفقیت پاک شد ',
                         'success',
                         'بستن'
                     )
-                    this.setState({categoris: null})
-                    this.getData()
+                    setTags(null)
+                    getData()
                 })
                     .catch((err) => {
                         console.log(err)
@@ -68,32 +61,32 @@ export default class Tags extends Component {
         })
     }
 
-  
-    componentDidMount() {
-        this.getData()
-    }
+
+    useLayoutEffect(() => {
+        getData()
+    }, [])
     // Table Data Configs
 
-    customerTableHead = [
+   const customerTableHead = [
         'ردیف',
         'نام',
         ' نامک ',
         ' اکشن '
     ]
- 
-    renderHead = (item, index) => <th key={index}>{item}</th>
 
-    renderBody = (item, index) => (
+    const renderHead = (item, index) => <th key={index}>{item}</th>
+
+    const renderBody = (item, index) => (
         <>
             <tr key={index}>
                 <td>{item.id}</td>
                 <td>{item.name}</td>
                 <td>{item.slug}</td>
                 <td>
-                    <button className="panel_item_button" onClick={() => this.HandleEdit(item)} >
+                    <button className="panel_item_button" onClick={() => HandleEdit(item)} >
                         <i className='bx bx-edit panel_item_button_edit' ></i>
                     </button>
-                    <button className="panel_item_button" onClick={() => this.HandleTrash(item.id)} >
+                    <button className="panel_item_button" onClick={() => HandleTrash(item.id)} >
                         <i className='bx bx-trash panel_item_button_trash' ></i>
                     </button>
 
@@ -102,52 +95,50 @@ export default class Tags extends Component {
         </>
     )
 
+    return (
+        <>
+            <h2 className="page-header">
+                <div className="d-flex justify-between align-center">
+                    <span className="animate">
+                        برچسب ها
+                    </span>
+                    <span>
+                        <button className="button" onClick={() => history.push('/tags/add')} >
+                            افزودن جدید
+                        </button>
+                    </span>
+                </div>
+            </h2>
+            <div className="row">
+                <div className="col-12">
+                    <div className="card animate-top">
+                        <div className="card__body">
+                            {
+                                Tags === null ? (
+                                    <>
+                                        <Loader />
+                                        <Loader />
+                                    </>
+                                ) : Tags.length === 0 ? (
+                                    <span> برچسبی وجود ندارد</span>
 
-    render() {
-        return (
-            <>
-                <h2 className="page-header">
-                    <div className="d-flex justify-between align-center">
-                        <span className="animate">
-                            برچسب ها
-                        </span>
-                        <span>
-                            <button className="button" onClick={()=> this.props.history.push('/tags/add')} >
-                                افزودن جدید
-                            </button>
-                        </span>
-                    </div>
-                </h2>
-                <div className="row">
-                    <div className="col-12">
-                        <div className="card animate-top">
-                            <div className="card__body">
-                                {
-                                    this.state.categoris === null ? (
-                                        <>
-                                            <Loader />
-                                            <Loader />
-                                        </>
-                                    ) : this.state.categoris.length === 0 ? (
-                                        <span> برچسبی وجود ندارد</span>
+                                ) : (
+                                    <Table
+                                        limit='5'
+                                        headData={customerTableHead}
+                                        renderHead={(item, index) => renderHead(item, index)}
+                                        bodyData={Tags}
+                                        renderBody={(item, index) => renderBody(item, index)}
+                                    />
+                                )
+                            }
 
-                                    ) : (
-                                        <Table
-                                            limit='5'
-                                            headData={this.customerTableHead}
-                                            renderHead={(item, index) => this.renderHead(item, index)}
-                                            bodyData={this.state.categoris}
-                                            renderBody={(item, index) => this.renderBody(item, index)}
-                                        />
-                                    )
-                                }
-
-                            </div>
                         </div>
                     </div>
                 </div>
-            </>
-        )
-    }
+            </div>
+        </>
+    )
 }
 
+export default Tags

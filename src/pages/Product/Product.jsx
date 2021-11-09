@@ -116,9 +116,9 @@ const Product = () => {
                                            <Table
                                                 limit='5'
                                                 headData={customerTableHead}
-                                                renderHead={(item, index) => this.renderHead(item, index)}
+                                                renderHead={(item, index) => renderHead(item, index)}
                                                 bodyData={product}
-                                                renderBody={(item, index) => this.renderBody(item, index)}
+                                                renderBody={(item, index) => renderBody(item, index)}
                                             />
                                             </>
                                         )

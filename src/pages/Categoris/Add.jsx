@@ -5,7 +5,6 @@ import { useHistory } from 'react-router'
 import Swal from 'sweetalert2'
 //Editor Required File
 import 'froala-editor/css/froala_editor.pkgd.min.css'
-import FroalaEditor from 'react-froala-wysiwyg'
 
 import Api from '../../util/AxiosConfig'
 
@@ -14,6 +13,7 @@ const AddCategory = () => {
     const [FormData, setFormData] = useState({
         detail: {
             name: '',
+            parent_id: '',
             img: ''
         }
     })
@@ -51,6 +51,15 @@ const AddCategory = () => {
             setFormData((prev) => ({
                 detail: {
                     name: data.target.value,
+                    parent_id: prev.detail.parent_id,
+                    img: prev.detail.img
+                }
+            }))
+        } else if (data.target.name === 'parent') {
+            setFormData((prev) => ({
+                detail: {
+                    name: prev.detail.name,
+                    parent_id: data.target.value,
                     img: prev.detail.img
                 }
             }))
@@ -61,6 +70,7 @@ const AddCategory = () => {
                 setFormData((prev) => ({
                     detail: {
                         name: prev.detail.name,
+                        parent_id: prev.detail.parent_id,
                         img: data
                     }
                 }))
@@ -86,13 +96,21 @@ const AddCategory = () => {
                 </div>
             </h2>
             <div className="row">
-            <div className="col-12">
+                <div className="col-12">
                     <div className="card animate-top">
                         <div className="card-title">
                             <label> نام دسته بندی </label>
                             <input type="text" className="form-control" name="title" value={FormData.detail.name} onChange={changeHandler} />
                             <br />
                             <br />
+                            <label>  دسته بندی مادر </label>
+                            <select  className="form-control" name="parent" value={FormData.detail.parent_id} onChange={changeHandler} >
+                                <option value=""> انتخاب کنید </option>
+                                <option value="1"> one </option>
+                                <option value="2"> 3 </option>
+                                <option value="3"> 4 </option>
+                            </select>
+                            
                             {/* <span className="d-flex justify-between">
                                 <label> لینک محصول  :</label>
                                 <a href={window.location.origin + '/' + state.detail.slug}>
@@ -101,7 +119,7 @@ const AddCategory = () => {
                             </span> */}
                         </div>
                         <div className="card-body">
-                          <div className="d-flex justify-center">
+                            <div className="d-flex justify-center">
                                 <div>
                                     <span>
                                         <br />
@@ -122,7 +140,7 @@ const AddCategory = () => {
 
                                 </div>
 
-                          </div>
+                            </div>
 
                         </div>
                     </div>
