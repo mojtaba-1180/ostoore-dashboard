@@ -86,7 +86,7 @@ const AddCategory = () => {
                 </div>
             </h2>
             <div className="row">
-                <div className="col-12">
+            <div className="col-12">
                     <div className="card animate-top">
                         <div className="card-title">
                             <label> نام دسته بندی </label>
