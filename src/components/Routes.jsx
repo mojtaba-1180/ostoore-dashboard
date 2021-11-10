@@ -23,6 +23,9 @@ import Tags from '../pages/Tags/Tags'
 import AddTags from '../pages/Tags/Add'
 import EditTags from '../pages/Tags/Edit'
 import PrivateRoute from '../container/PrivateRoute'
+import Brands from '../pages/Brands/Brands'
+import AddBrands from '../pages/Brands/Add'
+import { EditBrands } from '../pages/Brands/Edit'
 const Routes = () => {
     return (
 
@@ -100,6 +103,22 @@ const Routes = () => {
             <Route path='/tags/edit/:id' exact >
                 <PrivateRoute>
                     <EditTags />
+                </PrivateRoute>
+            </Route>
+            {/* Brands Routing  */}
+            <Route path="/brands" exact >
+                <PrivateRoute>
+                    <Brands />
+                </PrivateRoute>
+            </Route>
+            <Route path='/brands/add' exact >
+                <PrivateRoute>
+                    <AddBrands />
+                </PrivateRoute>
+            </Route>
+            <Route path='/brands/edit/:id' exact >
+                <PrivateRoute>
+                    <EditBrands />
                 </PrivateRoute>
             </Route>
             <Route

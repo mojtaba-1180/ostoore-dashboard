@@ -25,8 +25,8 @@
         "icon": "bx bx-list-ol"
     },
     {
-        "display_name": "inventory",
-        "route": "/inventory",
-        "icon": "bx bx-store-alt"
+        "display_name": "برند",
+        "route": "/brands",
+        "icon": "bx bx-flag"
     }
 ]

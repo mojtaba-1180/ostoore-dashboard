@@ -11,7 +11,7 @@
     --box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 
     --main-bg-light: #ffffff;
-    --second-bg-light: #fafafb;
+    --second-bg-light: #f5f5f5;
     --txt-color-light: #455560;
     --box-shadow-light: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 
@@ -87,7 +87,7 @@
 @media only screen and (max-width: 700px){
     :root {
         --main-bg: #ffffff;
-        --second-bg: #fafafb;
+        --second-bg: #f1f1f1;
         --txt-color: #455560;
         --txt-white: #fff;
         --main-color: #349eff;
@@ -293,6 +293,9 @@ input:focus {
 }
 .align-center{
     align-items: center;
+}
+.flex-col{
+    flex-direction: column;
 }
 .w-100{
     width: 100%;

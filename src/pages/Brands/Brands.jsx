@@ -1,12 +1,12 @@
 import React, { useLayoutEffect, useState } from 'react'
 import { useHistory } from 'react-router'
 import Table from '../../components/table/Table'
-import BeatLoader from "react-spinners/BeatLoader";
 import Swal from 'sweetalert2'
 import Api from '../../util/AxiosConfig'
-const Tags = () => {
+import BeatLoader from "react-spinners/BeatLoader";
+const Brands = () => {
     const history = useHistory();
-    const [Tags, setTags] = useState(null)
+    const [Brands, setBrands] = useState(null)
 
 
 
@@ -15,8 +15,8 @@ const Tags = () => {
     const getData = () => {
         Api.get('hashtag').then(
             (res) => {
-                setTags({
-                    tags: res.data
+                setBrands({
+                    Brands: res.data
                 })
             }
         ).catch(
@@ -29,7 +29,7 @@ const Tags = () => {
 
     const HandleEdit = item => {
         history.push({
-            pathname: `/tags/edit/${item.slug}`,
+            pathname: `/brands/edit/${item.slug}`,
             state: { detail: item }
         })
     }
@@ -44,14 +44,14 @@ const Tags = () => {
             cancelButtonText: 'خیر'
         }).then((result) => {
             if (result.isConfirmed) {
-                Api.delete(`hashtag/${id}`).then((res) => {
+                Api.delete(`brands/${id}`).then((res) => {
                     Swal.fire(
                         'حذف شد !',
                         'دسته بندی مورد نظر با موفقیت پاک شد ',
                         'success',
                         'بستن'
                     )
-                    setTags(null)
+                    setBrands(null)
                     getData()
                 })
                     .catch((err) => {
@@ -95,15 +95,16 @@ const Tags = () => {
         </>
     )
 
+    
     return (
         <>
             <h2 className="page-header">
                 <div className="d-flex justify-between align-center">
                     <span className="animate">
-                        برچسب ها
+                        برند ها
                     </span>
                     <span>
-                        <button className="button" onClick={() => history.push('/tags/add')} >
+                        <button className="button" onClick={() => history.push('/brands/add')} >
                             افزودن جدید
                         </button>
                     </span>
@@ -114,22 +115,24 @@ const Tags = () => {
                     <div className="card animate-top">
                         <div className="card__body">
                             {
-                                Tags === null ? (
+
+                                
+                                Brands === null ? (
                                     <>
                                       <div className="d-flex justify-center align-center flex-col " >
                                             <BeatLoader color={'#a1a1a1'} size={20}  />
                                             درحال بارگذاری
                                       </div>
                                     </>
-                                ) : Tags.length === 0 ? (
-                                    <span> برچسبی وجود ندارد</span>
+                                ) : Brands.length === 0 ? (
+                                    <span> برندی وجود ندارد</span>
 
                                 ) : (
                                     <Table
                                         limit='5'
                                         headData={customerTableHead}
                                         renderHead={(item, index) => renderHead(item, index)}
-                                        bodyData={Tags}
+                                        bodyData={Brands}
                                         renderBody={(item, index) => renderBody(item, index)}
                                     />
                                 )
@@ -143,4 +146,4 @@ const Tags = () => {
     )
 }
 
-export default Tags
+export default Brands
