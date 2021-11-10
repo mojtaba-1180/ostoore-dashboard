@@ -2,13 +2,13 @@ import React, { useState, useLayoutEffect } from 'react'
 import Table from '../../components/table/Table'
 import axios from 'axios'
 import Swal from 'sweetalert2'
-import Loader from '../../components/Loaders/ProductLoaders'
-import {useHistory} from 'react-router-dom'
+import BeatLoader from "react-spinners/BeatLoader";
+import { useHistory } from 'react-router-dom'
 const Product = () => {
     const history = useHistory();
-    const [product, setProduct] = useState(null);    
-     const getData = async () =>{
-       await axios.get('https://ostoore-sport.ir/api/v1/admin/product').then((res) => {
+    const [product, setProduct] = useState(null);
+    const getData = async () => {
+        await axios.get('https://ostoore-sport.ir/api/v1/admin/product').then((res) => {
             console.log(res)
             setTimeout(() => {
                 setProduct(res.data.result)
@@ -21,9 +21,9 @@ const Product = () => {
     useLayoutEffect(() => {
         getData()
     }, [])
-       
-    
-    
+
+
+
     const HandleEdit = item => {
         this.props.history.push({
             pathname: `/products/edit/${item.slug}`,
@@ -48,7 +48,7 @@ const Product = () => {
                         'success',
                         'بستن'
                     )
-                    this.setState({product: null})
+                    this.setState({ product: null })
                     this.getData()
                 })
                     .catch((err) => {
@@ -58,16 +58,16 @@ const Product = () => {
         })
     }
 
-   const customerTableHead = [
+    const customerTableHead = [
         'id',
         'عکس',
         'نام',
         ' نامک ',
         ' اکشن '
     ]
-   const renderHead = (item, index) => <th key={index}>{item}</th>
+    const renderHead = (item, index) => <th key={index}>{item}</th>
 
-    const  renderBody = (item, index) => (
+    const renderBody = (item, index) => (
         <>
             <tr key={item.id} >
                 <td>{item.id}</td>
@@ -86,51 +86,53 @@ const Product = () => {
         </>
     )
 
-        return (
-            <>
-                <div>
-                    <h2 className="page-header">
-                        <div className="d-flex justify-between align-center">
-                            <span className="animate">
-                                محصولات
-                            </span>
-                            <button className="button" onClick={() => history.push('/products/add/')} >
-                                افزودن محصول
-                            </button>
-                        </div>
-                    </h2>
-                    <div className="row">
-                        <div className="col-12">
-                            <div className="card animate-top">
-                                <div className="card__body">
-                                    {
-                                        product === null ? (
-                                            <>
-                                                <Loader />
-                                                <Loader />
-                                            </>
-                                        ) : product.length === 0 ? (
-                                            <p> محصولی یافت نشد </p>
-                                        ): (
-                                            <>
-                                           <Table
+    return (
+        <>
+            <div>
+                <h2 className="page-header">
+                    <div className="d-flex justify-between align-center">
+                        <span className="animate">
+                            محصولات
+                        </span>
+                        <button className="button" onClick={() => history.push('/products/add/')} >
+                            افزودن محصول
+                        </button>
+                    </div>
+                </h2>
+                <div className="row">
+                    <div className="col-12">
+                        <div className="card animate-top">
+                            <div className="card__body">
+                                {
+                                    product === null ? (
+                                        <>
+                                            <div className="d-flex justify-center align-center flex-col " >
+                                                <BeatLoader color={'#a1a1a1'} size={20} />
+                                                درحال بارگذاری
+                                            </div>
+                                        </>
+                                    ) : product.length === 0 ? (
+                                        <p> محصولی یافت نشد </p>
+                                    ) : (
+                                        <>
+                                            <Table
                                                 limit='5'
                                                 headData={customerTableHead}
                                                 renderHead={(item, index) => renderHead(item, index)}
                                                 bodyData={product}
                                                 renderBody={(item, index) => renderBody(item, index)}
                                             />
-                                            </>
-                                        )
-                                    }
-                                </div>
+                                        </>
+                                    )
+                                }
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-            </>
-        )
+        </>
+    )
 }
 
 export default Product;

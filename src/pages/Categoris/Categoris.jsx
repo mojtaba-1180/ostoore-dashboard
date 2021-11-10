@@ -1,14 +1,12 @@
 import { useState, useLayoutEffect } from 'react'
 import { useHistory } from 'react-router'
-
 import Table from '../../components/table/Table'
-
 import Loader from '../../components/Loaders/ProductLoaders'
-
 import { Link } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import axios from 'axios'
 import Api from '../../util/AxiosConfig'
+import BeatLoader from "react-spinners/BeatLoader";
 
 
 const Categoris = () => {
@@ -154,8 +152,10 @@ const Categoris = () => {
                             {
                                 Categoris === null ? (
                                     <>
-                                        <Loader />
-                                        <Loader />
+                                    <div className="d-flex justify-center align-center flex-col " >
+                                            <BeatLoader color={'#a1a1a1'} size={20}  />
+                                            درحال بارگذاری
+                                      </div>
                                     </>
                                 ) : Categoris.length === 0 ? (
                                     <span> دسته بندی وجود ندارد</span>

@@ -1,4 +1,4 @@
-const imgBase64 = (file) => {
+export const ImgBase64 = (file) => {
    
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -9,4 +9,3 @@ const imgBase64 = (file) => {
    
 }
 
-export default imgBase64
