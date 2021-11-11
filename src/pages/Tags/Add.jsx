@@ -1,5 +1,5 @@
 
-import { useState } from 'react'
+import { useState, useLayoutEffect } from 'react'
 import { useHistory } from 'react-router'
 
 import Swal from 'sweetalert2'
@@ -16,14 +16,13 @@ const AddTags = () => {
             name: ''
         }
     })
-
-    const updateHandler = () => {
+const updateHandler = () => {
         Api.post('hashtag', FormData.detail).then(() => {
             Swal.fire({
                 icon: 'success',
                 title: '  دسته بندی شما اضافه شد  ',
             })
-            history.push('/category')
+            history.push('/tags')
         })
             .catch((err) => {
                 Swal.fire({
@@ -36,13 +35,11 @@ const AddTags = () => {
     }
     const changeHandler = (data) => {
         if (data.target.name === 'title') {
-            setFormData((prev) => ({
+            setFormData({
                 detail: {
                     name: data.target.value,
-                    parent_id: prev.detail.parent_id,
-                    img: prev.detail.img
                 }
-            }))
+            })
         }
     }
 
@@ -68,11 +65,8 @@ const AddTags = () => {
                     <div className="card animate-top">
                         <div className="card-title">
                             <label> نام برچسب </label>
-                            <input type="text" className="form-control" name="title" value={FormData.detail.name} onChange={changeHandler} />
-                            <br />
-                            <br />
-
-                        </div>
+                            <input type="text" className="form-control" name="title" value={FormData.detail.name} onChange={(e) => changeHandler(e)} />
+                          </div>
 
                     </div>
                 </div>

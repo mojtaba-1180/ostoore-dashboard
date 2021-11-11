@@ -16,9 +16,7 @@ const Tags = () => {
         Api.get('hashtag').then(
             (res) => {
                 console.log(res)
-                // setTags({
-                //     tags: res.data
-                // })
+                setTags(res.result)
             }
         ).catch(
             (err) => {
@@ -29,8 +27,9 @@ const Tags = () => {
 
 
     const HandleEdit = item => {
+        console.log(item)
         history.push({
-            pathname: `/tags/edit/${item.slug}`,
+            pathname: `/tags/edit/${item._id}`,
             state: { detail: item }
         })
     }
@@ -80,14 +79,14 @@ const Tags = () => {
     const renderBody = (item, index) => (
         <>
             <tr key={index}>
-                <td>{item.id}</td>
+                <td>{index}</td>
                 <td>{item.name}</td>
                 <td>{item.slug}</td>
                 <td>
                     <button className="panel_item_button" onClick={() => HandleEdit(item)} >
                         <i className='bx bx-edit panel_item_button_edit' ></i>
                     </button>
-                    <button className="panel_item_button" onClick={() => HandleTrash(item.id)} >
+                    <button className="panel_item_button" onClick={() => HandleTrash(item._id)} >
                         <i className='bx bx-trash panel_item_button_trash' ></i>
                     </button>
 

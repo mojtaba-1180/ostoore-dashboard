@@ -1,77 +1,55 @@
-import React, { Component } from 'react'
-
-import axios from 'axios'
+import React, { useState, useLayoutEffect } from 'react'
+import { useLocation, useHistory } from 'react-router'
+import Api from '../../util/AxiosConfig'
 import Swal from 'sweetalert2'
-//Editor Required File
-import 'froala-editor/css/froala_editor.pkgd.min.css'
-import FroalaEditor from 'react-froala-wysiwyg'
 
-export default class EditTags extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
+
+const EditTags = () => {
+    const location = useLocation();
+    const history  = useHistory();
+    const [Detail, setDetail] = useState({
+        detail: {
+            name: '',
+            slug: ''
+        }})
+        const [Loading, setLoading] = useState(false)
+    useLayoutEffect(() => {
+        setDetail({
             detail: {
-                name: '',
-                slug: ''
-            },
-            loading: false,
-            err: ''
-        }
-        this.changeHandler = this.changeHandler.bind(this)
-        this.updateHandler = this.updateHandler.bind(this)
-
-    }
-
-    imgBase64(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file)
-            reader.onload = () => resolve(reader.result)
-            reader.onerror = error => reject(error)
+                name: location.state.detail.name
+            }
         })
-    }
+    }, [])
 
-    updateHandler = async () => {
-        if (this.state.detail.name === '') {
+    const updateHandler = async () => {
+        if (Detail.detail.name === '') {
             Swal.fire({
                 icon: 'error',
                 title: '  لطفا نام محصول را وارد کنید!!!  '
             })
         } else {
-            this.setState({
-                loading: true
-            })
-            await axios.put(`http://localhost:5000/prodcuts/${this.props.location.state.detail.id}`, this.state.detail).then((res) => {
+            setLoading(true)
+            await Api.put(`hashtag/${location.state.detail._id}`, Detail.detail).then((res) => {
                 Swal.fire({
                     icon: 'success',
                     title: ' بروز رسانی شد',
                 })
-                this.setState({
-                    loading: false
-                })
+                setLoading(false)
             })
                 .catch((err) => {
                     console.log(err + 'salama')
                 })
         }
     }
-    componentDidMount() {
-        this.setState({
+
+    const changeHandler = (data) => {
+        setDetail({
             detail: {
-                name: this.props.location.state.detail.name,
-                slug: this.props.location.state.detail.slug
-            }
+                name: data.target.value
+              }
         })
     }
-    changeHandler = (data) => {
-        this.setState(() => ({
-            detail: {
-                name: data.target.value,
-                slug: data.target.value.replace(/\s+/g, '-')
-            }
-        }))
-    }
-    render() {
+
         return (
             <div>
                 <h2 className="page-header top-sticky">
@@ -80,15 +58,15 @@ export default class EditTags extends Component {
                             ویرابش برچسب
                         </span>
                         <span>
-                            <button className="button bg-sucess" onClick={this.updateHandler} >
+                            <button className="button bg-sucess" onClick={() => updateHandler()} >
                                 {
-                                    this.state.loading ? (
+                                    Loading ? (
                                         <i className='bx bx-loader-alt bx-spin' ></i>
                                     ) : null
                                 }
                                 بروز رسانی
                             </button>
-                            <button className="button" onClick={() => this.props.history.go(-1)} >
+                            <button className="button" onClick={() => history.go(-1)} >
                                 بازگشت
                             </button>
                         </span>
@@ -99,7 +77,7 @@ export default class EditTags extends Component {
                         <div className="card animate-top">
                             <div className="card-title">
                                 <label> نام برچسب </label>
-                                <input type="text" className="form-control" name="title" value={this.state.detail.name} onChange={this.changeHandler} />
+                                <input type="text" className="form-control" name="title" value={Detail.detail.name} onChange={(e)=> changeHandler (e)} />
                                 <br />
                             </div>
                         </div>
@@ -108,4 +86,6 @@ export default class EditTags extends Component {
             </div>
         )
     }
-}
+
+
+export default EditTags
