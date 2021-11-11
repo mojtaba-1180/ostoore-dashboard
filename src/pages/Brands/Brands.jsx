@@ -13,15 +13,13 @@ const Brands = () => {
 
     // Geting Data server
     const getData = () => {
-        Api.get('hashtag').then(
+        Api.get('brand').then(
             (res) => {
-                setBrands({
-                    Brands: res.data
-                })
+                setBrands(res.result)
             }
         ).catch(
             (err) => {
-                console.log(err)
+                console.log(err.response)
             }
         )
     }
@@ -29,7 +27,7 @@ const Brands = () => {
 
     const HandleEdit = item => {
         history.push({
-            pathname: `/brands/edit/${item.slug}`,
+            pathname: `/brands/edit/${item._id}`,
             state: { detail: item }
         })
     }
@@ -44,19 +42,21 @@ const Brands = () => {
             cancelButtonText: 'خیر'
         }).then((result) => {
             if (result.isConfirmed) {
-                Api.delete(`brands/${id}`).then((res) => {
+                Api.delete(`brand/${id}`).then((res) => {
                     Swal.fire(
                         'حذف شد !',
                         'دسته بندی مورد نظر با موفقیت پاک شد ',
                         'success',
                         'بستن'
                     )
+                    console.log(res)
                     setBrands(null)
                     getData()
                 })
                     .catch((err) => {
-                        console.log(err)
+                        console.log(err.response)
                     })
+                
             }
         })
     }
@@ -79,14 +79,14 @@ const Brands = () => {
     const renderBody = (item, index) => (
         <>
             <tr key={index}>
-                <td>{item.id}</td>
+                <td>{index}</td>
                 <td>{item.name}</td>
                 <td>{item.slug}</td>
                 <td>
                     <button className="panel_item_button" onClick={() => HandleEdit(item)} >
                         <i className='bx bx-edit panel_item_button_edit' ></i>
                     </button>
-                    <button className="panel_item_button" onClick={() => HandleTrash(item.id)} >
+                    <button className="panel_item_button" onClick={() => HandleTrash(item._id)} >
                         <i className='bx bx-trash panel_item_button_trash' ></i>
                     </button>
 
@@ -125,7 +125,10 @@ const Brands = () => {
                                       </div>
                                     </>
                                 ) : Brands.length === 0 ? (
+                                    <>
+                                    {console.log(Brands)}
                                     <span> برندی وجود ندارد</span>
+                                    </>
 
                                 ) : (
                                     <Table

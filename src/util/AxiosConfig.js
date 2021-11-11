@@ -13,10 +13,10 @@ let token = cookies.get("token");
 // }
 
 const instance = axios.create({
-  baseURL: "http://localhost:5000/",
-  headers: {
-    Authorization: `Bearer ${token}`,
-  },
+  baseURL: "https://ostoore-sport.ir/api/v1/admin",
+  headers: { 
+    'Content-Type': 'application/json'
+  }
 });
 
 instance.interceptors.request.use(

@@ -15,9 +15,10 @@ const Tags = () => {
     const getData = () => {
         Api.get('hashtag').then(
             (res) => {
-                setTags({
-                    tags: res.data
-                })
+                console.log(res)
+                // setTags({
+                //     tags: res.data
+                // })
             }
         ).catch(
             (err) => {

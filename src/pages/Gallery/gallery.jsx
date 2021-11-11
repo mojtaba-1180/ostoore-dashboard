@@ -98,12 +98,10 @@ const Gallery = () => {
         console.log(id)
     }
     useLayoutEffect(() => {
-        setInterval(()=> {
+        setTimeout(()=> {
             getData();
-        },4000)
-        return () => {
-            clearInterval()
-        }
+        },1000)
+      
     }, [])
     return (
         <>

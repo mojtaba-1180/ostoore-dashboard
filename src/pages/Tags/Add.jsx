@@ -8,6 +8,7 @@ import 'froala-editor/css/froala_editor.pkgd.min.css'
 
 import Api from '../../util/AxiosConfig'
 
+import FormData from 'form-data'
 const AddTags = () => {
     const history = useHistory();
     const [FormData, setFormData] = useState({
@@ -16,19 +17,8 @@ const AddTags = () => {
         }
     })
 
-
-
-    const imgBase64 = (file) => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file)
-            reader.onload = () => resolve(reader.result)
-            reader.onerror = error => reject(error)
-        })
-    }
-
     const updateHandler = () => {
-        Api.post('category', FormData).then(() => {
+        Api.post('hashtag', FormData.detail).then(() => {
             Swal.fire({
                 icon: 'success',
                 title: '  دسته بندی شما اضافه شد  ',
@@ -41,7 +31,7 @@ const AddTags = () => {
                     title: 'مشکلی پیش آمده است',
                     text: 'لطفا برسی کنید با سازنده سایت تماس برقرار کنید'
                 })
-                console.log(err)
+                console.log(err.response)
             })
     }
     const changeHandler = (data) => {
@@ -81,9 +71,9 @@ const AddTags = () => {
                             <input type="text" className="form-control" name="title" value={FormData.detail.name} onChange={changeHandler} />
                             <br />
                             <br />
-                           
+
                         </div>
-                     
+
                     </div>
                 </div>
             </div>

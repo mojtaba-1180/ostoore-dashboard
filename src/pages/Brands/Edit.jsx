@@ -7,27 +7,28 @@ export const EditBrands = () => {
     const history = useHistory();
     // State Management
     const [Detail, setDetail] = useState({
-        name: '',
-        slug: ''
+        name: ''
     })
     const [Error, setError] = useState('')
     const [Loading, setLoading] = useState(false)
 
     // Mounting Founction
     useLayoutEffect(() => {
-        setDetail({name: 'test Name'})
+        console.log(location)
+        setDetail({name: location.state.detail.name})
     }, [])
 
     // Functions Handles
     const updateHandler = async () => {
-        if (this.state.detail.name === '') {
+        if (Detail.name === '') {
             Swal.fire({
                 icon: 'error',
                 title: '  لطفا نام برند را وارد کنید!!!  '
             })
         } else {
             setLoading(true)
-            await Api.put(`brands/1`, Detail).then((res) => {
+            console.log('salam')
+            await Api.put(`brand/${location.state.detail._id}`, Detail).then((res) => {
                 Swal.fire({
                     icon: 'success',
                     title: ' بروز رسانی شد',
@@ -51,7 +52,7 @@ export const EditBrands = () => {
                         ویرابش برند
                     </span>
                     <span>
-                        <button className="button bg-sucess" onClick={() => updateHandler} >
+                        <button className="button bg-sucess" onClick={() => updateHandler()} >
                             {
                                 Loading ? (
                                     <i className='bx bx-loader-alt bx-spin' ></i>
@@ -71,7 +72,6 @@ export const EditBrands = () => {
                         <div className="card-title">
                             <label> نام برند </label>
                             <input type="text" className="form-control" name="title" value={Detail.name} onChange={(e) => changeHandler(e)} />
-                            { Detail.name}
                             <br />
                         </div>
                     </div>

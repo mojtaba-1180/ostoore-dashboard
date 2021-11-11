@@ -18,22 +18,15 @@ const AddBrands = () => {
 
 
 
-    const imgBase64 = (file) => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file)
-            reader.onload = () => resolve(reader.result)
-            reader.onerror = error => reject(error)
-        })
-    }
+    
 
     const updateHandler = () => {
-        Api.post('category', FormData).then(() => {
+        Api.post('brand', FormData.detail).then(() => {
             Swal.fire({
                 icon: 'success',
                 title: '  برند شما اضافه شد  ',
             })
-            history.push('/category')
+            history.push('/brands')
         })
             .catch((err) => {
                 Swal.fire({
