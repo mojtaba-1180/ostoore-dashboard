@@ -1,21 +1,21 @@
 import React, { useState, useLayoutEffect } from 'react'
 import Table from '../../components/table/Table'
-import axios from 'axios'
 import Swal from 'sweetalert2'
 import BeatLoader from "react-spinners/BeatLoader";
 import { useHistory } from 'react-router-dom'
+import Api from '../../util/AxiosConfig'
 const Product = () => {
     const history = useHistory();
     const [product, setProduct] = useState(null);
     const getData = async () => {
-        await axios.get('https://ostoore-sport.ir/api/v1/admin/product').then((res) => {
+        await Api.get('product').then((res) => {
             console.log(res)
             setTimeout(() => {
-                setProduct(res.data.result)
+                setProduct(res.result)
             }, 500
             )
         }).catch((err) => {
-            console.log(err)
+            console.log(err.response)
         })
     }
     useLayoutEffect(() => {
@@ -25,7 +25,7 @@ const Product = () => {
 
 
     const HandleEdit = item => {
-        this.props.history.push({
+        history.push({
             pathname: `/products/edit/${item.slug}`,
             state: { detail: item }
         })
@@ -41,7 +41,7 @@ const Product = () => {
             cancelButtonText: 'خیر'
         }).then((result) => {
             if (result.isConfirmed) {
-                axios.delete(`https://ostoore-sport.ir/api/v1/admin/product/${id}`).then((res) => {
+                Api.delete(`product/${id}`).then((res) => {
                     Swal.fire(
                         'حذف شد !',
                         'محصول مورد نظر با موفقیت پاک شد ',

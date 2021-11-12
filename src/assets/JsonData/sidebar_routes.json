@@ -17,7 +17,7 @@
     {
         "display_name": "دسته بندی",
         "route": "/categories",
-        "icon": "bx bx-list-ol"
+        "icon": "bx bx-list-ul"
     },
     {
         "display_name": " برچسب ها ",
@@ -28,5 +28,10 @@
         "display_name": "برند",
         "route": "/brands",
         "icon": "bx bx-flag"
+    },
+    {
+        "display_name": "سایز محصولات ",
+        "route": "/size",
+        "icon": "bx bx-expand"
     }
 ]

@@ -26,6 +26,9 @@ import PrivateRoute from '../container/PrivateRoute'
 import Brands from '../pages/Brands/Brands'
 import AddBrands from '../pages/Brands/Add'
 import { EditBrands } from '../pages/Brands/Edit'
+import Sizes from '../pages/Size/Size'
+import AddSize from '../pages/Size/Add'
+import EditSize from '../pages/Size/Edit'
 const Routes = () => {
     return (
 
@@ -119,6 +122,22 @@ const Routes = () => {
             <Route path='/brands/edit/:id' exact >
                 <PrivateRoute>
                     <EditBrands />
+                </PrivateRoute>
+            </Route>
+            {/* Size Routing  */}
+            <Route path="/size" exact >
+                <PrivateRoute>
+                    <Sizes />
+                </PrivateRoute>
+            </Route>
+            <Route path='/size/add' exact >
+                <PrivateRoute>
+                    <AddSize />
+                </PrivateRoute>
+            </Route>
+            <Route path='/size/edit/:id' exact >
+                <PrivateRoute>
+                    <EditSize />
                 </PrivateRoute>
             </Route>
             <Route

@@ -1,99 +1,77 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 
-import axios from 'axios'
 import Swal from 'sweetalert2'
-
+import Api from '../../util/AxiosConfig'
 //Editor Required File
 import 'froala-editor/css/froala_editor.pkgd.min.css'
 import FroalaEditor from 'react-froala-wysiwyg'
+import { useHistory } from 'react-router'
+import { ImgBase64 } from '../../util/imgBase64'
 
-export default class Add extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            detail: {
-                name: '',
-                slug: '',
-                shortDetail: '',
-                body: '',
-                img: ''
-            }
-        }
-        this.changeHandler = this.changeHandler.bind(this)
-        this.updateHandler = this.updateHandler.bind(this)
+const AddProduct = () => {
+    const history = useHistory();
+    const [Detail, setDetail] = useState({
+        name: '',
+        slug: '',
+        shortDetail: '',
+        body: '',
+        img: ''
+    })
 
-    }
 
-    imgBase64(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file)
-            reader.onload = () => resolve(reader.result)
-            reader.onerror = error => reject(error)
-        })
-    }
-
-    updateHandler() {
-        if(this.state.detail.name === '')
-        {
+    const updateHandler = () => {
+        if (Detail.name === '') {
             Swal.fire({
                 icon: 'error',
                 title: '  لطفا نام محصول را وارد کنید!!!  '
             })
-        }else {
-         
-            axios.post('https://ostoore-sport.ir/api/v1/admin/product', this.state.detail).then(() => {
-            Swal.fire({
-                icon: 'success',
-                title: ' محصول شما اضافه شد  ',
-            })
-            this.props.history.push('/products')
-        })
-            .catch((err) => {
+        } else {
+            console.log('chnages')
+            Api.post('/product', Detail).then(() => {
                 Swal.fire({
-                    icon: 'error',
-                    title: 'مشکلی پیش آمده است',
-                    text: 'لطفا برسی کنید با سازنده سایت تماس برقرار کنید'
+                    icon: 'success',
+                    title: ' محصول شما اضافه شد  ',
                 })
-                console.log(err)
+                history.push('/products')
             })
+                .catch((err) => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'مشکلی پیش آمده است',
+                        text: 'لطفا برسی کنید با سازنده سایت تماس برقرار کنید'
+                    })
+                    console.log(err)
+                })
 
         }
     }
-    changeHandler(data) {
+    const changeHandler = (data) => {
         if (typeof (data) === 'string') {
-            this.setState((prev) => ({
-
-                detail: {
-                    name: prev.detail.name,
-                    slug: prev.detail.slug,
+            setDetail((prev) => ({
+                    name: prev.name,
+                    slug: prev.slug,
                     body: data,
-                    img: prev.detail.img
-                }
+                    img: prev.img
             }))
         } else {
             if (data.target.name === 'title') {
-                this.setState((prev) => ({
+                setDetail((prev) => ({
 
-                    detail: {
                         name: data.target.value,
                         slug: data.target.value.replace(/\s+/g, '-'),
-                        body: prev.detail.body,
-                        img: prev.detail.img
-                    }
+                        body: prev.body,
+                        img: prev.img
                 }))
             } else if (data.target.name === 'ProductImage') {
                 // Convert file to Base 64
                 const file = data.target.files[0]
-                this.imgBase64(file).then((data) => {
-                    this.setState((prev) => ({
-                        detail: {
-                            name: prev.detail.name,
-                            slug: prev.detail.slug,
-                            body: prev.detail.body,
-                            shortDetail: prev.detail.shortDetail,
+                ImgBase64(file).then((data) => {
+                    setDetail((prev) => ({
+                            name: prev.name,
+                            slug: prev.slug,
+                            body: prev.body,
+                            shortDetail: prev.shortDetail,
                             img: data
-                        }
                     }))
                 })
             }
@@ -101,7 +79,7 @@ export default class Add extends Component {
 
 
     }
-    render() {
+
         return (
             <div>
                 <h2 className="page-header top-sticky">
@@ -110,10 +88,10 @@ export default class Add extends Component {
                             افزودن محصول
                         </span>
                         <span>
-                            <button className="button bg-sucess" onClick={this.updateHandler} >
+                            <button className="button bg-sucess" onClick={() => updateHandler()} >
                                 ذخیره
                             </button>
-                            <button className="button" onClick={() => this.props.history.go(-1)} >
+                            <button className="button" onClick={() => history.go(-1)} >
                                 بازگشت
                             </button>
                         </span>
@@ -124,14 +102,14 @@ export default class Add extends Component {
                         <div className="card animate-top">
                             <div className="card-title">
                                 <label> نام محصول </label>
-                                <input type="text" className="form-control" name="title" value={this.state.detail.name} onChange={this.changeHandler} />
+                                <input type="text" className="form-control" name="title" value={Detail.name} onChange={(e) => changeHandler(e)} />
                                 <br />
                                 <br />
                                 <span className="d-flex justify-between">
                                     <label> لینک محصول  :</label>
-                                    <a href={window.location.origin + '/' + this.state.detail.slug}>
-                                        {window.location.origin + '/'} <span>{this.state.detail.slug}</span>
-                                    </a>
+                                    {/* <a href={window.location.origin + '/' + state.detail.slug}>
+                                        {window.location.origin + '/'} <span>{state.detail.slug}</span>
+                                    </a> */}
                                 </span>
                             </div>
                             <div className="card-body">
@@ -142,8 +120,8 @@ export default class Add extends Component {
 
                                 <FroalaEditor
                                     tag="textarea"
-                                    model={this.state.detail.body}
-                                    onModelChange={this.changeHandler}
+                                    model={Detail.shortDetail}
+                                    onModelChange={changeHandler}
                                 />
                                 <br />
                                 <span>
@@ -153,8 +131,8 @@ export default class Add extends Component {
                                 <br />
                                 <FroalaEditor
                                     tag="textarea"
-                                    model={this.state.detail.shortDetail}
-                                    onModelChange={this.changeHandler}
+                                    model={Detail.body}
+                                    onModelChange={changeHandler}
                                 />
                                 <div className="d-flex justify-center">
                                     <div>
@@ -165,14 +143,14 @@ export default class Add extends Component {
                                         </span>
                                         <div className="upload_image">
 
-                                            <input type="file" className="d-none" id="images" name="ProductImage" onChange={this.changeHandler} />
+                                            <input type="file" className="d-none" id="images" name="ProductImage" onChange={(e) => changeHandler(e)} />
                                             <button className="button " onClick={() => { document.getElementById('images').click() }}>
                                                 انتخاب عکس
                                             </button>
-                                            <button className="button bg-danger" onClick={() => { this.setState({ detail: { img: '' } }) }}>
+                                            <button className="button bg-danger" onClick={() => { setDetail({  img: '' }) }}>
                                                 حذف عکس
                                             </button>
-                                            <img src={this.state.detail.img} alt="" width="120" />
+                                            <img src={Detail.img} alt="" width="120" />
                                         </div>
 
                                     </div>
@@ -185,14 +163,14 @@ export default class Add extends Component {
                                         </span>
                                         <div className="upload_image">
 
-                                            <input type="file" className="d-none" id="images" name="ProductImage" onChange={this.changeHandler} />
+                                            <input type="file" className="d-none" id="images" name="ProductImage" onChange={(e) => changeHandler(e)} />
                                             <button className="button " onClick={() => { document.getElementById('images').click() }}>
                                                 انتخاب عکس
                                             </button>
-                                            <button className="button bg-danger" onClick={() => { this.setState({ detail: { img: '' } }) }}>
+                                            <button className="button bg-danger" onClick={() => { setDetail({ img: '' }) }}>
                                                 حذف عکس
                                             </button>
-                                            <img src={this.state.detail.img} alt="" width="120" />
+                                            <img src={Detail.img} alt="" width="120" />
                                         </div>
                                     </div>
                                 </div>
@@ -204,4 +182,5 @@ export default class Add extends Component {
             </div>
         )
     }
-}
+
+export default AddProduct

@@ -33,7 +33,7 @@ const SidebarItem = props => {
 
 
 const Sidebar = props => {
-    const authUser = React.createContext(false)
+    // const authUser = React.createContext(false)
     const [isLogin, setIsLogin] = useState(false);
     const { pathname } = useLocation();
     useLayoutEffect(() => {

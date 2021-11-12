@@ -1,7 +1,6 @@
 import { useState, useLayoutEffect } from 'react'
 import { useHistory } from 'react-router'
 import Table from '../../components/table/Table'
-import Loader from '../../components/Loaders/ProductLoaders'
 import { Link } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import axios from 'axios'

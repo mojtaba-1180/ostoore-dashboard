@@ -20,7 +20,7 @@ const updateHandler = () => {
         Api.post('hashtag', FormData.detail).then(() => {
             Swal.fire({
                 icon: 'success',
-                title: '  دسته بندی شما اضافه شد  ',
+                title: '   برچسب شما اضافه شد  ',
             })
             history.push('/tags')
         })
@@ -48,7 +48,7 @@ const updateHandler = () => {
             <h2 className="page-header top-sticky">
                 <div className="d-flex justify-between align-center">
                     <span className="animate">
-                        افزودن دسته بندی
+                        افزودن برچسب
                     </span>
                     <span className="d-flex " >
                         <button className="button bg-sucess ml-2" onClick={updateHandler} >

@@ -9,15 +9,12 @@ export const EditBrands = () => {
     const [Detail, setDetail] = useState({
         name: ''
     })
-    const [Error, setError] = useState('')
     const [Loading, setLoading] = useState(false)
 
     // Mounting Founction
     useLayoutEffect(() => {
-        console.log(location)
         setDetail({name: location.state.detail.name})
     }, [])
-
     // Functions Handles
     const updateHandler = async () => {
         if (Detail.name === '') {
