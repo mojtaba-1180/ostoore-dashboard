@@ -70,7 +70,7 @@ const Product = () => {
     const renderBody = (item, index) => (
         <>
             <tr key={item.id} >
-                <td>{item.id}</td>
+                <td>{index + 1}</td>
                 <td> <img src={item.img} alt="عکس محصول" className="img-table" /> </td>
                 <td>{item.name}</td>
                 <td>{item.slug}</td>

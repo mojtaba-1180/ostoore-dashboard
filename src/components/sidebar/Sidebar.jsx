@@ -4,8 +4,6 @@ import { Link, useLocation } from 'react-router-dom'
 
 import './sidebar.css'
 
-import logo from '../../assets/images/Logo.png'
-
 import sidebar_items from '../../assets/JsonData/sidebar_routes.json'
 
 
@@ -55,7 +53,7 @@ const Sidebar = props => {
                 <i className='bx bx-menu'></i>
             </button>
             <div className="sidebar__logo">
-                <img src={logo} alt="company logo" />
+                <img src="/assets/images/Logo.png" alt="company logo" />
             </div>
             <div className="sidebar_items">
             {

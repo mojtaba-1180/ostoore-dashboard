@@ -53,3 +53,27 @@
     background-color: var(--main-color-blue);
     color: #000;
 }
+.file_box{
+    border: 1px dashed;
+    background: #ccc2;
+    position: relative;
+}
+.file_box_text{
+    position: absolute;
+    top: 40%;
+    right: 50%;
+    transform: translate( 50%, 0%);
+}
+.file_box_input{
+    opacity: 0;
+    width: 100%;
+    height: 200px;
+}
+.file_box_footer{
+    width: 100%;
+    display: flex ;
+    justify-content: space-between;
+    margin-top: 20px;
+    margin-bottom: -20px;
+
+}

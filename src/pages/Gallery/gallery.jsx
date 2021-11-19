@@ -3,29 +3,44 @@ import ListingItem from '../../components/ListingItem/ListingItem';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import Api from '../../util/AxiosConfig'
-import { ImgBase64 } from '../../util/imgBase64'
+import FormData from 'form-data' 
 import PropagateLoader from "react-spinners/PropagateLoader";
-
+import { ImgBase64 } from '../../util/imgBase64';
 
 import './gallery.css'
 
 const Gallery = () => {
-    const [Folder, setFolder] = useState([])
     const [ActiveItem, setActiveItem] = useState(1)
     const [ContentNew, setContentNew] = useState({})
-
-
+    const [Images, setImages] = useState([])
+    const [PreviewUploadImg, setPreviewUploadImg] = useState({
+        files: null,
+        imageData: null
+    })
+    const [Upload, setUpload] = useState(false)
 
     const getData = async () => {
-        await Api.get('gallery').then((res) => {
-            setFolder(res)
+        console.log('geting Images...')
+        await Api.get('image/').then((res) => {
+            console.log(res)
+            setImages(res.result)
+            // res.result.map(item => {
+            //     // console.log(getImage(item._id))
+            //     return item
+            // })
         }).catch((err) => {
             console.log(err)
         })
     }
+    // const getImage = async (id) => {
+    //     await Api.get(`image/${id}`).then((res) => {
+    //         return res
+    //     }).catch((err) => {
+    //         console.log({ ErrGallery: err })
+    //     })
+    // }
     const HandleListinClick = (item) => {
         setActiveItem(item)
-
     }
     const HandleAddFolder = () => {
         Swal.fire({
@@ -45,7 +60,7 @@ const Gallery = () => {
                     content: []
                 }
                 Api.post('gallery', data).then((res) => {
-                    
+                    console.log(res)
                 }).catch((err) => {
                 })
             }
@@ -53,55 +68,57 @@ const Gallery = () => {
     }
 
     const HandleUpload = async () => {
-        const { value: file } = await Swal.fire({
-            title: 'Select image',
-            input: 'file',
-            inputAttributes: {
-                'accept': 'image/*',
-                'aria-label': 'Upload your profile picture'
-            }
-        })
+            const formdata = new FormData()
+            formdata.append("image", PreviewUploadImg.files);
+            formdata.append("name", PreviewUploadImg.files.name);
+            console.log(formdata)
+           console.log('uploading...')
+           
+            Api.post('image', formdata, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                  }
+            }).then((res) => {
+                setUpload(false)
+                console.log(res)
+                getData()
+            }).catch((err) => {
+                console.log(err)
 
-        if (file) {
-            console.log(' one ')
-            ImgBase64(file).then((res) => {
-                const data = {
-                    img: res
-                }
-                this.setState((prev) => ({
-                    contentNew: prev.Folder.filter(item => item.id === this.state.activeItem).map(item => {
-                        return {
-                            ...item,
-                            content: [
-                                ...item.content,
-                                data
-                            ]
-                        }
-                    })
-
-                }))
-                axios.put(`http://localhost:5000/gallery/${this.state.activeItem}`, this.state.contentNew[0]).then((res) => {
-                    console.log(res)
-                    this.getData()
-                }).catch((err) => {
-                    console.log(err)
-
-                })
             })
+            // this.setState((prev) => ({
+            //     contentNew: prev.Folder.filter(item => item.id === this.state.activeItem).map(item => {
+            //         return {
+            //             ...item,
+            //             content: [
+            //                 ...item.content,
+            //                 data
+            //             ]
+            //         }
+            //     })
 
-
-
-        }
+            // }))
+             
     }
 
     const HandleDelete = (id) => {
         console.log(id)
     }
+    const handleChanageUploadImage = (e) => {
+        ImgBase64(e.target.files[0]).then(res => {
+            setPreviewUploadImg({
+                files: e.target.files[0],
+                imageData: res
+            })
+        })
+        
+       
+    }
     useLayoutEffect(() => {
-        setTimeout(()=> {
+        setTimeout(() => {
             getData();
-        },1000)
-      
+        }, 1000)
+
     }, [])
     return (
         <>
@@ -111,7 +128,7 @@ const Gallery = () => {
                         گالری محصولات
                     </span>
                     <span>
-                        <button className="button" onClick={() => HandleUpload()}>
+                        <button className="button" onClick={() => setUpload(true)}>
                             بارگذاری در این پوشه
                         </button>
                     </span>
@@ -130,13 +147,13 @@ const Gallery = () => {
                                 </button>
                             </span>
                         </div>
-                        {
+                        {/* {
                             Folder.length === 0 ? (
                                 <>
                                     <div className="d-flex justify-center align-center flex-col " >
                                         <PropagateLoader color={'#a1a1a1'} size={10} />
                                     </div>
-                                  
+
                                 </>
                             ) : (
                                 <>
@@ -158,60 +175,71 @@ const Gallery = () => {
                                 </>
                             )
 
-                        }
+                        } */}
                     </div>
                 </div>
                 <div className="col-8 col-md-12 col-sm-12">
-                    <div className="card">
+                    <div className="card" style={ Images.length === 0 ?{} :{display: 'flex', flexWrap: 'wrap'}}>
                         {
-                         Folder.length === 0 ? (
-                            <>
-                            <div className="d-flex justify-center align-center flex-col " >
+                            Images.length === 0 ? (
+                                <>
+                                    <div className="d-flex justify-center align-center flex-col " >
                                         <PropagateLoader color={'#a1a1a1'} size={10} />
                                     </div>
-                            </>
-                         )   : (
+                                </>
+                            ) : (
 
-                       <>
-                        
-                        {
-                            Folder.map((item) => (
                                 <>
-                                    <div className={`tabs-content ${ActiveItem === item.id ? 'active' : ''}`} >
+                                        
+                                    {
+                                        Images.map((item) => {
 
-                                        {
-                                            item.content.length === 0 ? (
+                                            return (
                                                 <>
-                                                    عکسی وجود ندارد
-                                                </>
-                                            ) : (
-                                                item.content.map((img, index) => (
-                                                    <div className="box" key={index}>
-                                                        <img src={img.img} alt="" width="50" />
+                                                <div className={`tabs-content ${ActiveItem === item.id ? 'active' : 'active'}`} >
+                                                    <div className="box d-flex flex-col" key={item._id}>
+                                                        <img src={item.url} alt={item.name} width="80" />
+                                                        <p>{item.name}</p>
                                                         <div className="action">
-                                                            <button className=" btn-sm trash-btn" onClick={() => this.HandleDelete(index)}>
+                                                            <button className=" btn-sm trash-btn" onClick={() => this.HandleDelete(item._id)}>
                                                                 <i className="bx bx-trash-alt"></i>
                                                             </button>
                                                             <button className="btn-sm open-btn" >
                                                                 <i className="bx bx-move"></i>
                                                             </button>
                                                         </div>
-                                                    </div>
-
-                                                ))
+                                                    </div>    
+                                                </div>
+                                            </>
                                             )
-
-                                        }
-                                    </div>
+                                        })
+                                    }
                                 </>
-                            ))
+                            )
                         }
-                        </>
-                          )
-                          }
                     </div>
                 </div>
             </div>
+            
+            <div className={Upload ? 'animate-opacity absolute card w-50' : 'absolute card w-50 d-none'} style={{top: '50%', right: '50%',  transform: 'translate(50%, -50%)'}} >
+                    <div className="file_box" >
+                        <p className="file_box_text" >  برای آپلود کلیک کنید</p>
+                    <input className="file_box_input" type="file" onChange={(e) => handleChanageUploadImage(e)} />
+                    </div>
+                    {
+                        PreviewUploadImg.files && (
+                            <div className="w-100 d-flex justify-center flex-col align-center" >
+                                <img src={PreviewUploadImg.imageData} width="250" style={{marginTop: '10px', borderRadius: '10px'}} />
+                                <p>{PreviewUploadImg.files.name}</p>
+                            </div>
+                        )
+                    }
+                   
+                    <div className="file_box_footer" >
+                        <button className="button" onClick={() => setUpload(false)} > انصراف </button>
+                        <button className="button" onClick={() => HandleUpload()} > تایید </button>
+                    </div>
+            </div> 
         </>
     )
 }

@@ -35,6 +35,8 @@ const EditTags = () => {
                     title: ' بروز رسانی شد',
                 })
                 setLoading(false)
+                history.push('/tags')
+
             })
                 .catch((err) => {
                     console.log(err + 'salama')

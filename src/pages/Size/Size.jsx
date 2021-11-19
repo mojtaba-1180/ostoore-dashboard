@@ -70,7 +70,6 @@ const Sizes = () => {
    const customerTableHead = [
         'ردیف',
         'نام',
-        ' نامک ',
         ' اکشن '
     ]
 
@@ -79,9 +78,8 @@ const Sizes = () => {
     const renderBody = (item, index) => (
         <>
             <tr key={index}>
-                <td>{index}</td>
+                <td>{index + 1 }</td>
                 <td>{item.name}</td>
-                <td>{item.slug}</td>
                 <td>
                     <button className="panel_item_button" onClick={() => HandleEdit(item)} >
                         <i className='bx bx-edit panel_item_button_edit' ></i>

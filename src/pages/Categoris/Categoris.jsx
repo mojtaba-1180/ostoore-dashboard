@@ -13,14 +13,14 @@ const Categoris = () => {
     const history = useHistory();
 
     const [Categoris, setCategoris] = useState(null)
+    const [Images, setImages] = useState([])
 
     // Geting Data server
     const getData = () => {
-        console.log('get data check')
         Api.get('category').then(
             (res) => {
-                console.log({ catehoris: res.data})
-                // setCategoris(res.data)
+                setCategoris(res.result)
+                console.log(res)
         }
         ).catch(
             (err) => {
@@ -31,8 +31,9 @@ const Categoris = () => {
 
 
     const HandleEdit = item => {
+      
         history.push({
-            pathname: `/edit/categories/${item.slug}`,
+            pathname: `/edit/categories/${item._id}`,
             state: { detail: item }
         })
     }
@@ -78,7 +79,6 @@ const Categoris = () => {
         'id',
         'عکس',
         'نام',
-        ' نامک ',
         ' اکشن ',
         'زیر مجموعه'
     ]
@@ -86,37 +86,39 @@ const Categoris = () => {
     const renderHead = (item, index) => <th key={index}>{item}</th>
 
     const renderBody = (item, index) => (
+        
         <>
             <tr key={index}>
-                <td>{item.id}</td>
-                <td> <img src={item.img} alt="عکس محصول" className="img-table" /> </td>
+                <td>{index + 1}</td>
+                <td> <img src={item.images.length >= 1 && item.images[0].url} alt="عکس" className="img-table" /> </td>
                 <td>{item.name}</td>
-                <td>{item.slug}</td>
                 <td>
                     <button className="panel_item_button" onClick={() => HandleEdit(item)} >
                         <i className='bx bx-edit panel_item_button_edit' ></i>
                     </button>
-                    <button className="panel_item_button" onClick={() => HandleTrash(item.id)} >
-                        <i className='bx bx-trash panel_item_button_trash' ></i>
-                    </button>
+                    {
+                        item.ancestors.length >= 1 ? ('') : (
+                            <button className="panel_item_button" onClick={() => HandleTrash(item._id)} >
+                            <i className='bx bx-trash panel_item_button_trash' ></i>
+                        </button>
+                        )
+                    }
+                   
 
                 </td>
                 <td>
                     {
-                        item.ancestors ? (
+                        item.ancestors.length >= 1 ? (
                             <span className="btn_toggle">
                                 <Link to={{
-                                    pathname: `/categories/${item.slug}`,
-                                    state: item.ancestors,
-                                    old: {
-                                        title: item.name
-                                    }
-                                }}>
-                                    <span>
+                                    pathname: `/categories/${item._id}`,
+                                    state: item._id
+                                }} style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}} >
+                                    <span >
                                         زیر مجموعه
 
                                     </span>
-                                    <i className='bx bx-chevron-left'></i>
+                                    <i className='bx bx-chevron-left' style={{marginTop:'-8px'}} ></i>
 
                                 </Link>
                             </span>

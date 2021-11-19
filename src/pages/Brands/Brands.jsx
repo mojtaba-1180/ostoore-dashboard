@@ -79,7 +79,7 @@ const Brands = () => {
     const renderBody = (item, index) => (
         <>
             <tr key={index}>
-                <td>{index}</td>
+                <td>{index + 1}</td>
                 <td>{item.name}</td>
                 <td>{item.slug}</td>
                 <td>
@@ -89,7 +89,6 @@ const Brands = () => {
                     <button className="panel_item_button" onClick={() => HandleTrash(item._id)} >
                         <i className='bx bx-trash panel_item_button_trash' ></i>
                     </button>
-
                 </td>
             </tr>
         </>

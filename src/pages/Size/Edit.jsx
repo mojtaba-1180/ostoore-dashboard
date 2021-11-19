@@ -35,6 +35,8 @@ const EditSize = () => {
                     title: ' بروز رسانی شد',
                 })
                 setLoading(false)
+                history.push('/size')
+
             })
                 .catch((err) => {
                     console.log(err.response)

@@ -5,7 +5,7 @@ import './layout.css'
 import Sidebar from '../sidebar/Sidebar'
 import TopNav from '../topnav/TopNav'
 import Routes from '../Routes'
-import { BrowserRouter, Route, useLocation } from 'react-router-dom'
+import { BrowserRouter, Route } from 'react-router-dom'
 
 import { useSelector, useDispatch } from 'react-redux'
 

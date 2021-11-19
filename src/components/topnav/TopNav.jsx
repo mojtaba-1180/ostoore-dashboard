@@ -10,13 +10,13 @@ import ThemeMenu from '../thememenu/ThemeMenu'
 
 import notifications from '../../assets/JsonData/notification.json'
 
-import user_image from '../../assets/images/profile.png'
+
 
 import user_menu from '../../assets/JsonData/user_menus.json'
 
 const curr_user = {
-    display_name: '',
-    image: user_image
+    display_name: 'admin',
+    image: ''
 }
 
 const renderNotificationItem = (item, index) => (
@@ -28,12 +28,13 @@ const renderNotificationItem = (item, index) => (
 
 const renderUserToggle = (user) => (
     <div className="topnav__right-user">
-        <div className="topnav__right-user__image">
-            <img src={user.image} alt="" />
-        </div>
         <div className="topnav__right-user__name">
             {user.display_name}
         </div>
+        <div className="topnav__right-user__image">
+            <img src="/assets/images/profile.png" alt="" />
+        </div>
+        
     </div>
 )
 
@@ -65,7 +66,7 @@ const Topnav = () => {
                 <i className='bx bx-search'></i>
             </div>
             <div className="topnav__right">
-                <div className="topnav__right-item">
+                <div className="topnav__right-item" style={{marginLeft:'30px'}} >
                     {/* dropdown here */}
                     <Dropdown
                         customToggle={() => renderUserToggle(curr_user)}

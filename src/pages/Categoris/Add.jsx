@@ -1,5 +1,9 @@
 
-import { useState } from 'react'
+
+import Modal from '@mui/material/Modal';
+
+
+import { useState, useEffect } from 'react'
 import { useHistory } from 'react-router'
 
 import Swal from 'sweetalert2'
@@ -7,43 +11,41 @@ import Swal from 'sweetalert2'
 import 'froala-editor/css/froala_editor.pkgd.min.css'
 
 import Api from '../../util/AxiosConfig'
-
+import GalleryModal from '../../components/Gallery/gallery';
 const AddCategory = () => {
     const history = useHistory();
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+    const [Image, setImage] = useState(null)
+    const [CategoryList, setCategoryList] = useState(null)
     const [FormData, setFormData] = useState({
         detail: {
             name: '',
-            parent_id: '',
-            img: ''
+            parentId: '',
+            images: Image ? Image._id : ''
         }
     })
-
-
-
-    const imgBase64 = (file) => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file)
-            reader.onload = () => resolve(reader.result)
-            reader.onerror = error => reject(error)
-        })
-    }
-
     const updateHandler = () => {
-        Api.post('category', FormData).then(() => {
+        // post Data in added category
+        Api.post('category', FormData.detail).then(() => {
             Swal.fire({
                 icon: 'success',
                 title: '  دسته بندی شما اضافه شد  ',
             })
-            history.push('/category')
+            history.push('/categories')
         })
             .catch((err) => {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'مشکلی پیش آمده است',
-                    text: 'لطفا برسی کنید با سازنده سایت تماس برقرار کنید'
-                })
-                console.log(err)
+                // Swal.fire({
+                //     icon: 'error',
+                //     title: 'مشکلی پیش آمده است',
+                //     text: 'لطفا برسی کنید با سازنده سایت تماس برقرار کنید'
+                // })
+                if(err.response){
+                    console.log(err.response)
+                }else {
+                    console.log(err)
+                }
             })
     }
     const changeHandler = (data) => {
@@ -51,33 +53,64 @@ const AddCategory = () => {
             setFormData((prev) => ({
                 detail: {
                     name: data.target.value,
-                    parent_id: prev.detail.parent_id,
-                    img: prev.detail.img
+                    parentId: prev.detail.parentId,
+                    images: prev.detail.images
                 }
             }))
         } else if (data.target.name === 'parent') {
             setFormData((prev) => ({
                 detail: {
                     name: prev.detail.name,
-                    parent_id: data.target.value,
-                    img: prev.detail.img
+                    parentId: data.target.value,
+                    images: prev.detail.images
                 }
-            }))
-        } else if (data.target.name === 'ProductImage') {
-            // Convert file to Base 64
-            const file = data.target.files[0]
-            imgBase64(file).then((data) => {
-                setFormData((prev) => ({
-                    detail: {
-                        name: prev.detail.name,
-                        parent_id: prev.detail.parent_id,
-                        img: data
-                    }
-                }))
-            })
-        }
+            }))}
     }
 
+    const GetData = () => {
+        Api.get('category').then((res) => {
+            setCategoryList(res.result)
+            console.log(res)
+        }).catch((err) => {
+            console.log('getting data error see response : ')
+            console.log(err)
+
+        })
+    }
+    const handlechanges = (e) => {
+        setOpen(false)
+        setImage(e)
+        setFormData((prev) => (
+            {
+                detail: {
+                    name: prev.detail.name,
+                    parentId: prev.detail.parentId,
+                    images: e._id,
+                }
+            }
+        ))
+        
+    }
+    useEffect(() => {
+        let connection = false;
+        if(!connection){
+            GetData()
+        }
+        return () => {
+            connection = true
+        }
+    }, [])
+    const style = {
+        position:'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: '80vw',
+        height: '70vh' ,
+        backgroundColor: 'var(--main-bg)',
+        borderRadius: '20px',
+        padding: '20px'
+    };
     return (
         <div>
             <h2 className="page-header top-sticky">
@@ -104,13 +137,29 @@ const AddCategory = () => {
                             <br />
                             <br />
                             <label>  دسته بندی مادر </label>
-                            <select  className="form-control" name="parent" value={FormData.detail.parent_id} onChange={changeHandler} >
-                                <option value=""> انتخاب کنید </option>
-                                <option value="1"> one </option>
-                                <option value="2"> 3 </option>
-                                <option value="3"> 4 </option>
+                            <select className="form-control" name="parent" value={FormData.detail.parent_id} onChange={changeHandler} >
+                                
+                                {
+                                    CategoryList === null ?(<option value=""> درحال پردازش ...  </option>) :
+                                    CategoryList ? (
+                                        <>
+                                        <option value=""> بدون مادر </option>
+                                        {
+                                            
+                                            CategoryList.map(item => {
+                                                return (
+                                                <>
+                                                <option key={item._id} value={item._id}> {item.name} </option>
+                                               </> 
+                                                )
+                                               
+                                            })
+                                        }
+                                        </>
+                                    ) : CategoryList.length === 0 &&(<option value=""> خالی  </option>) 
+                                }
                             </select>
-                            
+
                             {/* <span className="d-flex justify-between">
                                 <label> لینک محصول  :</label>
                                 <a href={window.location.origin + '/' + state.detail.slug}>
@@ -127,25 +176,36 @@ const AddCategory = () => {
                                         <br />
                                     </span>
                                     <div className="upload_image">
-
-                                        <input type="file" className="d-none" id="images" name="ProductImage" onChange={changeHandler} />
-                                        <button className="button " onClick={() => { document.getElementById('images').click() }}>
-                                            انتخاب عکس
-                                        </button>
-                                        <button className="button bg-danger" onClick={() => { setFormData({ detail: { img: '' } }) }}>
-                                            حذف عکس
-                                        </button>
-                                        <img src={FormData.detail.img} alt="" width="120" />
+                                        <div className="d-flex flex-col" >
+                                            <button className="button " onClick={() => { handleOpen() }}>
+                                                انتخاب عکس
+                                            </button>
+                                            <button className="button bg-danger" onClick={() => { setImage(null) }}>
+                                                حذف عکس
+                                            </button>
+                                        </div>
+                                        {
+                                            console.log(FormData)
+                                        }
+                                        {Image && Image.name}
+                                        <img src={Image ? Image.url : ''} alt="" width="120" />
                                     </div>
-
                                 </div>
-
                             </div>
 
                         </div>
                     </div>
                 </div>
             </div>
+            <Modal
+                open={open}
+                onClose={handleClose}
+               
+            >
+                <div  style={style}>
+                    <GalleryModal data={handlechanges} />
+                </div>
+            </Modal>
         </div>
     )
 }

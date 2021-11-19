@@ -53,7 +53,9 @@ const Routes = () => {
                 </PrivateRoute>
             </Route>
             <Route path='/categories/:id' exact >
-
+            <PrivateRoute>
+                    <ChildCategoris />
+                </PrivateRoute>
             </Route>
             <Route path='/categories/:parnt/:id' >
                 <PrivateRoute>

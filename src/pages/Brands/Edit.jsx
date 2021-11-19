@@ -31,6 +31,7 @@ export const EditBrands = () => {
                     title: ' بروز رسانی شد',
                 })
                 setLoading(false)
+                history.push('/brands')
             })
                 .catch((err) => {
                     console.log(err + 'بروز رسانی به مشکل بر خورده است')

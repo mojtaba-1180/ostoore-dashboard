@@ -1,0 +1,7 @@
+.Mui-selected{
+ color: var(--main-color) !important;
+}
+*MuiTabs-indicator{
+    color: var(--main-color) !important;
+
+}

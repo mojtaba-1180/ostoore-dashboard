@@ -1,5 +1,5 @@
 
-import { useState, useLayoutEffect } from 'react'
+import { useState } from 'react'
 import { useHistory } from 'react-router'
 
 import Swal from 'sweetalert2'
@@ -8,7 +8,6 @@ import 'froala-editor/css/froala_editor.pkgd.min.css'
 
 import Api from '../../util/AxiosConfig'
 
-import FormData from 'form-data'
 const AddTags = () => {
     const history = useHistory();
     const [FormData, setFormData] = useState({

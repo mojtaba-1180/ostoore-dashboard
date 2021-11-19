@@ -9,16 +9,9 @@ import { useHistory } from 'react-router';
 
 const SignupSchema = Yup.object().shape({
 
-    username: Yup.string()
+    username: Yup.string().required('  الزامی میباشد'),
 
-        .min(2, 'Too Short!')
-
-        .max(70, 'Too Long!')
-
-        .required('  الزامی میباشد'),
-
-    password: Yup.string()
-        .required(' الزامی میباشد '),
+    password: Yup.string().required(' الزامی میباشد '),
 
 });
 
