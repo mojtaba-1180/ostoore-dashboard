@@ -4,7 +4,7 @@ import Modal from '@mui/material/Modal';
 
 
 import { useState, useEffect } from 'react'
-import { useHistory } from 'react-router'
+import { useHistory, useParams } from 'react-router'
 
 import Swal from 'sweetalert2'
 //Editor Required File
@@ -12,7 +12,8 @@ import 'froala-editor/css/froala_editor.pkgd.min.css'
 
 import Api from '../../util/AxiosConfig'
 import GalleryModal from '../../components/Gallery/gallery';
-const AddCategory = () => {
+const AddChildCategory = () => {
+    const { id } = useParams()
     const history = useHistory();
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
@@ -22,7 +23,7 @@ const AddCategory = () => {
     const [FormData, setFormData] = useState({
         detail: {
             name: '',
-            parentId: '',
+            parentId: id ,
             images: Image ? Image._id : ''
         }
     })
@@ -136,36 +137,6 @@ const AddCategory = () => {
                             <input type="text" className="form-control" name="title" value={FormData.detail.name} onChange={changeHandler} />
                             <br />
                             <br />
-                            {/* <label>  دسته بندی مادر </label>
-                            <select className="form-control" name="parent" value={FormData.detail.parent_id} onChange={changeHandler} >
-                                
-                                {
-                                    CategoryList === null ?(<option value=""> درحال پردازش ...  </option>) :
-                                    CategoryList ? (
-                                        <>
-                                        <option value=""> بدون مادر </option>
-                                        {
-                                            
-                                            CategoryList.map(item => {
-                                                return (
-                                                <>
-                                                <option key={item._id} value={item._id}> {item.name} </option>
-                                               </> 
-                                                )
-                                               
-                                            })
-                                        }
-                                        </>
-                                    ) : CategoryList.length === 0 &&(<option value=""> خالی  </option>) 
-                                }
-                            </select> */}
-
-                            {/* <span className="d-flex justify-between">
-                                <label> لینک محصول  :</label>
-                                <a href={window.location.origin + '/' + state.detail.slug}>
-                                    {window.location.origin + '/'} <span>{state.detail.slug}</span>
-                                </a>
-                            </span> */}
                         </div>
                         <div className="card-body">
                             <div className="d-flex justify-center">
@@ -199,9 +170,7 @@ const AddCategory = () => {
             </div>
             <Modal
                 open={open}
-                onClose={handleClose}
-               
-            >
+                onClose={handleClose}>
                 <div  style={style}>
                     <GalleryModal data={handlechanges} />
                 </div>
@@ -209,4 +178,4 @@ const AddCategory = () => {
         </div>
     )
 }
-export default AddCategory
+export default AddChildCategory

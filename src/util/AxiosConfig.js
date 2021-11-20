@@ -13,7 +13,7 @@ let token = cookies.get("token");
 // }
 
 const instance = axios.create({
-  baseURL: "http://localhost:8446/api/v1/admin",
+  baseURL: "https://secret-taiga-71725.herokuapp.com/api/v1/admin",
   headers: { 
     'Content-Type': 'application/json'
   }

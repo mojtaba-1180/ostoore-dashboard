@@ -12,6 +12,7 @@ import Categoris from '../pages/Categoris/Categoris'
 import ChildCategoris from '../pages/Categoris/Child'
 import EditCategoris from '../pages/Categoris/Edit'
 import AddCategori from '../pages/Categoris/Add'
+import AddChildCategori from '../pages/Categoris/AddChild'
 // Peoducts
 import Product from '../pages/Product/Product'
 import ProductEdit from '../pages/Product/Edit'
@@ -29,7 +30,12 @@ import { EditBrands } from '../pages/Brands/Edit'
 import Sizes from '../pages/Size/Size'
 import AddSize from '../pages/Size/Add'
 import EditSize from '../pages/Size/Edit'
+//  Logout 
+import { useHistory } from "react-router"
+import Cookies from "universal-cookie/es6"
+import Logout from '../pages/Auth/logout'
 const Routes = () => {
+  
     return (
 
         <Switch>
@@ -70,6 +76,11 @@ const Routes = () => {
             <Route path='/add/categories/' exact >
                 <PrivateRoute>
                     <AddCategori />
+                </PrivateRoute>
+            </Route>
+            <Route path='/add/categories-child/:id' exact >
+                <PrivateRoute>
+                    <AddChildCategori />
                 </PrivateRoute>
             </Route>
             {/* Route Products */}
@@ -148,15 +159,19 @@ const Routes = () => {
                 sensitive
                 path='/:url([a-z/]*[A-Z]+[a-z/]*)/'
                 render={props => {
-                    console.log('salam')
                     const path = props.location.pathname
                     return <Redirect to={`${path.toLowerCase()}`} />
                 }}
             />
+            <Route path="/logout" exact>
+                <Logout />
+            </Route>
             <Route>
                 <Redirect to="/" />
 
             </Route>
+            {/* logout Router */}
+            
         </Switch>
 
     )

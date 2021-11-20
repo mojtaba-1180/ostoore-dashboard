@@ -1,18 +1,24 @@
 [
     {
         "icon": "bx bx-user",
-        "content": "پروفایل"
+        "content": "پروفایل",
+        "path" : "/"
+
     },
     {
         "icon": "bx bx-wallet-alt",
-        "content": "درگاه"
+        "content": "درگاه",
+        "path" : "/"
+
     },
     {
         "icon": "bx bx-cog",
-        "content": "تنظیمات"
+        "content": "تنظیمات",
+        "path" : "/"
     },
     {
         "icon": "bx bx-log-out-circle bx-rotate-180",
-        "content": "خروج"
+        "content": "خروج",
+        "path" : "/logout"
     }
 ]

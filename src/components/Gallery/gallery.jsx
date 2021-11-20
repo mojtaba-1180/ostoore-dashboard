@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect } from 'react'
+import React, { useState, useLayoutEffect, useRef } from 'react'
 import ListingItem from '../../components/ListingItem/ListingItem';
 import Swal from 'sweetalert2';
 import Api from '../../util/AxiosConfig'
@@ -9,6 +9,8 @@ import { ImgBase64 } from '../../util/imgBase64';
 import './gallery.css'
 
 const GalleryModal = (props) => {
+    const uploadBtnRef = useRef()
+    const [uploadBtn, setuploadBtn] = useState(false)
     const [ActiveItem, setActiveItem] = useState(1)
     const [ContentNew, setContentNew] = useState({})
     const [Images, setImages] = useState([])
@@ -78,6 +80,8 @@ const GalleryModal = (props) => {
                     'Content-Type': 'multipart/form-data'
                   }
             }).then((res) => {
+                uploadBtnRef.current.classList.add('disable')
+                setuploadBtn(true)
                 setUpload(false)
                 console.log(res)
                 getData()
@@ -104,6 +108,7 @@ const GalleryModal = (props) => {
         props.data(e)
     }
     const handleChanageUploadImage = (e) => {
+        uploadBtnRef.current.classList.remove('disable')
         ImgBase64(e.target.files[0]).then(res => {
             setPreviewUploadImg({
                 files: e.target.files[0],
@@ -114,6 +119,8 @@ const GalleryModal = (props) => {
        
     }
     useLayoutEffect(() => {
+        uploadBtnRef.current.classList.add('disable')
+
         setTimeout(() => {
             getData();
         }, 1000)
@@ -233,7 +240,14 @@ const GalleryModal = (props) => {
                    
                     <div className="file_box_footer" >
                         <button className="button" onClick={() => setUpload(false)} > انصراف </button>
-                        <button className="button" onClick={() => HandleUpload()} > تایید </button>
+                        {
+                            uploadBtn ? (
+                                <button className="button"  > در حال بارگزاری <i className='bx bx-loader-circle bx-spin'></i> </button>
+
+                            ) : (
+                                <button className="button" ref={uploadBtnRef}  onClick={() => HandleUpload()} > اپلود  </button>
+                            )
+                        }
                     </div>
             </div> 
         </>

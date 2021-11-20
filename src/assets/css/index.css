@@ -173,6 +173,11 @@ input {
     outline: 0;
 }
 
+.disable{
+    pointer-events: none;
+    background-color: #616161 !important;
+}
+
 input:focus {
     border: 2px solid var(--main-color);
 }
