@@ -52,7 +52,11 @@ const Categoris = () => {
             cancelButtonText: 'خیر'
         }).then((result) => {
             if (result.isConfirmed) {
-                axios.delete(`http://localhost:5000/categori/${id}`).then((res) => {
+                console.log(id)
+                Api.delete('category', {
+                    categoryId: id
+                }).then((res) => {
+                    console.log(res)
                     Swal.fire(
                         'حذف شد !',
                         'دسته بندی مورد نظر با موفقیت پاک شد ',

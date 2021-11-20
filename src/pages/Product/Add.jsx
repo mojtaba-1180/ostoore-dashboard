@@ -197,7 +197,6 @@ const AddProduct = () => {
         left: '50%',
         transform: 'translate(-50%, -50%)',
         width: '80vw',
-        height: '70vh',
         backgroundColor: 'var(--main-bg)',
         borderRadius: '20px',
         padding: '20px'

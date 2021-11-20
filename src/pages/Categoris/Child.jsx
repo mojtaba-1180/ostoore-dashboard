@@ -122,7 +122,18 @@ const ChildCategoris = () => {
                                 </Link>
                             </span>
                         ) :
-                            null
+                        <span className="btn_toggle">
+                        <Link to={{
+                            pathname: `/add/categories-child/${item._id}`,
+                            state: item._id
+                        }} style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}} >
+                            <span >
+                                افزودن زیرمجموعه
+                            </span>
+                            <i className='bx bx-chevron-left' style={{marginTop:'-8px'}} ></i>
+
+                        </Link>
+                    </span>
                     }
                 </td>
             </tr>

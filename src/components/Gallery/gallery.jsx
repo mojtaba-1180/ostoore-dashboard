@@ -185,7 +185,7 @@ const GalleryModal = (props) => {
                     </div>
                 </div>
                 <div className="col-8 col-md-12 col-sm-12">
-                    <div className="card" style={ Images.length === 0 ?{} :{display: 'flex', flexWrap: 'wrap'}}>
+                    <div className="card " style={ Images.length === 0 ?{} :{display: 'flex', flexWrap: 'wrap', height: '25rem', overflowY: 'scroll', overflowX: 'hidden'}}>
                         {
                             Images.length === 0 ? (
                                 <>
@@ -203,14 +203,10 @@ const GalleryModal = (props) => {
                                             return (
                                                 <>
                                                 <div className={`tabs-content ${ActiveItem === item.id ? 'active' : 'active'}`} >
-                                                    <div className="box d-flex flex-col" key={item._id}>
+                                                    <div className="box d-flex flex-col" style={{cursor: 'pointer'}} onClick={() => handleChange(item)}  key={item._id}>
                                                         <img src={item.url} alt={item.name} width="80" />
                                                         <p>{item.name}</p>
-                                                        <div className="action">
-                                                            <button className=" btn-sm bg-success " onClick={() => handleChange(item)}>
-                                                                <i className="bx bx-check bg-success"></i>
-                                                            </button>
-                                                        </div>
+                                                       
                                                     </div>    
                                                 </div>
                                             </>

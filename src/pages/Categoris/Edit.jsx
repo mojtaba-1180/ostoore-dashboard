@@ -6,6 +6,7 @@ import Fade from '@mui/material/Fade';
 import { useState, useEffect } from 'react'
 import { useHistory, useLocation, useParams } from 'react-router'
 
+import GalleryModal from '../../components/Gallery/gallery';
 import Swal from 'sweetalert2'
 //Editor Required File
 import 'froala-editor/css/froala_editor.pkgd.min.css'
@@ -17,14 +18,18 @@ const EditCategory = () => {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+    const [Image, setImage] = useState(null)
     const { id } = useParams();
     const [CategoryList, setCategoryList] = useState(null)
+
     const [FormData, setFormData] = useState({
         detail: {
             name: '',
             parentId: '',
+            images : Image ? Image._id : ''
         }
     })
+    
     const updateHandler = () => {
         // post Data in added category
         Api.put(`category/`, FormData.detail).then(() => {
@@ -53,7 +58,7 @@ const EditCategory = () => {
                 detail: {
                     name: data.target.value,
                     parentId: prev.detail.parentId,
-                    img: prev.detail.img
+                    images: prev.detail.images
                 }
             }))
         } else if (data.target.name === 'parent') {
@@ -61,32 +66,39 @@ const EditCategory = () => {
                 detail: {
                     name: prev.detail.name,
                     parentId: data.target.value,
-                    img: prev.detail.img
+                    images: prev.detail.images
                 }
             }))
-        } else if (data.target.name === 'ProductImage') {
-            // Convert file to Base 64
-            const file = data.target.files[0]
-            // imgBase64(file).then((data) => {
-            //     setFormData((prev) => ({
-            //         detail: {
-            //             name: prev.detail.name,
-            //             parent_id: prev.detail.parent_id,
-            //             img: data
-            //         }
-            //     }))
-            // })
-        }
+        } 
     }
-
+    const handlechanges = (e) => {
+        setOpen(false)
+        console.log(e)
+        setImage(e)
+        setFormData((prev) => (
+            {
+                detail: {
+                    name: prev.detail.name,
+                    parentId: prev.detail.parentId,
+                    images: e._id,
+                }
+            }
+        ))
+        
+    }
     const GetData = () => {
         Api.get('category').then((res) => {
             setCategoryList(res.result)
             res.result.filter(item => item._id === id).map(item => {
+                console.log(item)
                 setFormData({
                     detail: {
                         name: item.name,
                         parentId: item.parentId,
+                        images: item.images.map(item => {
+                            setImage(item)
+                            return item._id
+                        })
                     }
                 })
             })
@@ -142,7 +154,7 @@ const EditCategory = () => {
                             <input type="text" className="form-control" name="title" value={FormData.detail.name} onChange={changeHandler} />
                             <br />
                             <br />
-                            <label>  دسته بندی مادر </label>
+                            {/* <label>  دسته بندی مادر </label>
                             <select className="form-control" name="parent" value={FormData.detail.parent_id} onChange={changeHandler} >
                                 
                                 {
@@ -164,7 +176,7 @@ const EditCategory = () => {
                                         </>
                                     ) : CategoryList.length === 0 &&(<option value=""> خالی  </option>) 
                                 }
-                            </select>
+                            </select> */}
 
                             {/* <span className="d-flex justify-between">
                                 <label> لینک محصول  :</label>
@@ -186,11 +198,11 @@ const EditCategory = () => {
                                             <button className="button " onClick={() => { handleOpen() }}>
                                                 انتخاب عکس
                                             </button>
-                                            <button className="button bg-danger" onClick={() => { setFormData({ detail: { img: '' } }) }}>
+                                            <button className="button bg-danger" onClick={() => {  setImage(null) }}>
                                                 حذف عکس
                                             </button>
                                         </div>
-                                        <img src={FormData.detail.img} alt="" width="120" />
+                                        <img src={Image && Image.url} alt="" width="120" />
                                     </div>
                                 </div>
                             </div>
@@ -202,9 +214,10 @@ const EditCategory = () => {
             <Modal
                 open={open}
                 onClose={handleClose}
+
             >
-                <div  style={style}>
-                    <Gallery />
+                <div style={style}>
+                    <GalleryModal data={handlechanges} />
                 </div>
             </Modal>
         </div>
