@@ -205,8 +205,7 @@ const GalleryModal = (props) => {
                                                 <div className={`tabs-content ${ActiveItem === item.id ? 'active' : 'active'}`} >
                                                     <div className="box d-flex flex-col" style={{cursor: 'pointer'}} onClick={() => handleChange(item)}  key={item._id}>
                                                         <img src={item.url} alt={item.name} width="80" />
-                                                        <p>{item.name}</p>
-                                                       
+                                                        {/* <p>{item.name}</p> */}
                                                     </div>    
                                                 </div>
                                             </>

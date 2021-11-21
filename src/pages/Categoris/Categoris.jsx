@@ -3,7 +3,6 @@ import { useHistory } from 'react-router'
 import Table from '../../components/table/Table'
 import { Link } from 'react-router-dom'
 import Swal from 'sweetalert2'
-import axios from 'axios'
 import Api from '../../util/AxiosConfig'
 import BeatLoader from "react-spinners/BeatLoader";
 

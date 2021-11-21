@@ -4,7 +4,7 @@ import Modal from '@mui/material/Modal';
 
 
 import { useState, useEffect } from 'react'
-import { useHistory } from 'react-router'
+import { useHistory, useLocation } from 'react-router'
 
 import Swal from 'sweetalert2'
 //Editor Required File
@@ -18,12 +18,16 @@ const AddCategory = () => {
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const [Image, setImage] = useState(null)
-    const [CategoryList, setCategoryList] = useState(null)
+    const [CategoryList, setCategoryList] = useState(null);
+    const location = useLocation()
+    console.log(location)
+
+
     const [FormData, setFormData] = useState({
         detail: {
             name: '',
-            parentId: '',
-            images: Image ? Image._id : ''
+            parentId: location.state ? location.state.id : null ,
+               images: Image ? Image._id : ''
         }
     })
     const updateHandler = () => {
@@ -183,9 +187,7 @@ const AddCategory = () => {
                                                 حذف عکس
                                             </button>
                                         </div>
-                                        {
-                                            console.log(FormData)
-                                        }
+                                        
                                         {Image && Image.name}
                                         <img src={Image ? Image.url : ''} alt="" width="120" />
                                     </div>

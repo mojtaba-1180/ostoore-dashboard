@@ -43,7 +43,7 @@ const ChildCategoris = () => {
     }
 
     const HandleAddNew = () => {
-        history.push('/add/categories/');
+        history.push(`/add/categories/`, { id });
     }
     const HandleTrash = id => {
         Swal.fire({
