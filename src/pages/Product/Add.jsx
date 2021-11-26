@@ -2,11 +2,11 @@ import { useState, useLayoutEffect, useRef } from 'react'
 import Swal from 'sweetalert2'
 import Api from '../../util/AxiosConfig'
 //Editor Required File
-import JoditEditor from "jodit-react";
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+
+// Router 
 import { useHistory } from 'react-router'
-import { ImgBase64 } from '../../util/imgBase64'
-
-
 // loaders import 
 import BeatLoader from "react-spinners/BeatLoader";
 
@@ -25,31 +25,15 @@ import { Modal } from '@mui/material'
 import GalleryModal from '../../components/Gallery/gallery'
 // tabs components
 import PropTypes from 'prop-types';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import './Product.css'
 
-// list Tree category 
-// import TreeView from '@mui/lab/TreeView';
-// import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-// import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-// import TreeItem from '@mui/lab/TreeItem';
-
-
-
 const AddProduct = () => {
-    // Editor State
-    const editor = useRef(null)
-    const editordescription = useRef(null)
-    const [Abstract, setAbstract] = useState('')
-    const [Description, setDescription] = useState('')
-
-    const config = {
-        readonly: false // all options from https://xdsoft.net/jodit/doc/
-    }
+    // Editor Config
+    // filed State
+    const [Loading, setLoading] = useState(false)
 
     // Base State
     const history = useHistory();
@@ -57,20 +41,25 @@ const AddProduct = () => {
         name: '',
         abstract: '',
         description: '',
-        basePrice: '',
+        basePrice: 0,
         hashtags: '',
         images: '',
         brand: '',
-        stock: true,
-        isDisable: false,
+        size: '',
+        stock: 1,
+        isDisable: true,
         categoryId: '',
     })
     const [Category, setCategory] = useState(null)
     const [Brands, setBrands] = useState(null)
     const [SearchCategory, setSearchCategory] = useState(Category)
     const [SearchBrands, setSearchBrands] = useState(Brands)
+    const [Size, setSize] = useState(null)
+    const [SearchSize, setSearchSize] = useState(Size)
     const [Tags, setTags] = useState([])
-    const [checked, setChecked] = useState([]);
+    const [checkedCategory, setCheckedCategory] = useState([]);
+    const [checkedBrands, setCheckedBrands] = useState([]);
+    const [checkedSize, setCheckedSize] = useState([]);
     const [Image, setImage] = useState(null)
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
@@ -108,53 +97,139 @@ const AddProduct = () => {
             }).catch((err) => {
                 console.log(err.response)
             })
+            API.get('size').then((res) => {
+                setSize(res.result)
+                setSearchSize(res.result)
+            }).catch((err) => {
+                console.log(err.response)
+            })
         } else {
-            console.log('close')
+            // console.log('close')
         }
         return () => {
             isCancelled = true
         }
     }, [])
     const updateHandler = () => {
+        setLoading(true)
         if (Detail.name === '') {
             Swal.fire({
                 icon: 'error',
-                title: '  لطفا نام محصول را وارد کنید!!!  '
+                title: '  لطفا نام محصول را وارد کنید!!!  ',
+                confirmButtonText: ' تایید '
+
             })
+            setLoading(false)
+        } else if (Detail.images === '') {
+            Swal.fire({
+                icon: 'error',
+                title: '  لطفا عکس محصول را انتخاب کنید !!!  ',
+                confirmButtonText: ' تایید '
+
+            })
+            setLoading(false)
         } else {
             console.log('chnages')
             Api.post('/product', Detail).then(() => {
                 Swal.fire({
                     icon: 'success',
                     title: ' محصول شما اضافه شد  ',
+                    confirmButtonText: ' تایید '
+
                 })
+                setLoading(false)
                 history.push('/products')
             })
                 .catch((err) => {
+                    setLoading(false)
                     Swal.fire({
                         icon: 'error',
                         title: 'مشکلی پیش آمده است',
-                        text: 'لطفا برسی کنید با سازنده سایت تماس برقرار کنید'
+                        text: 'لطفا برسی کنید با سازنده سایت تماس برقرار کنید',
+                        confirmButtonText: ' تایید '
+
                     })
                     console.log(err)
                 })
 
         }
     }
-   
-    const handleToggle = (value) => () => {
-        console.log(value)
 
-        const currentIndex = checked.indexOf(value);
-        const newChecked = [...checked];
+    //  Editor Handler change 
+
+
+    const handleToggleCategory = (value) => () => {
+
+        const currentIndex = checkedCategory.indexOf(value);
+        const newCheckedCategory = [...checkedCategory];
+        console.log(newCheckedCategory)
+        if (currentIndex === -1) {
+            newCheckedCategory.push(value);
+        } else {
+            newCheckedCategory.splice(currentIndex, 1);
+        }
+        setCheckedCategory(newCheckedCategory);
+        setDetail(prev => ({
+            name: prev.name,
+            abstract: prev.abstract,
+            description: prev.description,
+            basePrice: prev.basePrice,
+            hashtags: prev.hashtags,
+            images: prev.images,
+            brand: prev.brand,
+            stock: prev.stock,
+            isDisable: prev.isDisable,
+            categoryId: newCheckedCategory.length >= 1 ? newCheckedCategory : null,
+        }))
+    };
+    const handleToggleBrands = (value) => () => {
+
+        const currentIndex = checkedBrands.indexOf(value);
+        const newChecked = [...checkedBrands];
 
         if (currentIndex === -1) {
             newChecked.push(value);
         } else {
             newChecked.splice(currentIndex, 1);
         }
+        setCheckedBrands(newChecked);
+        setDetail(prev => ({
+            name: prev.name,
+            abstract: prev.abstract,
+            description: prev.description,
+            basePrice: prev.basePrice,
+            hashtags: prev.hashtags,
+            images: prev.images,
+            brand: newChecked.length >= 1 ? newChecked : null,
+            stock: prev.stock,
+            isDisable: prev.isDisable,
+            categoryId: prev.categoryId
+        }))
+    };
+    const handleToggleSize = (value) => () => {
 
-        setChecked(newChecked);
+        const currentIndex = checkedSize.indexOf(value);
+        const newChecked = [...checkedSize];
+
+        if (currentIndex === -1) {
+            newChecked.push(value);
+        } else {
+            newChecked.splice(currentIndex, 1);
+        }
+        setCheckedSize(newChecked);
+        setDetail(prev => ({
+            name: prev.name,
+            abstract: prev.abstract,
+            description: prev.description,
+            basePrice: prev.basePrice,
+            hashtags: prev.hashtags,
+            images: prev.images,
+            brand: prev.brand,
+            size: newChecked.length >= 1 ? newChecked : null,
+            stock: prev.stock,
+            isDisable: prev.isDisable,
+            categoryId: prev.categoryId
+        }))
     };
 
     // category search
@@ -172,14 +247,13 @@ const AddProduct = () => {
         }
         )
         setSearchBrands(data)
-
     }
     const handleImage = (e) => {
         setOpen(false)
         setImage(e)
-        setDetail((prev) => ({
+        setDetail(prev => ({
             name: prev.name,
-            abstract: prev.abstract ,
+            abstract: prev.abstract,
             description: prev.description,
             basePrice: prev.basePrice,
             hashtags: prev.hashtags,
@@ -187,8 +261,90 @@ const AddProduct = () => {
             brand: prev.brand,
             stock: prev.stock,
             isDisable: prev.isDisable,
-            categoryId: prev.categoryId,
+            categoryId: prev.categoryId
         }))
+
+    }
+    const handleChangeDetailProduct = (e, id) => {
+        if (e.target.id === 'name') {
+            setDetail(prev => ({
+                name: e.target.value,
+                abstract: prev.abstract,
+                description: prev.description,
+                basePrice: prev.basePrice,
+                hashtags: prev.hashtags,
+                images: prev.images,
+                brand: prev.brand,
+                stock: prev.stock,
+                isDisable: prev.isDisable,
+                categoryId: prev.categoryId
+            }))
+        } else if (e.target.id === 'stock') {
+            setDetail(prev => ({
+                name: prev.name,
+                abstract: prev.abstract,
+                description: prev.description,
+                basePrice: prev.basePrice,
+                hashtags: prev.hashtags,
+                images: prev.images,
+                brand: prev.brand,
+                stock: e.target.value,
+                isDisable: prev.isDisable,
+                categoryId: prev.categoryId
+            }))
+        } else if (e.target.id === 'isDisable') {
+            setDetail(prev => ({
+                name: prev.name,
+                abstract: prev.abstract,
+                description: prev.description,
+                basePrice: prev.basePrice,
+                hashtags: prev.hashtags,
+                images: prev.images,
+                brand: prev.brand,
+                stock: prev.stock,
+                isDisable: e.target.checked,
+                categoryId: prev.categoryId
+            }))
+        } else if (e.target.id === 'brand') {
+            setDetail(prev => ({
+                name: prev.name,
+                abstract: prev.abstract,
+                description: prev.description,
+                basePrice: prev.basePrice,
+                hashtags: prev.hashtags,
+                images: prev.images,
+                brand: e.target.checked,
+                stock: e.target.value,
+                isDisable: prev.isDisable,
+                categoryId: prev.categoryId
+            }))
+        } else if (e.target.id === 'baseprice') {
+            setDetail(prev => ({
+                name: prev.name,
+                abstract: prev.abstract,
+                description: prev.description,
+                basePrice: parseInt(e.target.value),
+                hashtags: prev.hashtags,
+                images: prev.images,
+                brand: prev.brand,
+                stock: prev.stock,
+                isDisable: prev.isDisable,
+                categoryId: prev.categoryId
+            }))
+        } else if (e.target.id === 'categoryId') {
+            setDetail(prev => ({
+                name: prev.name,
+                abstract: prev.abstract,
+                description: prev.description,
+                basePrice: prev.basePrice,
+                hashtags: prev.hashtags,
+                images: prev.images,
+                brand: prev.brand,
+                stock: prev.stock,
+                isDisable: prev.isDisable,
+                categoryId: e.target.checked
+            }))
+        }
 
     }
     const style = {
@@ -238,18 +394,30 @@ const AddProduct = () => {
     }
 
     return (
+
+
         <div>
-            {
-                console.log(checked)
-            }
+
             <h2 className="page-header top-sticky">
                 <div className="d-flex justify-between align-center">
                     <span className="animate">
                         افزودن محصول
                     </span>
                     <span>
-                        <button className="button bg-sucess" onClick={() => updateHandler()} >
-                            ذخیره
+                        <button className={Loading ? " button bg-sucess disable" : "button bg-sucess"} onClick={() => { updateHandler() }} >
+                            {
+                               Loading ? (
+                                <>
+                                <span>  درحال بارگذاری  </span>
+                                <i class='bx bx-loader bx-spin'></i>
+                                </>
+                               ) :(
+                                    <span>
+                                        ذخیره
+                                    </span>
+                               )
+                            }
+                            
                         </button>
                         <button className="button" onClick={() => history.go(-1)} >
                             بازگشت
@@ -262,27 +430,13 @@ const AddProduct = () => {
                     <div className="card animate-top">
                         <div className="card-title">
                             <label> نام محصول </label>
-                            <input type="text" className="form-control" name="title" value={Detail.name}
-                            
-                            onChange={(e) => setDetail((prev) => ({
-                                name: e.target.value,
-                                abstract: prev.abstract,
-                                description: prev.description,
-                                basePrice: prev.basePrice,
-                                hashtags: prev.hashtags,
-                                images: prev.images,
-                                brand: prev.brand,
-                                stock: prev.stock,
-                                isDisable: prev.isDisable,
-                                categoryId: prev.categoryId,
-                            }))} />
+                            <input type="text" className="form-control" id="name" name="title" onBlur={handleChangeDetailProduct} />
                             <br />
                             <br />
                             <span className="d-flex justify-between">
                                 {/* <label> لینک محصول  :</label> */}
                                 {/* <a href={window.location.origin + '/' + state.detail.slug}>
-                                        {window.location.origin + '/'} <span>{state.detail.slug}</span>
-                                    </a> */}
+                                {window.location.origin + '/'} <span>{state.detail.slug}</span> </a> */}
                             </span>
                         </div>
                         <div className="card-body">
@@ -291,15 +445,17 @@ const AddProduct = () => {
                                 <br />
                             </span>
 
-                            <JoditEditor
-                                ref={editor}
-                                value={Abstract}
-                                config={config}
-                                tabIndex={1} // tabIndex of textarea
-                                onBlur={abstract => {
-                                    setDetail((prev) => ({
+                            <CKEditor
+                                
+                                editor={ ClassicEditor }
+                                data=""
+                               
+                                onBlur={ ( event, editor ) => {
+                                   const data = editor.getData();
+                                    console.log( data );
+                                    setDetail(prev => ({
                                         name: prev.name,
-                                        abstract: abstract ,
+                                        abstract: data,
                                         description: prev.description,
                                         basePrice: prev.basePrice,
                                         hashtags: prev.hashtags,
@@ -307,11 +463,10 @@ const AddProduct = () => {
                                         brand: prev.brand,
                                         stock: prev.stock,
                                         isDisable: prev.isDisable,
-                                        categoryId: prev.categoryId,
+                                        categoryId: prev.categoryId
                                     }))
-                                    setAbstract(abstract)
-                                 }} // preferred to use only this option to update the content for performance reasons
-                                // onChange={() => {  }}
+                                } }
+                               
                             />
                             <br />
                             <span>
@@ -319,15 +474,21 @@ const AddProduct = () => {
                                 <br />
                             </span>
                             <br />
-                            <JoditEditor
-                                ref={editordescription}
-                                value={Description}
-                                config={config}
-                                tabIndex={1} // tabIndex of textarea
-                                onBlur={description => {
-                                    setDetail((prev) => ({
+                            <CKEditor
+                                
+                                editor={ ClassicEditor }
+                                data=""
+                                onReady={ editor => {
+                                    // You can store the "editor" and use when it is needed.
+                                    console.log( 'Editor is ready to use!', editor );
+                                } }
+                                
+                                onBlur={ ( event, editor ) => {
+                                    const description = editor.getData();
+                                    console.log( description );
+                                    setDetail(prev => ({
                                         name: prev.name,
-                                        abstract: prev.abstract ,
+                                        abstract: prev.abstract,
                                         description: description,
                                         basePrice: prev.basePrice,
                                         hashtags: prev.hashtags,
@@ -335,11 +496,12 @@ const AddProduct = () => {
                                         brand: prev.brand,
                                         stock: prev.stock,
                                         isDisable: prev.isDisable,
-                                        categoryId: prev.categoryId,
+                                        categoryId: prev.categoryId
                                     }))
-                                    setDescription(description)
-                                 }}
-                                // onChange={newContent => { }}
+                                } }
+                                // onFocus={ ( event, editor ) => {
+                                //     console.log( 'Focus.', editor );
+                                // } }
                             />
                             <div className="d-flex justify-between w-100">
                                 <div className="w-50" >
@@ -367,28 +529,6 @@ const AddProduct = () => {
                                     </div>
 
                                 </div>
-
-                                {/* <div className="w-50" >
-                                    <span>
-                                        <br />
-                                        <label > گالری محصول </label>
-                                        <br />
-                                    </span>
-                                    <div className="upload_image">
-                                        <div className="w-50">
-                                            <button className="button " onClick={() => { document.getElementById('images').click() }}>
-                                                انتخاب عکس
-                                            </button>
-                                            <button className="button bg-danger" onClick={() => { setDetail({ img: '' }) }}>
-                                                حذف عکس
-                                            </button>
-                                        </div>
-                                        <div className="w-50 d-flex justify-center align-center">
-                                            <input type="file" className="d-none" id="images" name="ProductImage" onChange={(e) => changeHandler(e)} />
-                                            <img src={Detail.img} alt="" width="100%" />
-                                        </div>
-                                    </div>
-                                </div> */}
                             </div>
 
                         </div>
@@ -405,17 +545,17 @@ const AddProduct = () => {
                                 id="combo-tags"
                                 options={Tags}
                                 onChange={(event, value) => {
-                                    setDetail((prev) => ({
+                                    setDetail(prev => ({
                                         name: prev.name,
-                                        abstract: prev.abstract ,
+                                        abstract: prev.abstract,
                                         description: prev.description,
                                         basePrice: prev.basePrice,
-                                        hashtags: value,
+                                        hashtags: value.map(item => item.id),
                                         images: prev.images,
                                         brand: prev.brand,
                                         stock: prev.stock,
                                         isDisable: prev.isDisable,
-                                        categoryId: prev.categoryId,
+                                        categoryId: prev.categoryId
                                     }))
                                 }}
                                 sx={{ width: '100%', backgroundColor: 'var(--second-bg)', color: 'var(--txt-color)', marginTop: '10px' }}
@@ -424,7 +564,7 @@ const AddProduct = () => {
 
                         </div>
                         <div className=" card" style={{ width: '49%' }} >
-                            <label > دسته بندی ها   </label>
+                            <label > دسته بندی  </label>
                             <input type="text" placeholder="جستجو..." className="form-control" onChange={(e) => handleSearchCategory(e)} />
                             <List dense sx={{ width: '100%', bgcolor: 'var(--second-bg)', marginTop: '10px', borderRadius: '10px', overflow: 'auto', maxHeight: '200px', }}>
 
@@ -447,7 +587,7 @@ const AddProduct = () => {
                                         (
                                             <>
                                                 {SearchCategory.map((item) => {
-
+                                                        console.log(checkedCategory.indexOf(item._id))
                                                     return (
                                                         <ListItem
                                                             key={item._id}
@@ -455,8 +595,8 @@ const AddProduct = () => {
                                                                 <Checkbox
                                                                     style={{ color: 'var(--main-color)' }}
                                                                     edge="end"
-                                                                    onChange={handleToggle(item._id)}
-                                                                    checked={checked.indexOf(item._id) !== -1}
+                                                                    onChange={handleToggleCategory(item._id)}
+                                                                    checked={checkedCategory.indexOf(item._id) !== -1}
                                                                     inputProps={{ 'aria-labelledby': item._id }}
                                                                 />
                                                             }
@@ -471,59 +611,16 @@ const AddProduct = () => {
                                             </>
                                         )}
                             </List>
-
-                            {/* <TreeView
-                                aria-label="file system navigator"
-                                defaultCollapseIcon={<i className="bx bx-arrow-to-bottom" ></i>}
-                                defaultExpandIcon={<i className="bx bx-arrow-to-left" ></i>}
-                                sx={{ height: 240, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
-                            >
-                                <TreeItem nodeId="1" label="Applications">
-                                    <TreeItem nodeId="2" label="Calendar" />
-                                </TreeItem>
-                                <TreeItem nodeId="5" label="Documents">
-                                    <TreeItem nodeId="10" label="OSS" />
-                                    <TreeItem nodeId="6" label="MUI">
-                                        <TreeItem nodeId="8" label="index.js" />
-                                    </TreeItem>
-                                </TreeItem>
-                            </TreeView> */}
                         </div>
                         <div className="card w-50 col-6 col-md-12"  >
-                            <Box
-                                sx={{ flexGrow: 1, bgcolor: 'var(--main-bg)', color: 'var(--text-color)', display: 'flex', height: 224 }}
-                            >
-                                <Tabs
-                                    orientation="vertical"
-                                    variant="scrollable"
-                                    value={value}
-                                    // indicatorColor="primary"
-                                    onChange={handleChangeTab}
-                                    aria-label="Vertical tabs example"
-                                    sx={{ borderRight: 1, borderColor: 'var(--second-bg)', color: 'var(--text-color)' }}
-                                >
-                                    <Tab label=" اطلاعات محصول" sx={{ color: 'var(--text-color)', fontFamily: 'IRANSans' }} selectionFollowsFocus  {...a11yProps(0)} />
-                                    <Tab label=" موجودی محصول" sx={{ color: 'var(--text-color)', fontFamily: 'IRANSans' }} {...a11yProps(1)} />
-                                </Tabs>
-                                <TabPanel value={value} index={0}>
-                                    <label >قیمت  (تومان)   </label>
-                                    <input type="number" placeholder="قیمت" style={{ marginBottom: '10px' }} className="form-control w-100" />
-                                    <label   > قیمت ویژه (تومان)  </label>
-                                    <input type="number" placeholder="قیمت فروش ویژه" className="form-control w-100" />
-                                </TabPanel>
-                                <TabPanel value={value} index={1}>
-                                    <label > تعداد موجودی  </label>
-                                    <input type="number" placeholder=" تعداد" style={{ marginBottom: '10px' }} className="form-control w-100" />
-                                    <div>
-                                    <label  >  موجودی  </label>
-                                    <FormControlLabel style={{width: '50%'}}  control={<Checkbox defaultChecked />} label=" موجود" />
-                                    </div>
-                                    <div>
-                                   <label >  غیر فعال/فعال  </label>
-                                    <FormControlLabel style={{width: '50%'}}  control={<Checkbox  />} label=" غیر فعال" />
-                                    </div>
-                                </TabPanel>
-                            </Box>
+                            <label >قیمت  (تومان)   </label>
+                            <input type="number" placeholder="قیمت" style={{ marginBottom: '10px' }} id="baseprice" value={Detail.basePrice} onChange={handleChangeDetailProduct} className="form-control w-100" />
+                            <label > تعداد موجودی  </label>
+                            <input type="number" placeholder="تعداد" id="stock" value={Detail.stock} style={{ marginBottom: '10px' }} onChange={(e) => handleChangeDetailProduct(e)} className="form-control w-100" />
+                            <div>
+                                <label >  غیر فعال/فعال  </label>
+                                <FormControlLabel style={{ width: '50%' }} control={<Checkbox id="isDisable" value={Detail.isDisable} onChange={handleChangeDetailProduct} />} label=" غیر فعال" />
+                            </div>
 
                         </div>
                         <div className=" card" style={{ width: '49%' }} >
@@ -558,8 +655,57 @@ const AddProduct = () => {
                                                                 <Checkbox
                                                                     style={{ color: 'var(--main-color)' }}
                                                                     edge="end"
-                                                                    onChange={handleToggle(item._id)}
-                                                                    checked={checked.indexOf(item._id) !== -1}
+                                                                    onChange={handleToggleBrands(item._id)}
+                                                                    checked={checkedBrands.indexOf(item._id) !== -1}
+                                                                    inputProps={{ 'aria-labelledby': item._id }}
+                                                                />
+                                                            }
+                                                            disablePadding
+                                                        >
+                                                            <ListItemButton>
+                                                                <ListItemText id={item._id} primary={item.name} />
+                                                            </ListItemButton>
+                                                        </ListItem>
+                                                    );
+                                                })}
+                                            </>
+                                        )}
+                            </List>
+                        </div>
+                        <div className=" card" style={{ width: '49%' }} >
+                            <label > سایز  </label>
+                            <input type="text" placeholder="جستجو..." className="form-control" onChange={(e) => handleSearchBrands(e)} />
+                            <List dense sx={{ width: '100%', bgcolor: 'var(--second-bg)', marginTop: '10px', borderRadius: '10px', overflow: 'auto', maxHeight: '200px', }}>
+
+
+                                {
+                                    Size === null ? (
+                                        <>
+                                            <div className="d-flex justify-center align-center flex-col " >
+                                                <BeatLoader color={'#a1a1a1'} size={10} />
+                                                در حال بارگذاری
+                                            </div>
+                                        </>
+                                    ) : Size.length === 0 ? (
+                                        <>
+                                            <div className="d-flex justify-center align-center flex-col " >
+                                                سایزی موجود نیست
+                                            </div>
+                                        </>
+                                    ) :
+                                        (
+                                            <>
+                                                {Size.map((item) => {
+
+                                                    return (
+                                                        <ListItem
+                                                            key={item._id}
+                                                            secondaryAction={
+                                                                <Checkbox
+                                                                    style={{ color: 'var(--main-color)' }}
+                                                                    edge="end"
+                                                                    onChange={handleToggleSize(item._id)}
+                                                                    checked={checkedSize.indexOf(item._id) !== -1}
                                                                     inputProps={{ 'aria-labelledby': item._id }}
                                                                 />
                                                             }

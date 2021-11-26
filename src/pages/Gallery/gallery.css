@@ -5,7 +5,7 @@
 .tabs-content.active {
     display: flex;
     justify-content: start;
-    align-items: flex-start;
+    align-items: center;
     flex-wrap: wrap;
     animation: show-top .5s;
 }
@@ -13,8 +13,8 @@
 .box {
     padding: 4px;
     box-shadow: var(--box-shadow);
-    width: 6rem;
-    height: 7rem;
+    width: 13rem;
+    height: 13rem;
     margin: 2px 4px;
     display: flex;
     justify-content: center;
@@ -37,7 +37,7 @@
 
 .box:hover .action {
     opacity: 1;
-    visibility: visible;
+    visibility: hidden;
 }
 
 .box .action .btn-sm {
@@ -52,6 +52,10 @@
 .box .action .btn-sm.open-btn {
     background-color: var(--main-color-blue);
     color: #000;
+}
+.box img{
+    width: 100%;
+    height: 70%;
 }
 .file_box{
     border: 1px dashed;

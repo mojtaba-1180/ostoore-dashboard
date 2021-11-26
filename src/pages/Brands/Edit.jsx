@@ -50,7 +50,7 @@ export const EditBrands = () => {
                         ویرابش برند
                     </span>
                     <span>
-                        <button className="button bg-sucess" onClick={() => updateHandler()} >
+                        <button className={Loading ? " button bg-sucess disable" : "button bg-sucess"} onClick={() => updateHandler()} >
                             {
                                 Loading ? (
                                     <i className='bx bx-loader-alt bx-spin' ></i>

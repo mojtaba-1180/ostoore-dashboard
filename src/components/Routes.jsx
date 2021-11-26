@@ -34,6 +34,7 @@ import EditSize from '../pages/Size/Edit'
 import { useHistory } from "react-router"
 import Cookies from "universal-cookie/es6"
 import Logout from '../pages/Auth/logout'
+import ChildCategorisTwo from '../pages/Categoris/ChildTwo'
 const Routes = () => {
   
     return (
@@ -65,7 +66,7 @@ const Routes = () => {
             </Route>
             <Route path='/categories/:parnt/:id' >
                 <PrivateRoute>
-                    <ChildCategoris />
+                    <ChildCategorisTwo />
                 </PrivateRoute>
             </Route>
             <Route path='/edit/categories/:id' exact >

@@ -141,7 +141,7 @@ const GalleryModal = (props) => {
                 </div>
             </h2>
             <div className="row animate-top">
-                <div className="col-4 col-md-12 col-sm-12">
+                {/* <div className="col-4 col-md-12 col-sm-12">
                     <div className="card">
                         <div className="d-flex justify-between align-center">
                             <span className="animate">
@@ -153,7 +153,7 @@ const GalleryModal = (props) => {
                                 </button>
                             </span>
                         </div>
-                        {/* {
+                         {
                             Folder.length === 0 ? (
                                 <>
                                     <div className="d-flex justify-center align-center flex-col " >
@@ -181,10 +181,10 @@ const GalleryModal = (props) => {
                                 </>
                             )
 
-                        } */}
+                        } 
                     </div>
-                </div>
-                <div className="col-8 col-md-12 col-sm-12">
+                </div> */}
+                <div className="col-12 col-md-12 col-sm-12">
                     <div className="card " style={ Images.length === 0 ?{} :{display: 'flex', flexWrap: 'wrap', height: '25rem', overflowY: 'scroll', overflowX: 'hidden'}}>
                         {
                             Images.length === 0 ? (

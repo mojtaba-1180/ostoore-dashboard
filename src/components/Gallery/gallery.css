@@ -26,7 +26,7 @@
 }
 .box:hover {
   transform: scale(1.04);
-  box-shadow: 0 0 10px -4px #000a;
+  /* box-shadow: 0 0 10px -4px #000a; */
 }
 .box .action {
   position: absolute;
@@ -44,7 +44,7 @@
 
 .box:hover .action {
   opacity: 1;
-  visibility: visible;
+  visibility: hidden;
 }
 
 .box .action .btn-sm {

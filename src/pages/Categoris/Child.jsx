@@ -1,4 +1,4 @@
-import { useState, useLayoutEffect } from "react";
+import { useState, useLayoutEffect, useEffect } from "react";
 import { useHistory, useParams } from "react-router";
 import Table from "../../components/table/Table";
 import { Link } from "react-router-dom";
@@ -16,29 +16,19 @@ const ChildCategoris = () => {
   const getData = () => {
     Api.get(`category`)
       .then((res) => {
-        const response = res.result
-          .filter((item) => item._id == id)
-          .map((item) => {
-            return item;
-          });
-        setParent(response);
-        response.map((item) => {
-          setCategoris(item.ancestors);
-        });
-        //   setCategoris(response.ancestors)
+          setCategoris(res.result.filter(item => item.parentId).filter(item => item.parentId._id === id ));
+          console.log(res.result.filter(item => item.parentId).filter(item => item.parentId._id === id ))
       })
       .catch((err) => {
         console.log(err);
       });
   };
-
   const HandleEdit = (item) => {
     history.push({
       pathname: `/edit/categories/${item._id}`,
       state: { detail: item },
     });
   };
-
   const HandleAddNew = () => {
     history.push(`/add/categories/`, { id });
   };
@@ -86,7 +76,6 @@ const ChildCategoris = () => {
   useLayoutEffect(() => {
     getData();
   }, []);
-  // Table Data Configs
 
   const customerTableHead = ["ردیف", "عکس", "نام", " اکشن ", "زیر مجموعه"];
 
@@ -94,74 +83,86 @@ const ChildCategoris = () => {
 
   const renderBody = (item, index) => (
     <>
-      <tr key={index}>
-        <td>{index + 1}</td>
-        <td>
-          <img
-            src={item.images && item.images.length >= 1 && item.images[0].url}
-            alt="عکس"
-            className="img-table"
-          />
-        </td>
-        <td>{item.name}</td>
-        <td>
-          <button
-            className="panel_item_button"
-            onClick={() => HandleEdit(item)}
-          >
-            <i className="bx bx-edit panel_item_button_edit"></i>
-          </button>
-          <button
-            className="panel_item_button"
-            onClick={() => HandleTrash(item._id)}
-          >
-            <i className="bx bx-trash panel_item_button_trash"></i>
-          </button>
-        </td>
-        <td>
-          {item.ancestors ? (
-            <span className="btn_toggle">
-              <Link
-                to={{
-                  pathname: `/categories/${item._id}`,
-                  state: item._id,
-                }}
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
+      {
+        item.parentId && item.parentId._id === id && (
+              <tr key={index}>
+            <td>{index + 1}</td>
+            <td>
+              
+              <img
+                src={item.images.length >= 1 && item.images[0].url}
+                alt="عکس"
+                className="img-table"
+              />
+            </td>
+            <td>{item.name}</td>
+            <td>
+              <button
+                className="panel_item_button"
+                onClick={() => HandleEdit(item)}
               >
-                <span>زیر مجموعه</span>
-                <i
-                  className="bx bx-chevron-left"
-                  style={{ marginTop: "-8px" }}
-                ></i>
-              </Link>
-            </span>
-          ) : (
-            <span className="btn_toggle">
-              <Link
-                to={{
-                  pathname: `/add/categories-child/${item._id}`,
-                  state: item._id,
-                }}
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <span>افزودن زیرمجموعه</span>
-                <i
-                  className="bx bx-chevron-left"
-                  style={{ marginTop: "-8px" }}
-                ></i>
-              </Link>
-            </span>
-          )}
-        </td>
-      </tr>
+                <i className="bx bx-edit panel_item_button_edit"></i>
+              </button>
+            
+              {item.childId? (
+                ""
+              ) : (
+                <button
+                  className="panel_item_button"
+                  onClick={() => HandleTrash(item._id)}
+                >
+                  <i className="bx bx-trash panel_item_button_trash"></i>
+                </button>
+              )}
+            </td>
+            <td>
+              {item.childId? (
+                <>
+                <span className="btn_toggle">
+                  <Link
+                    to={{
+                      pathname: `/categories/${id}/${item._id}`,
+                      state: item._id,
+                    }}
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <span>زیر مجموعه</span>
+                    <i
+                      className="bx bx-chevron-left"
+                      style={{ marginTop: "-8px" }}
+                    ></i>
+                  </Link>
+                </span>
+                </>
+              ) : (
+                <span className="btn_toggle">
+                  <Link
+                    to={{
+                      pathname: `/add/categories-child/${item._id}`,
+                      state: item._id,
+                    }}
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <span>افزودن زیرمجموعه</span>
+                    <i
+                      className="bx bx-chevron-left"
+                      style={{ marginTop: "-8px" }}
+                    ></i>
+                  </Link>
+                </span>
+              )}
+            </td>
+          </tr>
+        )
+      }
     </>
   );
 
@@ -169,7 +170,7 @@ return (
     <>
       <h2 className="page-header">
         <div className="justify-between d-flex align-center">
-          <span className="animate">دسته بندی ها</span>
+          <span className="">دسته بندی ها</span>
           <span>
             <button className="button" onClick={() => HandleAddNew()}>
               افزودن جدید

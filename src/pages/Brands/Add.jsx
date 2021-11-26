@@ -15,17 +15,17 @@ const AddBrands = () => {
             name: ''
         }
     })
-
-
-
-    
+    const [Loading, setLoading] = useState(false)
 
     const updateHandler = () => {
+        setLoading(true)
         Api.post('brand', FormData.detail).then(() => {
             Swal.fire({
                 icon: 'success',
                 title: '  برند شما اضافه شد  ',
             })
+        setLoading(false)
+
             history.push('/brands')
         })
             .catch((err) => {
@@ -34,6 +34,7 @@ const AddBrands = () => {
                     title: 'مشکلی پیش آمده است',
                     text: 'لطفا برسی کنید با سازنده سایت تماس برقرار کنید'
                 })
+        setLoading(false)
                 console.log(err)
             })
     }
@@ -57,7 +58,7 @@ const AddBrands = () => {
                         افزودن برند
                     </span>
                     <span className="d-flex " >
-                        <button className="button bg-sucess ml-2" onClick={updateHandler} >
+                    <button className={Loading ? " button bg-sucess disable" : "button bg-sucess"} onClick={updateHandler} >
                             ذخیره
                         </button>
                         <button className="button" onClick={() => history.go(-1)} >

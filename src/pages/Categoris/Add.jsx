@@ -18,39 +18,66 @@ const AddCategory = () => {
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const [Image, setImage] = useState(null)
+    const [Loading, setLoading] = useState(false)
     const [CategoryList, setCategoryList] = useState(null);
     const location = useLocation()
+
     console.log(location)
 
 
     const [FormData, setFormData] = useState({
         detail: {
             name: '',
-            parentId: location.state ? location.state.id : null ,
-               images: Image ? Image._id : ''
+            parentId: location.state ? location.state.id : null,
+            images: Image ? Image._id : ''
         }
     })
     const updateHandler = () => {
         // post Data in added category
-        Api.post('category', FormData.detail).then(() => {
+        setLoading(true)
+        if (FormData.detail.name === '') {
             Swal.fire({
-                icon: 'success',
-                title: '  دسته بندی شما اضافه شد  ',
+                icon: 'warning',
+                title: '  نام دسته بندی را وارد کنید ',
+                confirmButtonText: ' تایید '
             })
-            history.push('/categories')
-        })
-            .catch((err) => {
-                // Swal.fire({
-                //     icon: 'error',
-                //     title: 'مشکلی پیش آمده است',
-                //     text: 'لطفا برسی کنید با سازنده سایت تماس برقرار کنید'
-                // })
-                if(err.response){
-                    console.log(err.response)
-                }else {
-                    console.log(err)
-                }
+            setLoading(false)
+        } else if (FormData.detail.images === '') {
+            Swal.fire({
+                icon: 'warning',
+                title: '  عکس دسته بندی را انتخاب کنید ',
+                confirmButtonText: ' تایید '
             })
+            setLoading(false)
+        } else {
+            Api.post('category', FormData.detail).then(() => {
+                Swal.fire({
+                    icon: 'success',
+                    title: '  دسته بندی شما اضافه شد  ',
+                    confirmButtonText: ' تایید '
+
+                })
+                history.push('/categories')
+                setLoading(false)
+
+            })
+                .catch((err) => {
+                    setLoading(false)
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'مشکلی پیش آمده است',
+                        text: 'لطفا برسی کنید با سازنده سایت تماس برقرار کنید',
+                        confirmButtonText: ' تایید '
+
+                    })
+                    if (err.response) {
+                        console.log(err.response)
+                    } else {
+                        // console.log(err)
+                    }
+                })
+        }
     }
     const changeHandler = (data) => {
         if (data.target.name === 'title') {
@@ -68,7 +95,8 @@ const AddCategory = () => {
                     parentId: data.target.value,
                     images: prev.detail.images
                 }
-            }))}
+            }))
+        }
     }
 
     const GetData = () => {
@@ -93,11 +121,11 @@ const AddCategory = () => {
                 }
             }
         ))
-        
+
     }
     useEffect(() => {
         let connection = false;
-        if(!connection){
+        if (!connection) {
             GetData()
         }
         return () => {
@@ -105,7 +133,7 @@ const AddCategory = () => {
         }
     }, [])
     const style = {
-        position:'absolute',
+        position: 'absolute',
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
@@ -122,7 +150,7 @@ const AddCategory = () => {
                         افزودن دسته بندی
                     </span>
                     <span className="d-flex " >
-                        <button className="button bg-sucess ml-2" onClick={updateHandler} >
+                        <button className={Loading ? " button bg-sucess disable" : "button bg-sucess"} onClick={updateHandler} >
                             ذخیره
                         </button>
                         <button className="button" onClick={() => history.go(-1)} >
@@ -139,29 +167,29 @@ const AddCategory = () => {
                             <input type="text" className="form-control" name="title" value={FormData.detail.name} onChange={changeHandler} />
                             <br />
                             <br />
-                            {/* <label>  دسته بندی مادر </label>
+                            <label>  دسته بندی مادر </label>
                             <select className="form-control" name="parent" value={FormData.detail.parent_id} onChange={changeHandler} >
-                                
+
                                 {
-                                    CategoryList === null ?(<option value=""> درحال پردازش ...  </option>) :
-                                    CategoryList ? (
-                                        <>
-                                        <option value=""> بدون مادر </option>
-                                        {
-                                            
-                                            CategoryList.map(item => {
-                                                return (
-                                                <>
-                                                <option key={item._id} value={item._id}> {item.name} </option>
-                                               </> 
-                                                )
-                                               
-                                            })
-                                        }
-                                        </>
-                                    ) : CategoryList.length === 0 &&(<option value=""> خالی  </option>) 
+                                    CategoryList === null ? (<option value=""> درحال پردازش ...  </option>) :
+                                        CategoryList ? (
+                                            <>
+                                                <option value=""> بدون مادر </option>
+                                                {
+
+                                                    CategoryList.map(item => {
+                                                        return (
+                                                            <>
+                                                                <option key={item._id} value={item._id}> {item.name} </option>
+                                                            </>
+                                                        )
+
+                                                    })
+                                                }
+                                            </>
+                                        ) : CategoryList.length === 0 && (<option value=""> خالی  </option>)
                                 }
-                            </select> */}
+                            </select>
 
                             {/* <span className="d-flex justify-between">
                                 <label> لینک محصول  :</label>
@@ -187,7 +215,7 @@ const AddCategory = () => {
                                                 حذف عکس
                                             </button>
                                         </div>
-                                        
+
                                         {Image && Image.name}
                                         <img src={Image ? Image.url : ''} alt="" width="120" />
                                     </div>
@@ -201,9 +229,9 @@ const AddCategory = () => {
             <Modal
                 open={open}
                 onClose={handleClose}
-               
+
             >
-                <div  style={style}>
+                <div style={style}>
                     <GalleryModal data={handlechanges} />
                 </div>
             </Modal>

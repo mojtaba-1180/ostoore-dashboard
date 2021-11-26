@@ -24,10 +24,9 @@ const Product = () => {
 
 
 
-    const HandleEdit = item => {
+    const HandleEdit = id => {
         history.push({
-            pathname: `/products/edit/${item.slug}`,
-            state: { detail: item }
+            pathname: `/products/edit/${id}`
         })
     }
     const handleTrash = id => {
@@ -70,15 +69,26 @@ const Product = () => {
     const renderBody = (item, index) => (
         <>
             <tr key={item.id} >
+
                 <td>{index + 1}</td>
-                <td> <img src={item.img} alt="عکس محصول" className="img-table" /> </td>
+                {
+                    item.images.map(img => {
+                        Api.get('images')
+                        return (
+                            <>
+                            <   td> <img src={img} alt="عکس محصول" className="img-table" /> </td>
+                            </>
+                        )
+                    })
+                }
+                
                 <td>{item.name}</td>
                 <td>{item.slug}</td>
                 <td>
-                    <button className="panel_item_button" onClick={() => HandleEdit(item)} >
+                    <button className="panel_item_button" onClick={() => HandleEdit(item._id)} >
                         <i className='bx bx-edit panel_item_button_edit' ></i>
                     </button>
-                    <button className="panel_item_button" onClick={() => handleTrash(item.id)} >
+                    <button className="panel_item_button" onClick={() => handleTrash(item._id)} >
                         <i className='bx bx-trash panel_item_button_trash' ></i>
                     </button>
                 </td>

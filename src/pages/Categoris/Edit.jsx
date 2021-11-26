@@ -19,6 +19,7 @@ const EditCategory = () => {
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const [Image, setImage] = useState(null)
+    const [Loading, setLoading] = useState(false)
     const { id } = useParams();
     const [CategoryList, setCategoryList] = useState(null)
 
@@ -32,25 +33,48 @@ const EditCategory = () => {
     
     const updateHandler = () => {
         // post Data in added category
-        Api.put(`category/`, FormData.detail).then(() => {
+        setLoading(true)
+        if(FormData.detail.name === '') {
+            setLoading(false)
             Swal.fire({
-                icon: 'success',
-                title: '  دسته بندی شما اضافه شد  ',
+                icon: 'warning',
+                title: '   نام دسته بندی نباید خالی باشد !!  ',
+                
             })
-            history.push('/categories')
-        })
-            .catch((err) => {
-                // Swal.fire({
-                //     icon: 'error',
-                //     title: 'مشکلی پیش آمده است',
-                //     text: 'لطفا برسی کنید با سازنده سایت تماس برقرار کنید'
-                // })
-                if(err.response){
-                    console.log(err.response)
-                }else {
-                    console.log(err)
-                }
+        } else if (FormData.detail.images === '') {
+            setLoading(false)
+
+            Swal.fire({
+                icon: 'warning',
+                title: '  لطفا عکس دسته بندی را انتخاب کنید  ',
             })
+        } else {
+            Api.put(`category/`, FormData.detail).then(() => {
+                setLoading(false)
+    
+                Swal.fire({
+                    icon: 'success',
+                    title: '  دسته بندی شما اضافه شد  ',
+                })
+                history.push('/categories')
+    
+            })
+                .catch((err) => {
+                    setLoading(false)
+    
+                    // Swal.fire({
+                    //     icon: 'error',
+                    //     title: 'مشکلی پیش آمده است',
+                    //     text: 'لطفا برسی کنید با سازنده سایت تماس برقرار کنید'
+                    // })
+                    if(err.response){
+                        console.log(err.response)
+                    }else {
+                        console.log(err)
+                    }
+                })
+        }
+       
     }
     const changeHandler = (data) => {
         if (data.target.name === 'title') {
@@ -137,7 +161,7 @@ const EditCategory = () => {
                         افزودن دسته بندی
                     </span>
                     <span className="d-flex " >
-                        <button className="button bg-sucess ml-2" onClick={updateHandler} >
+                        <button className={Loading ? " button bg-sucess disable" : "button bg-sucess"} onClick={updateHandler} >
                             ذخیره
                         </button>
                         <button className="button" onClick={() => history.go(-1)} >
@@ -154,7 +178,7 @@ const EditCategory = () => {
                             <input type="text" className="form-control" name="title" value={FormData.detail.name} onChange={changeHandler} />
                             <br />
                             <br />
-                            {/* <label>  دسته بندی مادر </label>
+                            <label>  دسته بندی مادر </label>
                             <select className="form-control" name="parent" value={FormData.detail.parent_id} onChange={changeHandler} >
                                 
                                 {
@@ -165,6 +189,7 @@ const EditCategory = () => {
                                         {
                                             
                                             CategoryList.map(item => {
+                                                console.log({item})
                                                 return (
                                                 <>
                                                 <option key={item._id} selected={item.parentId === FormData.detail.parentId ? 'selected' : ''}  value={item._id}> {item.name} </option>
@@ -176,7 +201,7 @@ const EditCategory = () => {
                                         </>
                                     ) : CategoryList.length === 0 &&(<option value=""> خالی  </option>) 
                                 }
-                            </select> */}
+                            </select>
 
                             {/* <span className="d-flex justify-between">
                                 <label> لینک محصول  :</label>
@@ -198,7 +223,16 @@ const EditCategory = () => {
                                             <button className="button " onClick={() => { handleOpen() }}>
                                                 انتخاب عکس
                                             </button>
-                                            <button className="button bg-danger" onClick={() => {  setImage(null) }}>
+                                            <button className="button bg-danger" onClick={() => {
+                                                 setImage(null)
+                                                 setFormData(prev => ({
+                                                    detail: {
+                                                        name: prev.detail.name,
+                                                        parentId: prev.detail.parentId,
+                                                        images: '',
+                                                    }
+                                                 }))
+                                                  }}>
                                                 حذف عکس
                                             </button>
                                         </div>

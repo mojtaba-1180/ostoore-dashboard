@@ -467,3 +467,12 @@ input:focus {
 .MuiAutocomplete-tag {
   padding-left: 8px !important;
 }
+
+
+
+/* ck editor Style */
+
+.ck {
+  direction: rtl !important;
+
+}

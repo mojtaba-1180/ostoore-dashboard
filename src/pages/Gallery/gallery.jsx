@@ -139,13 +139,13 @@ const Gallery = () => {
                     </span>
                     <span>
                         <button className="button" onClick={() => setUpload(true)}>
-                            بارگذاری در این پوشه
+                            بارگذاری عکس
                         </button>
                     </span>
                 </div>
             </h2>
             <div className="row animate-top">
-                <div className="col-4 col-md-12 col-sm-12">
+                {/* <div className="col-4 col-md-12 col-sm-12">
                     <div className="card">
                         <div className="d-flex justify-between align-center">
                             <span className="animate">
@@ -157,7 +157,7 @@ const Gallery = () => {
                                 </button>
                             </span>
                         </div>
-                        {/* {
+                       {
                             Folder.length === 0 ? (
                                 <>
                                     <div className="d-flex justify-center align-center flex-col " >
@@ -185,10 +185,10 @@ const Gallery = () => {
                                 </>
                             )
 
-                        } */}
+                        } 
                     </div>
-                </div>
-                <div className="col-8 col-md-12 col-sm-12">
+                </div> */}
+                <div className="col-12 col-md-12 col-sm-12">
                     <div className="card" style={ Images.length === 0 ?{} :{display: 'flex', flexWrap: 'wrap'}}>
                         {
                             Images.length === 0 ? (
@@ -208,7 +208,7 @@ const Gallery = () => {
                                                 <>
                                                 <div className={`tabs-content ${ActiveItem === item.id ? 'active' : 'active'}`} >
                                                     <div className="box d-flex flex-col" key={item._id}>
-                                                        <img src={item.url} alt={item.name} width="80" />
+                                                        <img src={item.url} alt={item.name} />
                                                         <p>{item.name}</p>
                                                         <div className="action">
                                                             <button className=" btn-sm trash-btn" onClick={() => this.HandleDelete(item._id)}>

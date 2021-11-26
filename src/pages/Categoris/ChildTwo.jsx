@@ -1,67 +1,40 @@
-import { useState, useLayoutEffect } from "react";
-import { useHistory } from "react-router";
+import { useState, useLayoutEffect, useEffect } from "react";
+import { useHistory, useParams } from "react-router";
 import Table from "../../components/table/Table";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
+import axios from "axios";
 import Api from "../../util/AxiosConfig";
 import BeatLoader from "react-spinners/BeatLoader";
-import axios from "axios";
 
-const Categoris = () => {
+const ChildCategorisTwo = () => {
   const history = useHistory();
-
-    const [Categoris, setCategoris] = useState(null);
-    const [Images, setImages] = useState([]);
-    const [State, setState] = useState([])    
+  const { id } = useParams();
+  const [Categoris, setCategoris] = useState(null);
+  const [Parent, setParent] = useState([]);
   // Geting Data server
-  const getData = () => { 
-    Api.get("category")
+  const getData = () => {
+    Api.get(`category`)
       .then((res) => {
-        // setCategoris(res.result);
-       
-        const Data = res.result
-        // console.log({Data})
-        setCategoris(Data.filter(item => !item.parentId))
-
-         // const data = res.result.map((item) => {
-        //   return item.ancestors.length >= 1
-        //     ? {
-        //         ...item.ancestors,
-        //         child: {
-        //           ...item,
-        //         },
-        //       }
-        //     : ({
-        //       ...item,
-        //       }
-        //     )   
-        // });
-
-        // .map(item => {
-            // return  console.log({item})
-        // })
-        // console.log(DataCheck);
-     
+          setCategoris(res.result.filter(item => item.parentId).filter(item => item.parentId._id === id ));
+          console.log(res.result.filter(item => item.parentId).filter(item => item.parentId._id === id ))
       })
       .catch((err) => {
         console.log(err);
       });
   };
-
   const HandleEdit = (item) => {
     history.push({
       pathname: `/edit/categories/${item._id}`,
       state: { detail: item },
     });
   };
-
   const HandleAddNew = () => {
-    history.push("/add/categories/");
+    history.push(`/add/categories/`, { id });
   };
   const HandleTrash = (id) => {
     Swal.fire({
       title: " ایا مطمعن هستید میخواهید حذف کنید",
-      // text: '  توجه ! با تمام زیر مجموعه های خود حذف میشود آیا مطمئن هستید ؟ ',
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -70,7 +43,7 @@ const Categoris = () => {
       cancelButtonText: "خیر",
     }).then((result) => {
       if (result.isConfirmed) {
-        // console.log(id)
+        console.log(id)
         let data = JSON.stringify({
           "categoryId": id
        });
@@ -84,7 +57,6 @@ const Categoris = () => {
         };
         axios(config)
           .then((res) => {
-            console.log(res);
             Swal.fire(
               "حذف شد !",
               "دسته بندی مورد نظر با موفقیت پاک شد ",
@@ -104,16 +76,16 @@ const Categoris = () => {
   useLayoutEffect(() => {
     getData();
   }, []);
-  // Table Data Configs
 
-  const customerTableHead = ["id", "عکس", "نام", " اکشن ", "زیر مجموعه"];
+  const customerTableHead = ["ردیف", "عکس", "نام", " اکشن ", "زیر مجموعه"];
 
   const renderHead = (item, index) => <th key={index}>{item}</th>;
 
   const renderBody = (item, index) => (
     <>
-    {!item.parentId && (
-          <tr key={index}>
+      {
+        item.parentId && item.parentId._id === id && (
+              <tr key={index}>
             <td>{index + 1}</td>
             <td>
               
@@ -132,14 +104,16 @@ const Categoris = () => {
                 <i className="bx bx-edit panel_item_button_edit"></i>
               </button>
             
-              
+              {item.childId? (
+                ""
+              ) : (
                 <button
                   className="panel_item_button"
                   onClick={() => HandleTrash(item._id)}
                 >
                   <i className="bx bx-trash panel_item_button_trash"></i>
                 </button>
-              
+              )}
             </td>
             <td>
               {item.childId? (
@@ -147,7 +121,7 @@ const Categoris = () => {
                 <span className="btn_toggle">
                   <Link
                     to={{
-                      pathname: `/categories/${item._id}`,
+                      pathname: `/categories/${id}/${item._id}`,
                       state: item._id,
                     }}
                     style={{
@@ -187,24 +161,41 @@ const Categoris = () => {
               )}
             </td>
           </tr>
-    )}
+        )
+      }
     </>
   );
 
-  return (
+return (
     <>
       <h2 className="page-header">
         <div className="justify-between d-flex align-center">
-          <span className="animate">دسته بندی ها</span>
+          <span className="">دسته بندی ها</span>
           <span>
-            <button className="button" onClick={() => HandleAddNew()}>
+            {/* <button className="button" onClick={() => HandleAddNew()}>
               افزودن جدید
-            </button>
+            </button> */}
           </span>
         </div>
       </h2>
       <div className="row">
         <div className="col-12">
+          دسته بندی مادر : 
+          {
+
+        Parent.map((item, index) =>  {
+          return (
+            <>
+            <Link key={index} to="/categories" style={{marginRight: '10px',fontSize: '20px', textDecoration: 'underline'}} >
+            {
+              item.name
+            }
+            </Link>
+            /
+            </>
+          )
+        })
+          }
           <div className="card animate-top">
             <div className="card__body">
               {Categoris === null ? (
@@ -233,4 +224,4 @@ const Categoris = () => {
   );
 };
 
-export default Categoris;
+export default ChildCategorisTwo;

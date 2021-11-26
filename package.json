@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^31.0.0",
+    "@ckeditor/ckeditor5-react": "^3.0.3",
     "@emotion/react": "^11.5.0",
     "@emotion/styled": "^11.3.0",
     "@mui/lab": "^5.0.0-alpha.55",
@@ -17,7 +18,6 @@
     "env-cmd": "^10.1.0",
     "form-data": "^4.0.0",
     "formik": "^2.2.9",
-    "jodit-react": "^1.1.12",
     "json-server": "^0.16.3",
     "ra-data-simple-rest": "^3.18.3",
     "react": "^17.0.2",
@@ -25,6 +25,7 @@
     "react-apexcharts": "^1.3.9",
     "react-content-loader": "^6.0.3",
     "react-dom": "^17.0.2",
+    "react-dropdown-tree-select": "^2.5.1",
     "react-froala-wysiwyg": "^4.0.5",
     "react-redux": "^7.2.4",
     "react-router-dom": "^5.2.0",
