@@ -167,7 +167,7 @@ const AddCategory = () => {
                             <input type="text" className="form-control" name="title" value={FormData.detail.name} onChange={changeHandler} />
                             <br />
                             <br />
-                            <label>  دسته بندی مادر </label>
+                            {/* <label>  دسته بندی مادر </label>
                             <select className="form-control" name="parent" value={FormData.detail.parent_id} onChange={changeHandler} >
 
                                 {
@@ -189,7 +189,7 @@ const AddCategory = () => {
                                             </>
                                         ) : CategoryList.length === 0 && (<option value=""> خالی  </option>)
                                 }
-                            </select>
+                            </select> */}
 
                             {/* <span className="d-flex justify-between">
                                 <label> لینک محصول  :</label>

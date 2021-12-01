@@ -52,9 +52,9 @@ const Sidebar = props => {
              <button className="sidebar_button" onClick={() => toggleMenu()}>
                 <i className='bx bx-menu'></i>
             </button>
-            <div className="sidebar__logo">
+            {/* <div className="sidebar__logo">
                 <img src="/assets/images/Logo.png" alt="company logo" />
-            </div>
+            </div> */}
             <div className="sidebar_items">
             {
                 sidebar_items.map((item, index) => (

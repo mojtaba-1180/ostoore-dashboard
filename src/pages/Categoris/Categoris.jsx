@@ -131,18 +131,28 @@ const Categoris = () => {
               >
                 <i className="bx bx-edit panel_item_button_edit"></i>
               </button>
-            
-              
+            {
+              console.log(item)
+            }
+              { 
+                
+                item.childId ? (
+                  null
+                ) : (
                 <button
                   className="panel_item_button"
                   onClick={() => HandleTrash(item._id)}
                 >
                   <i className="bx bx-trash panel_item_button_trash"></i>
                 </button>
+                )
+
+              }
+                
               
             </td>
             <td>
-              {item.childId? (
+              {item.childId ? (
                 <>
                 <span className="btn_toggle">
                   <Link

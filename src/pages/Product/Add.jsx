@@ -21,13 +21,13 @@ import ListItemText from '@mui/material/ListItemText';
 import Checkbox from '@mui/material/Checkbox';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
-import { Modal } from '@mui/material'
+import { Modal, Switch } from '@mui/material'
 import GalleryModal from '../../components/Gallery/gallery'
 // tabs components
 import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import FormControlLabel from '@mui/material/FormControlLabel';
+
 import './Product.css'
 
 const AddProduct = () => {
@@ -409,7 +409,7 @@ const AddProduct = () => {
                                Loading ? (
                                 <>
                                 <span>  درحال بارگذاری  </span>
-                                <i class='bx bx-loader bx-spin'></i>
+                                <i classList='bx bx-loader bx-spin'></i>
                                 </>
                                ) :(
                                     <span>
@@ -587,7 +587,7 @@ const AddProduct = () => {
                                         (
                                             <>
                                                 {SearchCategory.map((item) => {
-                                                        console.log(checkedCategory.indexOf(item._id))
+                                                    
                                                     return (
                                                         <ListItem
                                                             key={item._id}
@@ -619,8 +619,14 @@ const AddProduct = () => {
                             <input type="number" placeholder="تعداد" id="stock" value={Detail.stock} style={{ marginBottom: '10px' }} onChange={(e) => handleChangeDetailProduct(e)} className="form-control w-100" />
                             <div>
                                 <label >  غیر فعال/فعال  </label>
-                                <FormControlLabel style={{ width: '50%' }} control={<Checkbox id="isDisable" value={Detail.isDisable} onChange={handleChangeDetailProduct} />} label=" غیر فعال" />
-                            </div>
+                                <Switch
+                                checked={Detail.isDisable}
+                                id="isDisable"
+                                onChange={handleChangeDetailProduct}
+                                inputProps={{ 'aria-label': 'controlled' }}
+                                />
+
+                                </div>
 
                         </div>
                         <div className=" card" style={{ width: '49%' }} >

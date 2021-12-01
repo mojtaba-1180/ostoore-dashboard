@@ -11,13 +11,15 @@ const ChildCategoris = () => {
   const history = useHistory();
   const { id } = useParams();
   const [Categoris, setCategoris] = useState(null);
-  const [Parent, setParent] = useState([]);
+  const [Parent, setParent] = useState(null);
+
   // Geting Data server
   const getData = () => {
     Api.get(`category`)
       .then((res) => {
           setCategoris(res.result.filter(item => item.parentId).filter(item => item.parentId._id === id ));
-          console.log(res.result.filter(item => item.parentId).filter(item => item.parentId._id === id ))
+          setParent(res.result.filter(item => item._id === id ));
+          // console.log(res.result.filter(item => item.parentId).filter(item => item.parentId._id === id ))
       })
       .catch((err) => {
         console.log(err);
@@ -30,7 +32,7 @@ const ChildCategoris = () => {
     });
   };
   const HandleAddNew = () => {
-    history.push(`/add/categories/`, { id });
+    history.push(`/add/categories-child/${id}`);
   };
   const HandleTrash = (id) => {
     Swal.fire({
@@ -182,19 +184,22 @@ return (
         <div className="col-12">
           دسته بندی مادر : 
           {
-
-        Parent.map((item, index) =>  {
-          return (
-            <>
-            <Link key={index} to="/categories" style={{marginRight: '10px',fontSize: '20px', textDecoration: 'underline'}} >
-            {
-              item.name
-            }
-            </Link>
-            /
-            </>
-          )
-        })
+            Parent ? Parent.map((item , index) => {
+              return <>
+              /
+              <Link key={index}  to="/categories/" style={{marginRight: '10px',fontSize: '20px', textDecoration: 'underline'}}>
+          {
+            item.name
+          }   
+              </Link>
+              
+              </>
+            }) : 
+            (
+              <>
+              درحال پردازش ... 
+              </>
+            )
           }
           <div className="card animate-top">
             <div className="card__body">

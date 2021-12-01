@@ -74,7 +74,7 @@ const Topnav = () => {
                         renderItems={(item, index) => renderUserMenu(item, index)}
                     />
                 </div>
-                <div className="topnav__right-item">
+                {/* <div className="topnav__right-item">
                     <Dropdown
                         icon='bx bx-bell'
                         badge='12'
@@ -82,8 +82,8 @@ const Topnav = () => {
                         renderItems={(item, index) => renderNotificationItem(item, index)}
                         renderFooter={() => <Link to='/'>View All</Link>}
                     />
-                    {/* dropdown here */}
-                </div>
+                    
+                </div> */}
                 <div className="topnav__right-item">
                     <ThemeMenu/>
                 </div>

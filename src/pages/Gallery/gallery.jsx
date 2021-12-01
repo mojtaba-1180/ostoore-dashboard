@@ -84,7 +84,7 @@ const Gallery = () => {
                     'Content-Type': 'multipart/form-data'
                   }
             }).then((res) => {
-                uploadBtnRef.current.classList.add('disable')
+                // uploadBtnRef.current.classList.add('disable')
                 setuploadBtn(true)
                 setUpload(false)
                 getData()
@@ -191,10 +191,11 @@ const Gallery = () => {
                 <div className="col-12 col-md-12 col-sm-12">
                     <div className="card" style={ Images.length === 0 ?{} :{display: 'flex', flexWrap: 'wrap'}}>
                         {
-                            Images.length === 0 ? (
+                           Images.length === 0  ? (
                                 <>
-                                    <div className="d-flex justify-center align-center flex-col " >
-                                        <PropagateLoader color={'#a1a1a1'} size={10} />
+                                 <div className="d-flex justify-center align-center flex-col " >
+                                 <PropagateLoader color={'#a1a1a1'} size={10} />
+                                  
                                     </div>
                                 </>
                             ) : (

@@ -2,14 +2,16 @@ import React from 'react'
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import Cookies from 'universal-cookie/es6'
 import * as Yup from "yup";
-
+import Api from '../../util/AxiosConfig'
 import './form.css'
 import { useHistory } from 'react-router';
+import { applyMiddleware } from 'redux';
+import Swal from 'sweetalert2';
 // import axios from 'axios';
 
 const SignupSchema = Yup.object().shape({
 
-    username: Yup.string().required('  الزامی میباشد'),
+    phoneNumber: Yup.string().required('  الزامی میباشد'),
 
     password: Yup.string().required(' الزامی میباشد '),
 
@@ -35,12 +37,26 @@ const Login = (props) => {
                             </h2>
                             <Formik
                                 initialValues={{
-                                    username: '',
+                                    phoneNumber: '',
                                     password: '',
                                 }}
                                 validationSchema={SignupSchema}
                                 onSubmit={(value) => {
-                                    // axios.post()
+                                    
+                                    // Api.post('login', value).then(res => {
+                                    //     cookies.set('login', true)
+                                    //     history.push("/")
+                                    // }).catch(err =>{
+                                    //     if(err.response){
+                                    //         Swal.fire({
+                                    //             icon: 'error',
+                                    //             title: ' خطا ! ',
+                                    //             text: 'نام کاربری یا رمز عبور  نادرست است',
+                                    //             confirmButtonText: 'تایید'
+                                               
+                                    //           })
+                                    //     }
+                                    // })
                                     cookies.set('login', true)
                                     history.push("/")
                                 }}
@@ -50,11 +66,11 @@ const Login = (props) => {
                                     <Form className="d-flex" >
                                         <div>
                                             <div>
-                                                <label htmlFor="username" >  نام کاربری </label>
+                                                <label htmlFor="phoneNumber" >  نام کاربری </label>
                                                 <span className="color-danger err">
-                                                    <ErrorMessage name="username" />
+                                                    <ErrorMessage name="phoneNumber" />
                                                 </span>
-                                                <Field name="username" id="username" className="form-control" />
+                                                <Field name="phoneNumber" id="phoneNumber" className="form-control" />
                                                 <br />
 
                                             </div>

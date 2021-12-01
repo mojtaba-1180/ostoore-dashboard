@@ -8,6 +8,7 @@
     box-shadow: var(--box-shadow);
     z-index: 999;
     transition:  .3s;
+    padding-top: 2rem;
 }
 
 

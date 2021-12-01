@@ -1,10 +1,8 @@
 
 import Backdrop from '@mui/material/Backdrop';
 import Modal from '@mui/material/Modal';
-import Fade from '@mui/material/Fade';
-
 import { useState, useEffect } from 'react'
-import { useHistory, useLocation, useParams } from 'react-router'
+import { useHistory, useParams } from 'react-router'
 
 import GalleryModal from '../../components/Gallery/gallery';
 import Swal from 'sweetalert2'
@@ -12,7 +10,6 @@ import Swal from 'sweetalert2'
 import 'froala-editor/css/froala_editor.pkgd.min.css'
 
 import Api from '../../util/AxiosConfig'
-import Gallery from '../Gallery/gallery'
 const EditCategory = () => {
     const history = useHistory();
     const [open, setOpen] = useState(false);
@@ -55,6 +52,7 @@ const EditCategory = () => {
                 Swal.fire({
                     icon: 'success',
                     title: '  دسته بندی شما اضافه شد  ',
+                    confirmButtonText: 'تایید'
                 })
                 history.push('/categories')
     
@@ -192,7 +190,7 @@ const EditCategory = () => {
                                                 console.log({item})
                                                 return (
                                                 <>
-                                                <option key={item._id} selected={item.parentId === FormData.detail.parentId ? 'selected' : ''}  value={item._id}> {item.name} </option>
+                                                <option key={item._id} selected={item.parentId? item.parentId === FormData.detail.parentId ? 'selected' : '' : ''}  value={item._id}> {item.name} </option>
                                                </> 
                                                 )
                                                

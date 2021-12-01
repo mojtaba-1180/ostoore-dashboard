@@ -13,6 +13,7 @@ import ChildCategoris from '../pages/Categoris/Child'
 import EditCategoris from '../pages/Categoris/Edit'
 import AddCategori from '../pages/Categoris/Add'
 import AddChildCategori from '../pages/Categoris/AddChild'
+import AddChildCategoriTwo from '../pages/Categoris/AddChildTwo'
 // Peoducts
 import Product from '../pages/Product/Product'
 import ProductEdit from '../pages/Product/Edit'
@@ -31,8 +32,6 @@ import Sizes from '../pages/Size/Size'
 import AddSize from '../pages/Size/Add'
 import EditSize from '../pages/Size/Edit'
 //  Logout 
-import { useHistory } from "react-router"
-import Cookies from "universal-cookie/es6"
 import Logout from '../pages/Auth/logout'
 import ChildCategorisTwo from '../pages/Categoris/ChildTwo'
 const Routes = () => {
@@ -64,7 +63,7 @@ const Routes = () => {
                     <ChildCategoris />
                 </PrivateRoute>
             </Route>
-            <Route path='/categories/:parnt/:id' >
+            <Route path='/categories/:parent/:id' >
                 <PrivateRoute>
                     <ChildCategorisTwo />
                 </PrivateRoute>
@@ -82,6 +81,11 @@ const Routes = () => {
             <Route path='/add/categories-child/:id' exact >
                 <PrivateRoute>
                     <AddChildCategori />
+                </PrivateRoute>
+            </Route>
+            <Route path='/add/categories-child/:parent/:id' exact >
+                <PrivateRoute>
+                    <AddChildCategoriTwo />
                 </PrivateRoute>
             </Route>
             {/* Route Products */}

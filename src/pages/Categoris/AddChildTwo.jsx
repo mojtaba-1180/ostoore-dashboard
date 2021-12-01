@@ -12,7 +12,7 @@ import 'froala-editor/css/froala_editor.pkgd.min.css'
 
 import Api from '../../util/AxiosConfig'
 import GalleryModal from '../../components/Gallery/gallery';
-const AddChildCategory = () => {
+const AddChildCategoryTwo = () => {
     const { id } = useParams()
     const history = useHistory();
     const [open, setOpen] = useState(false);
@@ -28,9 +28,10 @@ const AddChildCategory = () => {
             images: Image ? Image._id : ''
         }
     })
-    const updateHandler = () => {
+    const updateHandler = (data) => {
         setLoading(true)
-
+        console.log(data)
+        // post Data in added category
         if (FormData.detail.name === '') {
             Swal.fire({
                 icon: 'warning',
@@ -46,26 +47,30 @@ const AddChildCategory = () => {
             })
             setLoading(false)
         } else {
-             // post Data in added category
-        Api.post('category', FormData.detail).then(() => {
+            Api.post('category', FormData.detail).then(() => {
+                Swal.fire({
+                    icon: 'success',
+                    title: '  دسته بندی شما اضافه شد  ',
+                    confirmButtonText: ' تایید '
+
+                })
             setLoading(false)
-            Swal.fire({
-                icon: 'success',
-                title: '  دسته بندی شما اضافه شد  ',
+                history.push('/categories')
             })
-            history.push('/categories')
-        })
-            .catch((err) => {
+                .catch((err) => {
                 setLoading(false)
-                // Swal.fire({
-                //     icon: 'error',
-                //     title: 'مشکلی پیش آمده است',
-                //     text: 'لطفا برسی کنید با سازنده سایت تماس برقرار کنید'
-                // })
-            })
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'مشکلی پیش آمده است',
+                        text: 'لطفا برسی کنید با سازنده سایت تماس برقرار کنید',
+                         confirmButtonText: ' تایید '
+
+                    })
+                })
         }
-       
+        
     }
+
     const changeHandler = (data) => {
         if (data.target.name === 'title') {
             setFormData((prev) => ({
@@ -85,16 +90,6 @@ const AddChildCategory = () => {
             }))}
     }
 
-    const GetData = () => {
-        Api.get('category').then((res) => {
-            setCategoryList(res.result)
-            console.log(res)
-        }).catch((err) => {
-            console.log('getting data error see response : ')
-            console.log(err)
-
-        })
-    }
     const handlechanges = (e) => {
         setOpen(false)
         setImage(e)
@@ -109,15 +104,6 @@ const AddChildCategory = () => {
         ))
         
     }
-    useEffect(() => {
-        let connection = false;
-        if(!connection){
-            GetData()
-        }
-        return () => {
-            connection = true
-        }
-    }, [])
     const style = {
         position:'absolute',
         top: '50%',
@@ -136,7 +122,7 @@ const AddChildCategory = () => {
                         افزودن دسته بندی
                     </span>
                     <span className="d-flex " >
-                        <button className={Loading ? " button bg-sucess disable" : "button bg-sucess"} onClick={updateHandler} >
+                    <button className={Loading ? " button bg-sucess disable" : "button bg-sucess"} onClick={updateHandler} >
                             ذخیره
                         </button>
                         <button className="button" onClick={() => history.go(-1)} >
@@ -171,9 +157,6 @@ const AddChildCategory = () => {
                                                 حذف عکس
                                             </button>
                                         </div>
-                                        {
-                                            console.log(FormData)
-                                        }
                                         {Image && Image.name}
                                         <img src={Image ? Image.url : ''} alt="" width="120" />
                                     </div>
@@ -194,4 +177,4 @@ const AddChildCategory = () => {
         </div>
     )
 }
-export default AddChildCategory
+export default AddChildCategoryTwo

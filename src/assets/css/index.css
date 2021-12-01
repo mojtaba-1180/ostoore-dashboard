@@ -472,7 +472,8 @@ input:focus {
 
 /* ck editor Style */
 
-.ck {
+.ck-rounded-corners .ck.ck-editor__main>.ck-editor__editable, .ck.ck-editor__main>.ck-editor__editable.ck-rounded-corners {
+  text-align: right !important;
   direction: rtl !important;
 
 }

@@ -9,15 +9,17 @@ import BeatLoader from "react-spinners/BeatLoader";
 
 const ChildCategorisTwo = () => {
   const history = useHistory();
-  const { id } = useParams();
+  const { id, parent } = useParams();
   const [Categoris, setCategoris] = useState(null);
-  const [Parent, setParent] = useState([]);
+  const [ParentItem, setParentItem] = useState([]);
   // Geting Data server
   const getData = () => {
     Api.get(`category`)
       .then((res) => {
           setCategoris(res.result.filter(item => item.parentId).filter(item => item.parentId._id === id ));
-          console.log(res.result.filter(item => item.parentId).filter(item => item.parentId._id === id ))
+          setParentItem(res.result);
+
+          // console.log(res.result.filter(item => item.parentId).filter(item => item.parentId._id === id ))
       })
       .catch((err) => {
         console.log(err);
@@ -30,7 +32,7 @@ const ChildCategorisTwo = () => {
     });
   };
   const HandleAddNew = () => {
-    history.push(`/add/categories/`, { id });
+    history.push(`/add/categories-child/${parent}/${id}`);
   };
   const HandleTrash = (id) => {
     Swal.fire({
@@ -77,7 +79,7 @@ const ChildCategorisTwo = () => {
     getData();
   }, []);
 
-  const customerTableHead = ["ردیف", "عکس", "نام", " اکشن ", "زیر مجموعه"];
+  const customerTableHead = ["ردیف", "عکس", "نام", " اکشن "];
 
   const renderHead = (item, index) => <th key={index}>{item}</th>;
 
@@ -115,51 +117,6 @@ const ChildCategorisTwo = () => {
                 </button>
               )}
             </td>
-            <td>
-              {item.childId? (
-                <>
-                <span className="btn_toggle">
-                  <Link
-                    to={{
-                      pathname: `/categories/${id}/${item._id}`,
-                      state: item._id,
-                    }}
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <span>زیر مجموعه</span>
-                    <i
-                      className="bx bx-chevron-left"
-                      style={{ marginTop: "-8px" }}
-                    ></i>
-                  </Link>
-                </span>
-                </>
-              ) : (
-                <span className="btn_toggle">
-                  <Link
-                    to={{
-                      pathname: `/add/categories-child/${item._id}`,
-                      state: item._id,
-                    }}
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <span>افزودن زیرمجموعه</span>
-                    <i
-                      className="bx bx-chevron-left"
-                      style={{ marginTop: "-8px" }}
-                    ></i>
-                  </Link>
-                </span>
-              )}
-            </td>
           </tr>
         )
       }
@@ -172,9 +129,9 @@ return (
         <div className="justify-between d-flex align-center">
           <span className="">دسته بندی ها</span>
           <span>
-            {/* <button className="button" onClick={() => HandleAddNew()}>
+            <button className="button" onClick={() => HandleAddNew()}>
               افزودن جدید
-            </button> */}
+            </button>
           </span>
         </div>
       </h2>
@@ -182,20 +139,35 @@ return (
         <div className="col-12">
           دسته بندی مادر : 
           {
-
-        Parent.map((item, index) =>  {
-          return (
-            <>
-            <Link key={index} to="/categories" style={{marginRight: '10px',fontSize: '20px', textDecoration: 'underline'}} >
-            {
-              item.name
-            }
-            </Link>
-            /
-            </>
-          )
-        })
+             ParentItem.filter(item => item._id === id).map((item, index) =>  {
+              return (
+                <>
+                /
+                <Link key={index} to={`/categories/${parent}`} style={{marginRight: '10px',fontSize: '20px', textDecoration: 'underline'}} >
+                {
+                  item.name
+                }
+                </Link>
+                
+                </>
+              )
+          })
           }
+          {
+ParentItem.filter(item => item._id === parent).map((item, index) =>  {
+  return (
+    <>
+    /
+    <Link key={index} to="/categories" style={{marginRight: '10px',fontSize: '20px', textDecoration: 'underline'}} >
+    {
+      item.name
+    }
+    </Link>
+    </>
+  )
+})
+          }
+         
           <div className="card animate-top">
             <div className="card__body">
               {Categoris === null ? (
