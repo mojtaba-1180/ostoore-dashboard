@@ -60,7 +60,8 @@ const AddProduct = () => {
     const [checkedCategory, setCheckedCategory] = useState([]);
     const [checkedBrands, setCheckedBrands] = useState([]);
     const [checkedSize, setCheckedSize] = useState([]);
-    const [Image, setImage] = useState(null)
+    const [Image, setImage] = useState([])
+    const [ImageId, setImageId] = useState([])
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -250,14 +251,15 @@ const AddProduct = () => {
     }
     const handleImage = (e) => {
         setOpen(false)
-        setImage(e)
+        setImage([...Image, e])
+        setImageId([...ImageId, e._id])
         setDetail(prev => ({
             name: prev.name,
             abstract: prev.abstract,
             description: prev.description,
             basePrice: prev.basePrice,
             hashtags: prev.hashtags,
-            images: e._id,
+            images: ImageId,
             brand: prev.brand,
             stock: prev.stock,
             isDisable: prev.isDisable,
@@ -386,13 +388,10 @@ const AddProduct = () => {
         value: PropTypes.number.isRequired,
     };
 
-    function a11yProps(index) {
-        return {
-            id: `vertical-tab-${index}`,
-            'aria-controls': `vertical-tabpanel-${index}`,
-        };
+    const delHandlerImage = (id) => {
+        setImage(Image.filter(item => item._id != id))
+            setImageId(ImageId.filter(item => item != id))
     }
-
     return (
 
 
@@ -504,7 +503,7 @@ const AddProduct = () => {
                                 // } }
                             />
                             <div className="d-flex justify-between w-100">
-                                <div className="w-50" >
+                                <div className="w-100" >
                                     <span>
                                         <br />
                                         <label > عکس محصول </label>
@@ -512,7 +511,7 @@ const AddProduct = () => {
                                     </span>
 
                                     <div className="upload_image d-flex">
-                                        <div className="w-50" >
+                                        <div className="w-100" >
                                             <button className="button " onClick={() => { handleOpen() }}>
                                                 انتخاب عکس
                                             </button>
@@ -520,9 +519,26 @@ const AddProduct = () => {
                                                 حذف عکس
                                             </button>
                                         </div>
-                                        <div className="w-50 d-flex justify-center align-center">
-                                            <img src={Image ? Image.url : ''} alt="" width="100%" />
-                                            {Image ? Image.name : ''}
+                                        <div className="w-100 d-flex justify-around align-center">
+                                            {
+                                                console.log(Image)
+                                            }
+                                            {
+                                                Image.length >= 1? Image.map(item => {
+                                                   return (
+                                                       <>
+                                                       <div style={{boxShadow: '0 0 10px #ccc'}} > 
+                                                       <button onClick={() => delHandlerImage(item._id)}>
+                                                       <i class='bx bx-trash-alt'></i>
+                                                       </button>
+                                                       <img src={item.url} alt="" width="30" />
+                                                       {item.name}
+                                                       </div>
+                                                       </>
+                                                   )
+                                                }) : null
+                                            }
+                                         
                                         </div>
 
 
