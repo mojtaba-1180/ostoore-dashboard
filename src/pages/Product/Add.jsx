@@ -27,6 +27,7 @@ import GalleryModal from '../../components/Gallery/gallery'
 import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import Tooltip from '@mui/material/Tooltip';
 
 import './Product.css'
 
@@ -41,12 +42,12 @@ const AddProduct = () => {
         name: '',
         abstract: '',
         description: '',
-        basePrice: 0,
+        basePrice: '',
         hashtags: '',
         images: '',
         brand: '',
         size: '',
-        stock: 1,
+        stock: '',
         isDisable: true,
         categoryId: '',
     })
@@ -390,7 +391,7 @@ const AddProduct = () => {
 
     const delHandlerImage = (id) => {
         setImage(Image.filter(item => item._id != id))
-            setImageId(ImageId.filter(item => item != id))
+        setImageId(ImageId.filter(item => item != id))
     }
     return (
 
@@ -405,18 +406,18 @@ const AddProduct = () => {
                     <span>
                         <button className={Loading ? " button bg-sucess disable" : "button bg-sucess"} onClick={() => { updateHandler() }} >
                             {
-                               Loading ? (
-                                <>
-                                <span>  درحال بارگذاری  </span>
-                                <i classList='bx bx-loader bx-spin'></i>
-                                </>
-                               ) :(
+                                Loading ? (
+                                    <>
+                                        <span>  درحال بارگذاری  </span>
+                                        <i classList='bx bx-loader bx-spin'></i>
+                                    </>
+                                ) : (
                                     <span>
                                         ذخیره
                                     </span>
-                               )
+                                )
                             }
-                            
+
                         </button>
                         <button className="button" onClick={() => history.go(-1)} >
                             بازگشت
@@ -445,13 +446,13 @@ const AddProduct = () => {
                             </span>
 
                             <CKEditor
-                                
-                                editor={ ClassicEditor }
+
+                                editor={ClassicEditor}
                                 data=""
-                               
-                                onBlur={ ( event, editor ) => {
-                                   const data = editor.getData();
-                                    console.log( data );
+
+                                onBlur={(event, editor) => {
+                                    const data = editor.getData();
+                                    console.log(data);
                                     setDetail(prev => ({
                                         name: prev.name,
                                         abstract: data,
@@ -464,8 +465,8 @@ const AddProduct = () => {
                                         isDisable: prev.isDisable,
                                         categoryId: prev.categoryId
                                     }))
-                                } }
-                               
+                                }}
+
                             />
                             <br />
                             <span>
@@ -474,17 +475,17 @@ const AddProduct = () => {
                             </span>
                             <br />
                             <CKEditor
-                                
-                                editor={ ClassicEditor }
+
+                                editor={ClassicEditor}
                                 data=""
-                                onReady={ editor => {
+                                onReady={editor => {
                                     // You can store the "editor" and use when it is needed.
-                                    console.log( 'Editor is ready to use!', editor );
-                                } }
-                                
-                                onBlur={ ( event, editor ) => {
+                                    console.log('Editor is ready to use!', editor);
+                                }}
+
+                                onBlur={(event, editor) => {
                                     const description = editor.getData();
-                                    console.log( description );
+                                    console.log(description);
                                     setDetail(prev => ({
                                         name: prev.name,
                                         abstract: prev.abstract,
@@ -497,10 +498,10 @@ const AddProduct = () => {
                                         isDisable: prev.isDisable,
                                         categoryId: prev.categoryId
                                     }))
-                                } }
-                                // onFocus={ ( event, editor ) => {
-                                //     console.log( 'Focus.', editor );
-                                // } }
+                                }}
+                            // onFocus={ ( event, editor ) => {
+                            //     console.log( 'Focus.', editor );
+                            // } }
                             />
                             <div className="d-flex justify-between w-100">
                                 <div className="w-100" >
@@ -519,26 +520,28 @@ const AddProduct = () => {
                                                 حذف عکس
                                             </button>
                                         </div>
-                                        <div className="w-100 d-flex justify-around align-center">
+                                        <div className="w-100 d-flex " style={{}}>
                                             {
                                                 console.log(Image)
                                             }
                                             {
-                                                Image.length >= 1? Image.map(item => {
-                                                   return (
-                                                       <>
-                                                       <div style={{boxShadow: '0 0 10px #ccc'}} > 
-                                                       <button onClick={() => delHandlerImage(item._id)}>
-                                                       <i class='bx bx-trash-alt'></i>
-                                                       </button>
-                                                       <img src={item.url} alt="" width="30" />
-                                                       {item.name}
-                                                       </div>
-                                                       </>
-                                                   )
+                                                Image.length >= 1 ? Image.map(item => {
+                                                    return (
+                                                        <>
+                                                            <div className='d-flex flex-col justify-center align-center' style={{ margin: '10px', border: '1px solid #ccc', borderRadius: '15px', padding: '10px' }} >
+                                                                <img src={item.url} alt="" width="120px" height="120px" />
+                                                                <div>
+                                                                    <button onClick={() => delHandlerImage(item._id)} style={{ backgroundColor: '#f40', padding: '3px', margin: '2px', borderRadius: '10px' }}>
+                                                                        <i class='bx bx-trash-alt'></i>
+                                                                    </button>
+                                                                    {item.name}
+                                                                </div>
+                                                            </div>
+                                                        </>
+                                                    )
                                                 }) : null
                                             }
-                                         
+
                                         </div>
 
 
@@ -603,7 +606,7 @@ const AddProduct = () => {
                                         (
                                             <>
                                                 {SearchCategory.map((item) => {
-                                                    
+
                                                     return (
                                                         <ListItem
                                                             key={item._id}
@@ -633,16 +636,22 @@ const AddProduct = () => {
                             <input type="number" placeholder="قیمت" style={{ marginBottom: '10px' }} id="baseprice" value={Detail.basePrice} onChange={handleChangeDetailProduct} className="form-control w-100" />
                             <label > تعداد موجودی  </label>
                             <input type="number" placeholder="تعداد" id="stock" value={Detail.stock} style={{ marginBottom: '10px' }} onChange={(e) => handleChangeDetailProduct(e)} className="form-control w-100" />
-                            <div>
-                                <label >  غیر فعال/فعال  </label>
+                            <div className="d-flex" style={{alignItems: 'center'}} >
+                                <label > وضعیت  </label>
                                 <Switch
-                                checked={Detail.isDisable}
-                                id="isDisable"
-                                onChange={handleChangeDetailProduct}
-                                inputProps={{ 'aria-label': 'controlled' }}
+                                    checked={Detail.isDisable}
+                                    id="isDisable"
+                                    onChange={handleChangeDetailProduct}
+                                    inputProps={{ 'aria-label': 'controlled' }}
                                 />
-
+                                <div className="d-flex" style={{alignItems: 'center'}} >
+                                    <Tooltip title="  وضعیت موجودی یا ناموجودی محصول را تعیین کنید. " arrow>
+                                        <svg xmlns="http://www.w3.org/2000/svg" style={{width: '20px', height: '20px'}} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    </Tooltip>
                                 </div>
+                            </div>
 
                         </div>
                         <div className=" card" style={{ width: '49%' }} >
