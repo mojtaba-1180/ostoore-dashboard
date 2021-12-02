@@ -10,6 +10,7 @@ import './gallery.css'
 
 const GalleryModal = (props) => {
     const uploadBtnRef = useRef()
+    const inputImg = useRef()
     const [uploadBtn, setuploadBtn] = useState(false)
     const [ActiveItem, setActiveItem] = useState(1)
     const [ContentNew, setContentNew] = useState({})
@@ -118,6 +119,16 @@ const GalleryModal = (props) => {
         
        
     }
+
+    const HandleDelete = () => {
+        uploadBtnRef.current.classList.add('disable')
+        inputImg.current.value = ''
+        setPreviewUploadImg({
+            files: null,
+            imageData: null
+        })
+    }
+
     useLayoutEffect(() => {
         uploadBtnRef.current.classList.add('disable')
 
@@ -222,11 +233,16 @@ const GalleryModal = (props) => {
             <div className={Upload ? 'animate-opacity absolute card w-50' : 'absolute card w-50 d-none'} style={{top: '50%', right: '50%',  transform: 'translate(50%, -50%)'}} >
                     <div className="file_box" >
                         <p className="file_box_text" >  برای آپلود کلیک کنید</p>
-                    <input className="file_box_input" type="file" onChange={(e) => handleChanageUploadImage(e)} />
+                    <input className="file_box_input" ref={inputImg} type="file" onChange={(e) => handleChanageUploadImage(e)} />
                     </div>
                     {
                         PreviewUploadImg.files && (
-                            <div className="w-100 d-flex justify-center flex-col align-center" >
+                            <div className="w-100 d-flex justify-center flex-col align-center"  style={{position: 'relative'}} >
+                                 <button onClick={() => HandleDelete()} style={{position: 'absolute', top:'-10px', zIndex: '10', backgroundColor: "#f00", color: '#fff' , borderRadius: '20px'}} >
+                                            <svg xmlns="http://www.w3.org/2000/svg"  style={{width: '30px'}} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                        </button>
                                 <img src={PreviewUploadImg.imageData} width="250" style={{marginTop: '10px', borderRadius: '10px'}} />
                                 <p>{PreviewUploadImg.files.name}</p>
                             </div>
