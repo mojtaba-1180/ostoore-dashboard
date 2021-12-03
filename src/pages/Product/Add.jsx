@@ -28,7 +28,9 @@ import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Tooltip from '@mui/material/Tooltip';
-
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import './Product.css'
 
 const AddProduct = () => {
@@ -43,12 +45,12 @@ const AddProduct = () => {
         abstract: '',
         description: '',
         basePrice: '',
-        hashtags: '',
-        images: '',
-        brand: '',
-        size: '',
+        hashtags: "",
+        images: "",
+        brand: "",
+        size: "",
         stock: '',
-        isDisable: true,
+        isDisable: false,
         categoryId: '',
     })
     const [Category, setCategory] = useState(null)
@@ -130,8 +132,73 @@ const AddProduct = () => {
 
             })
             setLoading(false)
+        }else if (Detail.brand === '') {
+            Swal.fire({
+                icon: 'error',
+                title: '  لطفا برند محصول را انتخاب کنید !!!  ',
+                confirmButtonText: ' تایید '
+
+            })
+            setLoading(false)
+        }else if (Detail.size === '') {
+            Swal.fire({
+                icon: 'error',
+                title: '  لطفا سایز محصول را انتخاب کنید !!!  ',
+                confirmButtonText: ' تایید '
+
+            })
+            setLoading(false)
+        }else if (Detail.hashtags === '') {
+            Swal.fire({
+                icon: 'error',
+                title: '  لطفا برچسب  محصول را انتخاب کنید !!!  ',
+                confirmButtonText: ' تایید '
+
+            })
+            setLoading(false)
+        }else if (Detail.stock === '') {
+            Swal.fire({
+                icon: 'error',
+                title: '  لطفا موجودی محصول را وارد کنید !!!  ',
+                confirmButtonText: ' تایید '
+
+            })
+            setLoading(false)
+        }else if (Detail.description === '') {
+            Swal.fire({
+                icon: 'error',
+                title: '  لطفا توضیحات محصول را وارد کنید !!!  ',
+                confirmButtonText: ' تایید '
+
+            })
+            setLoading(false)
+        }else if (Detail.abstract === '') {
+            Swal.fire({
+                icon: 'error',
+                title: '  لطفا توضیحات کوتاه محصول را وارد کنید !!!  ',
+                confirmButtonText: ' تایید '
+
+            })
+            setLoading(false)
+        }else if (Detail.basePrice === '') {
+            Swal.fire({
+                icon: 'error',
+                title: '  لطفا قیمت محصول را وارد کنید !!!  ',
+                confirmButtonText: ' تایید '
+
+            })
+            setLoading(false)
+        }else if (Detail.categoryId === '') {
+            Swal.fire({
+                icon: 'error',
+                title: '  لطفا دسته بندی محصول را وارد کنید !!!  ',
+                confirmButtonText: ' تایید '
+
+            })
+            setLoading(false)
         } else {
             console.log('chnages')
+            console.log(Detail)
             Api.post('/product', Detail).then(() => {
                 Swal.fire({
                     icon: 'success',
@@ -165,7 +232,7 @@ const AddProduct = () => {
         const currentIndex = checkedCategory.indexOf(value);
         const newCheckedCategory = [...checkedCategory];
         console.log(newCheckedCategory)
-        if (currentIndex === -1) {
+         if (currentIndex === -1) {
             newCheckedCategory.push(value);
         } else {
             newCheckedCategory.splice(currentIndex, 1);
@@ -180,6 +247,7 @@ const AddProduct = () => {
             images: prev.images,
             brand: prev.brand,
             stock: prev.stock,
+size: prev.size,
             isDisable: prev.isDisable,
             categoryId: newCheckedCategory.length >= 1 ? newCheckedCategory : null,
         }))
@@ -188,13 +256,13 @@ const AddProduct = () => {
 
         const currentIndex = checkedBrands.indexOf(value);
         const newChecked = [...checkedBrands];
-
-        if (currentIndex === -1) {
-            newChecked.push(value);
-        } else {
-            newChecked.splice(currentIndex, 1);
-        }
-        setCheckedBrands(newChecked);
+        // console.log(value)
+        // if (currentIndex === -1) {
+        //     newChecked.push(value);
+        // } else {
+        //     newChecked.splice(currentIndex, 1);
+        // }
+        // setCheckedBrands(newChecked);
         setDetail(prev => ({
             name: prev.name,
             abstract: prev.abstract,
@@ -202,8 +270,9 @@ const AddProduct = () => {
             basePrice: prev.basePrice,
             hashtags: prev.hashtags,
             images: prev.images,
-            brand: newChecked.length >= 1 ? newChecked : null,
+            brand: value,
             stock: prev.stock,
+size: prev.size,
             isDisable: prev.isDisable,
             categoryId: prev.categoryId
         }))
@@ -263,6 +332,7 @@ const AddProduct = () => {
             images: ImageId,
             brand: prev.brand,
             stock: prev.stock,
+size: prev.size,
             isDisable: prev.isDisable,
             categoryId: prev.categoryId
         }))
@@ -279,6 +349,7 @@ const AddProduct = () => {
                 images: prev.images,
                 brand: prev.brand,
                 stock: prev.stock,
+size: prev.size,
                 isDisable: prev.isDisable,
                 categoryId: prev.categoryId
             }))
@@ -305,10 +376,12 @@ const AddProduct = () => {
                 images: prev.images,
                 brand: prev.brand,
                 stock: prev.stock,
+size: prev.size,
                 isDisable: e.target.checked,
                 categoryId: prev.categoryId
             }))
-        } else if (e.target.id === 'brand') {
+        }
+         else if (e.target.id === 'brand') {
             setDetail(prev => ({
                 name: prev.name,
                 abstract: prev.abstract,
@@ -331,6 +404,7 @@ const AddProduct = () => {
                 images: prev.images,
                 brand: prev.brand,
                 stock: prev.stock,
+size: prev.size,
                 isDisable: prev.isDisable,
                 categoryId: prev.categoryId
             }))
@@ -344,6 +418,7 @@ const AddProduct = () => {
                 images: prev.images,
                 brand: prev.brand,
                 stock: prev.stock,
+size: prev.size,
                 isDisable: prev.isDisable,
                 categoryId: e.target.checked
             }))
@@ -462,6 +537,7 @@ const AddProduct = () => {
                                         images: prev.images,
                                         brand: prev.brand,
                                         stock: prev.stock,
+size: prev.size,
                                         isDisable: prev.isDisable,
                                         categoryId: prev.categoryId
                                     }))
@@ -495,6 +571,7 @@ const AddProduct = () => {
                                         images: prev.images,
                                         brand: prev.brand,
                                         stock: prev.stock,
+size: prev.size,
                                         isDisable: prev.isDisable,
                                         categoryId: prev.categoryId
                                     }))
@@ -520,10 +597,7 @@ const AddProduct = () => {
                                                 حذف عکس
                                             </button>
                                         </div>
-                                        <div className="w-100 d-flex " style={{}}>
-                                            {
-                                                console.log(Image)
-                                            }
+                                        <div className="w-100 d-flex ">
                                             {
                                                 Image.length >= 1 ? Image.map(item => {
                                                     return (
@@ -573,6 +647,7 @@ const AddProduct = () => {
                                         images: prev.images,
                                         brand: prev.brand,
                                         stock: prev.stock,
+size: prev.size,
                                         isDisable: prev.isDisable,
                                         categoryId: prev.categoryId
                                     }))
@@ -657,51 +732,58 @@ const AddProduct = () => {
                         <div className=" card" style={{ width: '49%' }} >
                             <label > برند  </label>
                             <input type="text" placeholder="جستجو..." className="form-control" onChange={(e) => handleSearchBrands(e)} />
-                            <List dense sx={{ width: '100%', bgcolor: 'var(--second-bg)', marginTop: '10px', borderRadius: '10px', overflow: 'auto', maxHeight: '200px', }}>
-
-
-                                {
-                                    SearchBrands === null ? (
-                                        <>
-                                            <div className="d-flex justify-center align-center flex-col " >
-                                                <BeatLoader color={'#a1a1a1'} size={10} />
-                                                در حال بارگذاری
-                                            </div>
-                                        </>
-                                    ) : SearchBrands.length === 0 ? (
-                                        <>
-                                            <div className="d-flex justify-center align-center flex-col " >
-                                                برندی موجود نیست
-                                            </div>
-                                        </>
-                                    ) :
-                                        (
+                                <List dense sx={{ width: '100%', bgcolor: 'var(--second-bg)', marginTop: '10px', borderRadius: '10px', overflow: 'auto', maxHeight: '200px', }}>
+                                    {
+                                        SearchBrands === null ? (
                                             <>
-                                                {SearchBrands.map((item) => {
-
-                                                    return (
-                                                        <ListItem
-                                                            key={item._id}
-                                                            secondaryAction={
-                                                                <Checkbox
-                                                                    style={{ color: 'var(--main-color)' }}
-                                                                    edge="end"
-                                                                    onChange={handleToggleBrands(item._id)}
-                                                                    checked={checkedBrands.indexOf(item._id) !== -1}
-                                                                    inputProps={{ 'aria-labelledby': item._id }}
-                                                                />
-                                                            }
-                                                            disablePadding
-                                                        >
-                                                            <ListItemButton>
-                                                                <ListItemText id={item._id} primary={item.name} />
-                                                            </ListItemButton>
-                                                        </ListItem>
-                                                    );
-                                                })}
+                                                <div className="d-flex justify-center align-center flex-col " >
+                                                    <BeatLoader color={'#a1a1a1'} size={10} />
+                                                    در حال بارگذاری
+                                                </div>
                                             </>
-                                        )}
-                            </List>
+                                        ) : SearchBrands.length === 0 ? (
+                                            <>
+                                                <div className="d-flex justify-center align-center flex-col " >
+                                                    برندی موجود نیست
+                                                </div>
+                                            </>
+                                        ) :
+                                            (
+                                                <>
+                                                  <RadioGroup
+                                                                name="radio-buttons-group-brand"
+                                                                >
+                                                    {SearchBrands.map((item) => {
+
+                                                        return (
+                                                            // <ListItem
+                                                            //     key={item._id}
+                                                            //     secondaryAction={
+                                                            //         <Radio
+                                                            //             style={{ color: 'var(--main-color)' }}
+                                                            //             edge="end"
+                                                            //             name="brand"
+                                                            //             onChange={handleToggleBrands(item._id)}
+                                                            //             checked={checkedBrands.indexOf(item._id) !== -1}
+                                                            //             inputProps={{ 'aria-labelledby': item._id }}
+                                                            //         />
+                                                            //     }
+                                                            //     disablePadding
+                                                            // >
+                                                            //     <ListItemButton>
+                                                            //         <ListItemText id={item._id} primary={item.name} />
+                                                            //     </ListItemButton>
+                                                            // </ListItem>
+
+                                                              
+                                                                <FormControlLabel onChange={handleToggleBrands(item._id)} value={item._id} control={<Radio />} label={item.name} />
+                                                                );
+                                                            })}
+                                                            
+                                                               </RadioGroup>
+                                                </>
+                                            )}
+                                </List>
                         </div>
                         <div className=" card" style={{ width: '49%' }} >
                             <label > سایز  </label>

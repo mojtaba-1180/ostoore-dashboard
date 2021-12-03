@@ -21,19 +21,24 @@ import ListItemText from '@mui/material/ListItemText';
 import Checkbox from '@mui/material/Checkbox';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
-import { Modal } from '@mui/material'
+import { Modal, Switch } from '@mui/material'
 import GalleryModal from '../../components/Gallery/gallery'
 // tabs components
 import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import Tooltip from '@mui/material/Tooltip';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
+
 import './Product.css'
 
-const EditProduct = () => {
-    // Editor Config
+const AddProduct = () => {
+    const { id } = useParams();
     // filed State
     const [Loading, setLoading] = useState(false)
+    const [LoadingPage, setLoadingPage] = useState(false)
 
     // Base State
     const history = useHistory();
@@ -41,13 +46,13 @@ const EditProduct = () => {
         name: '',
         abstract: '',
         description: '',
-        basePrice: 0,
-        hashtags: '',
-        images: '',
-        brand: '',
-        size: '',
-        stock: 1,
-        isDisable: true,
+        basePrice: '',
+        hashtags: "",
+        images: "",
+        brand: "",
+        size: "",
+        stock: '',
+        isDisable: false,
         categoryId: '',
     })
     const [Category, setCategory] = useState(null)
@@ -60,13 +65,11 @@ const EditProduct = () => {
     const [checkedCategory, setCheckedCategory] = useState([]);
     const [checkedBrands, setCheckedBrands] = useState([]);
     const [checkedSize, setCheckedSize] = useState([]);
-    const [Image, setImage] = useState(null)
+    const [Image, setImage] = useState([])
+    const [ImageId, setImageId] = useState([])
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-
-    //Product get Id in Params 
-    const {id} = useParams();
 
     // Products Tabs components 
 
@@ -80,10 +83,44 @@ const EditProduct = () => {
     useLayoutEffect(() => {
         let isCancelled = false
         if (!isCancelled) {
-           Api.get(`product/`).then((res) => {
-               const result = res.result
-                result.filter(item => item._id === id).map(item => {
-                    setDetail(prev => ({
+            setLoadingPage(true)
+            API.get('hashtag').then((res) => {
+                setTags(res.result.map(item => {
+                    return { label: item.name, id: item._id }
+                }))
+
+            }).catch((err) => {
+                console.log(err.response)
+            })
+            API.get('category').then((res) => {
+                setCategory(res.result)
+                setSearchCategory(res.result)
+            }).catch((err) => {
+                console.log(err.response)
+            })
+            API.get('brand').then((res) => {
+                setBrands(res.result)
+                setSearchBrands(res.result)
+            }).catch((err) => {
+                console.log(err.response)
+            })
+            API.get('size').then((res) => {
+                setSize(res.result)
+                setSearchSize(res.result)
+            }).catch((err) => {
+                console.log(err.response)
+            })
+            API.get('product').then(res => {
+                const data = res.result.filter(item => item._id === id)
+                data.map(item => {
+                    setValue(item)
+                    setCheckedSize(item.size)
+                    setCheckedCategory(item.categoryId)
+                    setImageId(item.images)
+                    API.get('image').then(res => {
+                      setImage(res.result.filter(item => ImageId.includes(item._id)))
+                    })
+                    setDetail({
                         name: item.name,
                         abstract: item.abstract,
                         description: item.description,
@@ -91,20 +128,16 @@ const EditProduct = () => {
                         hashtags: item.hashtags,
                         images: item.images,
                         brand: item.brand,
+                        size: item.size,
                         stock: item.stock,
                         isDisable: item.isDisable,
                         categoryId: item.categoryId,
-                    }))
-                    console.log(item)
-                    // setCheckedCategory(item.categoryId)
-                    // setCheckedBrands(item.brand)
-                    // setCheckedSize(item.size)
-                    // setTags(item.hashtags)
+                    })
+                    setLoadingPage(false)
                 })
-                console.log(res.result)
-           }).catch((err) => {
-               console.log(err)
-           })
+            }).catch(err => {
+                console.log(err)
+            })
         } else {
             // console.log('close')
         }
@@ -112,42 +145,6 @@ const EditProduct = () => {
             isCancelled = true
         }
     }, [])
-    useLayoutEffect(() => {
-        API.get('category').then((res) => {
-            setCategory(res.result)
-            setSearchCategory(res.result)
-            console.log(res)
-        }).catch((err) => {
-            console.log(err.response)
-        })
-    },[])
-    useLayoutEffect(() => {
-        API.get('brand').then((res) => {
-            setBrands(res.result)
-            setSearchBrands(res.result)
-        }).catch((err) => {
-            console.log(err.response)
-        })
-    },[])
-    useLayoutEffect(() => {
-        API.get('size').then((res) => {
-            setSize(res.result)
-            setSearchSize(res.result)
-        }).catch((err) => {
-            console.log(err.response)
-        })
-    },[])
-    useLayoutEffect(() => {
-        API.get('hashtag').then((res) => {
-            setTags(res.result.map(item => {
-                return { label: item.name, id: item._id }
-            }))
-        }).catch((err) => {
-            console.log(err.response)
-        })
-    },[])
-
-
     const updateHandler = () => {
         setLoading(true)
         if (Detail.name === '') {
@@ -166,10 +163,72 @@ const EditProduct = () => {
 
             })
             setLoading(false)
+        }else if (Detail.brand === '') {
+            Swal.fire({
+                icon: 'error',
+                title: '  لطفا برند محصول را انتخاب کنید !!!  ',
+                confirmButtonText: ' تایید '
+
+            })
+            setLoading(false)
+        }else if (Detail.size === '') {
+            Swal.fire({
+                icon: 'error',
+                title: '  لطفا سایز محصول را انتخاب کنید !!!  ',
+                confirmButtonText: ' تایید '
+
+            })
+            setLoading(false)
+        }else if (Detail.hashtags === '') {
+            Swal.fire({
+                icon: 'error',
+                title: '  لطفا برچسب  محصول را انتخاب کنید !!!  ',
+                confirmButtonText: ' تایید '
+
+            })
+            setLoading(false)
+        }else if (Detail.stock === '') {
+            Swal.fire({
+                icon: 'error',
+                title: '  لطفا موجودی محصول را وارد کنید !!!  ',
+                confirmButtonText: ' تایید '
+
+            })
+            setLoading(false)
+        }else if (Detail.description === '') {
+            Swal.fire({
+                icon: 'error',
+                title: '  لطفا توضیحات محصول را وارد کنید !!!  ',
+                confirmButtonText: ' تایید '
+
+            })
+            setLoading(false)
+        }else if (Detail.abstract === '') {
+            Swal.fire({
+                icon: 'error',
+                title: '  لطفا توضیحات کوتاه محصول را وارد کنید !!!  ',
+                confirmButtonText: ' تایید '
+
+            })
+            setLoading(false)
+        }else if (Detail.basePrice === '') {
+            Swal.fire({
+                icon: 'error',
+                title: '  لطفا قیمت محصول را وارد کنید !!!  ',
+                confirmButtonText: ' تایید '
+
+            })
+            setLoading(false)
+        }else if (Detail.categoryId === '') {
+            Swal.fire({
+                icon: 'error',
+                title: '  لطفا دسته بندی محصول را وارد کنید !!!  ',
+                confirmButtonText: ' تایید '
+
+            })
+            setLoading(false)
         } else {
-            console.log('chnages')
-            console.log(Detail)
-            Api.put('/product', Detail).then(() => {
+            Api.put(`product?id=${id}`, Detail).then(() => {
                 Swal.fire({
                     icon: 'success',
                     title: ' محصول شما بروزرسانی شد  ',
@@ -202,7 +261,7 @@ const EditProduct = () => {
         const currentIndex = checkedCategory.indexOf(value);
         const newCheckedCategory = [...checkedCategory];
         console.log(newCheckedCategory)
-        if (currentIndex === -1) {
+         if (currentIndex === -1) {
             newCheckedCategory.push(value);
         } else {
             newCheckedCategory.splice(currentIndex, 1);
@@ -217,6 +276,7 @@ const EditProduct = () => {
             images: prev.images,
             brand: prev.brand,
             stock: prev.stock,
+size: prev.size,
             isDisable: prev.isDisable,
             categoryId: newCheckedCategory.length >= 1 ? newCheckedCategory : null,
         }))
@@ -225,13 +285,13 @@ const EditProduct = () => {
 
         const currentIndex = checkedBrands.indexOf(value);
         const newChecked = [...checkedBrands];
-
-        if (currentIndex === -1) {
-            newChecked.push(value);
-        } else {
-            newChecked.splice(currentIndex, 1);
-        }
-        setCheckedBrands(newChecked);
+        // console.log(value)
+        // if (currentIndex === -1) {
+        //     newChecked.push(value);
+        // } else {
+        //     newChecked.splice(currentIndex, 1);
+        // }
+        // setCheckedBrands(newChecked);
         setDetail(prev => ({
             name: prev.name,
             abstract: prev.abstract,
@@ -239,8 +299,9 @@ const EditProduct = () => {
             basePrice: prev.basePrice,
             hashtags: prev.hashtags,
             images: prev.images,
-            brand: newChecked.length >= 1 ? newChecked : null,
+            brand: value,
             stock: prev.stock,
+size: prev.size,
             isDisable: prev.isDisable,
             categoryId: prev.categoryId
         }))
@@ -287,21 +348,31 @@ const EditProduct = () => {
         )
         setSearchBrands(data)
     }
+    const handleSearchSize = (val) => {
+        const data = Size.filter(e => {
+            return e.name.includes(val.target.value)
+        }
+        )
+        setSearchSize(data)
+    }
     const handleImage = (e) => {
         setOpen(false)
-        setImage(e)
+        setImage([...Image, e])
+        setImageId([...ImageId, e._id])
         setDetail(prev => ({
             name: prev.name,
             abstract: prev.abstract,
             description: prev.description,
             basePrice: prev.basePrice,
             hashtags: prev.hashtags,
-            images: e._id,
+            images: ImageId,
             brand: prev.brand,
             stock: prev.stock,
+            size: prev.size,
             isDisable: prev.isDisable,
             categoryId: prev.categoryId
         }))
+        console.log(Image)
 
     }
     const handleChangeDetailProduct = (e, id) => {
@@ -315,6 +386,7 @@ const EditProduct = () => {
                 images: prev.images,
                 brand: prev.brand,
                 stock: prev.stock,
+                size: prev.size,
                 isDisable: prev.isDisable,
                 categoryId: prev.categoryId
             }))
@@ -341,10 +413,12 @@ const EditProduct = () => {
                 images: prev.images,
                 brand: prev.brand,
                 stock: prev.stock,
+                size: prev.size,
                 isDisable: e.target.checked,
                 categoryId: prev.categoryId
             }))
-        } else if (e.target.id === 'brand') {
+        }
+         else if (e.target.id === 'brand') {
             setDetail(prev => ({
                 name: prev.name,
                 abstract: prev.abstract,
@@ -367,6 +441,7 @@ const EditProduct = () => {
                 images: prev.images,
                 brand: prev.brand,
                 stock: prev.stock,
+                size: prev.size,
                 isDisable: prev.isDisable,
                 categoryId: prev.categoryId
             }))
@@ -380,6 +455,7 @@ const EditProduct = () => {
                 images: prev.images,
                 brand: prev.brand,
                 stock: prev.stock,
+                size: prev.size,
                 isDisable: prev.isDisable,
                 categoryId: e.target.checked
             }))
@@ -425,38 +501,42 @@ const EditProduct = () => {
         value: PropTypes.number.isRequired,
     };
 
-    function a11yProps(index) {
-        return {
-            id: `vertical-tab-${index}`,
-            'aria-controls': `vertical-tabpanel-${index}`,
-        };
+    const delHandlerImage = (id) => {
+        setImage(Image.filter(item => item._id != id))
+        setImageId(ImageId.filter(item => item != id))
     }
-
     return (
 
 
-        <div>
-
+        <div className={LoadingPage ? 'pending' : ''} >
             <h2 className="page-header top-sticky">
                 <div className="d-flex justify-between align-center">
                     <span className="animate">
                         افزودن محصول
                     </span>
+                   {
+                       LoadingPage && (
+                        <div className="d-flex justify-center align-center " >
+                                 در حال بارگذاری
+                              {' '}  <BeatLoader color={'#a1a1a1'} size={10} />  {' '}
+                        </div>
+                       )
+                   }
                     <span>
                         <button className={Loading ? " button bg-sucess disable" : "button bg-sucess"} onClick={() => { updateHandler() }} >
                             {
-                               Loading ? (
-                                <>
-                                <span>  درحال بارگذاری  </span>
-                                <i class='bx bx-loader bx-spin'></i>
-                                </>
-                               ) :(
+                                Loading ? (
+                                    <>
+                                        <span>  درحال بارگذاری  </span>
+                                        <i classList='bx bx-loader bx-spin'></i>
+                                    </>
+                                ) : (
                                     <span>
                                         ذخیره
                                     </span>
-                               )
+                                )
                             }
-                            
+
                         </button>
                         <button className="button" onClick={() => history.go(-1)} >
                             بازگشت
@@ -469,7 +549,7 @@ const EditProduct = () => {
                     <div className="card animate-top">
                         <div className="card-title">
                             <label> نام محصول </label>
-                            <input type="text" className="form-control" value={Detail.name} id="name" name="title" onBlur={handleChangeDetailProduct} />
+                            <input type="text" className="form-control" id="name" value={Detail.name} name="title" onChange={handleChangeDetailProduct} />
                             <br />
                             <br />
                             <span className="d-flex justify-between">
@@ -485,13 +565,13 @@ const EditProduct = () => {
                             </span>
 
                             <CKEditor
-                                
-                                editor={ ClassicEditor }
+
+                                editor={ClassicEditor}
                                 data={Detail.abstract}
-                               
-                                onBlur={ ( event, editor ) => {
-                                   const data = editor.getData();
-                                    console.log( data );
+
+                                onBlur={(event, editor) => {
+                                    const data = editor.getData();
+                                    console.log(data);
                                     setDetail(prev => ({
                                         name: prev.name,
                                         abstract: data,
@@ -501,11 +581,12 @@ const EditProduct = () => {
                                         images: prev.images,
                                         brand: prev.brand,
                                         stock: prev.stock,
+                                        size: prev.size,
                                         isDisable: prev.isDisable,
                                         categoryId: prev.categoryId
                                     }))
-                                } }
-                               
+                                }}
+
                             />
                             <br />
                             <span>
@@ -514,13 +595,17 @@ const EditProduct = () => {
                             </span>
                             <br />
                             <CKEditor
-                                
-                                editor={ ClassicEditor }
+
+                                editor={ClassicEditor}
                                 data={Detail.description}
-                               
-                                onBlur={ ( event, editor ) => {
+                                onReady={editor => {
+                                    // You can store the "editor" and use when it is needed.
+                                    console.log('Editor is ready to use!', editor);
+                                }}
+
+                                onBlur={(event, editor) => {
                                     const description = editor.getData();
-                                    console.log( description );
+                                    console.log(description);
                                     setDetail(prev => ({
                                         name: prev.name,
                                         abstract: prev.abstract,
@@ -530,16 +615,17 @@ const EditProduct = () => {
                                         images: prev.images,
                                         brand: prev.brand,
                                         stock: prev.stock,
+size: prev.size,
                                         isDisable: prev.isDisable,
                                         categoryId: prev.categoryId
                                     }))
-                                } }
-                                // onFocus={ ( event, editor ) => {
-                                //     console.log( 'Focus.', editor );
-                                // } }
+                                }}
+                            // onFocus={ ( event, editor ) => {
+                            //     console.log( 'Focus.', editor );
+                            // } }
                             />
                             <div className="d-flex justify-between w-100">
-                                <div className="w-50" >
+                                <div className="w-100" >
                                     <span>
                                         <br />
                                         <label > عکس محصول </label>
@@ -547,7 +633,7 @@ const EditProduct = () => {
                                     </span>
 
                                     <div className="upload_image d-flex">
-                                        <div className="w-50" >
+                                        <div className="w-100" >
                                             <button className="button " onClick={() => { handleOpen() }}>
                                                 انتخاب عکس
                                             </button>
@@ -555,9 +641,25 @@ const EditProduct = () => {
                                                 حذف عکس
                                             </button>
                                         </div>
-                                        <div className="w-50 d-flex justify-center align-center">
-                                            <img src={Image ? Image.url : ''} alt="" width="100%" />
-                                            {Image ? Image.name : ''}
+                                        <div className="w-100 d-flex ">
+                                            {
+                                                Image.length >= 1 ? Image.map(item => {
+                                                    return (
+                                                        <>
+                                                            <div className='d-flex flex-col justify-center align-center' style={{ margin: '10px', border: '1px solid #ccc', borderRadius: '15px', padding: '10px' }} >
+                                                                <img src={item.url} alt="" width="120px" height="120px" />
+                                                                <div>
+                                                                    <button onClick={() => delHandlerImage(item._id)} style={{ backgroundColor: '#f40', padding: '3px', margin: '2px', borderRadius: '10px' }}>
+                                                                        <i class='bx bx-trash-alt'></i>
+                                                                    </button>
+                                                                    {item.name}
+                                                                </div>
+                                                            </div>
+                                                        </>
+                                                    )
+                                                }) : null
+                                            }
+
                                         </div>
 
 
@@ -589,6 +691,7 @@ const EditProduct = () => {
                                         images: prev.images,
                                         brand: prev.brand,
                                         stock: prev.stock,
+                                        size: prev.size,
                                         isDisable: prev.isDisable,
                                         categoryId: prev.categoryId
                                     }))
@@ -622,7 +725,7 @@ const EditProduct = () => {
                                         (
                                             <>
                                                 {SearchCategory.map((item) => {
-                                                        console.log(checkedCategory.indexOf(item._id))
+
                                                     return (
                                                         <ListItem
                                                             key={item._id}
@@ -652,76 +755,96 @@ const EditProduct = () => {
                             <input type="number" placeholder="قیمت" style={{ marginBottom: '10px' }} id="baseprice" value={Detail.basePrice} onChange={handleChangeDetailProduct} className="form-control w-100" />
                             <label > تعداد موجودی  </label>
                             <input type="number" placeholder="تعداد" id="stock" value={Detail.stock} style={{ marginBottom: '10px' }} onChange={(e) => handleChangeDetailProduct(e)} className="form-control w-100" />
-                            <div>
-                                <label >  غیر فعال/فعال  </label>
-                                <FormControlLabel style={{ width: '50%' }} control={<Checkbox id="isDisable" value={Detail.isDisable} onChange={handleChangeDetailProduct} />} label=" غیر فعال" />
+                            <div className="d-flex" style={{alignItems: 'center'}} >
+                                <label > وضعیت  </label>
+                                <Switch
+                                    checked={Detail.isDisable}
+                                    id="isDisable"
+                                    onChange={handleChangeDetailProduct}
+                                    inputProps={{ 'aria-label': 'controlled' }}
+                                />
+                                <div className="d-flex" style={{alignItems: 'center'}} >
+                                    <Tooltip title="  وضعیت موجودی یا ناموجودی محصول را تعیین کنید. " arrow>
+                                        <svg xmlns="http://www.w3.org/2000/svg" style={{width: '20px', height: '20px'}} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    </Tooltip>
+                                </div>
                             </div>
 
                         </div>
                         <div className=" card" style={{ width: '49%' }} >
                             <label > برند  </label>
                             <input type="text" placeholder="جستجو..." className="form-control" onChange={(e) => handleSearchBrands(e)} />
-                            <List dense sx={{ width: '100%', bgcolor: 'var(--second-bg)', marginTop: '10px', borderRadius: '10px', overflow: 'auto', maxHeight: '200px', }}>
-
-
-                                {
-                                    SearchBrands === null ? (
-                                        <>
-                                            <div className="d-flex justify-center align-center flex-col " >
-                                                <BeatLoader color={'#a1a1a1'} size={10} />
-                                                در حال بارگذاری
-                                            </div>
-                                        </>
-                                    ) : SearchBrands.length === 0 ? (
-                                        <>
-                                            <div className="d-flex justify-center align-center flex-col " >
-                                                برندی موجود نیست
-                                            </div>
-                                        </>
-                                    ) :
-                                        (
+                                <List dense sx={{ width: '100%', bgcolor: 'var(--second-bg)', marginTop: '10px', borderRadius: '10px', overflow: 'auto', maxHeight: '200px', }}>
+                                    {
+                                        SearchBrands === null ? (
                                             <>
-                                                {SearchBrands.map((item) => {
-
-                                                    return (
-                                                        <ListItem
-                                                            key={item._id}
-                                                            secondaryAction={
-                                                                <Checkbox
-                                                                    style={{ color: 'var(--main-color)' }}
-                                                                    edge="end"
-                                                                    onChange={handleToggleBrands(item._id)}
-                                                                    checked={checkedBrands.indexOf(item._id) !== -1}
-                                                                    inputProps={{ 'aria-labelledby': item._id }}
-                                                                />
-                                                            }
-                                                            disablePadding
-                                                        >
-                                                            <ListItemButton>
-                                                                <ListItemText id={item._id} primary={item.name} />
-                                                            </ListItemButton>
-                                                        </ListItem>
-                                                    );
-                                                })}
+                                                <div className="d-flex justify-center align-center flex-col " >
+                                                    <BeatLoader color={'#a1a1a1'} size={10} />
+                                                    در حال بارگذاری
+                                                </div>
                                             </>
-                                        )}
-                            </List>
+                                        ) : SearchBrands.length === 0 ? (
+                                            <>
+                                                <div className="d-flex justify-center align-center flex-col " >
+                                                    برندی موجود نیست
+                                                </div>
+                                            </>
+                                        ) :
+                                            (
+                                                <>
+                                                  <RadioGroup
+                                                                name="radio-buttons-group-brand"
+                                                                defaultValue={Detail.brand}
+                                                                >
+                                                    {SearchBrands.map((item) => {
+
+                                                        return (
+                                                            // <ListItem
+                                                            //     key={item._id}
+                                                            //     secondaryAction={
+                                                            //         <Radio
+                                                            //             style={{ color: 'var(--main-color)' }}
+                                                            //             edge="end"
+                                                            //             name="brand"
+                                                            //             onChange={handleToggleBrands(item._id)}
+                                                            //             checked={checkedBrands.indexOf(item._id) !== -1}
+                                                            //             inputProps={{ 'aria-labelledby': item._id }}
+                                                            //         />
+                                                            //     }
+                                                            //     disablePadding
+                                                            // >
+                                                            //     <ListItemButton>
+                                                            //         <ListItemText id={item._id} primary={item.name} />
+                                                            //     </ListItemButton>
+                                                            // </ListItem>
+
+                                                              
+                                                                <FormControlLabel onChange={handleToggleBrands(item._id)} value={item._id} control={<Radio />} label={item.name} />
+                                                                );
+                                                            })}
+                                                            
+                                                               </RadioGroup>
+                                                </>
+                                            )}
+                                </List>
                         </div>
                         <div className=" card" style={{ width: '49%' }} >
                             <label > سایز  </label>
-                            <input type="text" placeholder="جستجو..." className="form-control" onChange={(e) => handleSearchBrands(e)} />
+                            <input type="text" placeholder="جستجو..." className="form-control" onChange={(e) => handleSearchSize(e)} />
                             <List dense sx={{ width: '100%', bgcolor: 'var(--second-bg)', marginTop: '10px', borderRadius: '10px', overflow: 'auto', maxHeight: '200px', }}>
 
 
                                 {
-                                    Size === null ? (
+                                    SearchSize === null ? (
                                         <>
                                             <div className="d-flex justify-center align-center flex-col " >
                                                 <BeatLoader color={'#a1a1a1'} size={10} />
                                                 در حال بارگذاری
                                             </div>
                                         </>
-                                    ) : Size.length === 0 ? (
+                                    ) : SearchSize.length === 0 ? (
                                         <>
                                             <div className="d-flex justify-center align-center flex-col " >
                                                 سایزی موجود نیست
@@ -730,7 +853,7 @@ const EditProduct = () => {
                                     ) :
                                         (
                                             <>
-                                                {Size.map((item) => {
+                                                {SearchSize.map((item) => {
 
                                                     return (
                                                         <ListItem
@@ -772,4 +895,4 @@ const EditProduct = () => {
     )
 }
 
-export default EditProduct
+export default AddProduct

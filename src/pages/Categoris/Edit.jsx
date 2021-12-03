@@ -1,7 +1,7 @@
 
 import Backdrop from '@mui/material/Backdrop';
 import Modal from '@mui/material/Modal';
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useLayoutEffect } from 'react'
 import { useHistory, useParams } from 'react-router'
 
 import GalleryModal from '../../components/Gallery/gallery';
@@ -22,9 +22,10 @@ const EditCategory = () => {
 
     const [FormData, setFormData] = useState({
         detail: {
+            categoryId : id,
             name: '',
             parentId: '',
-            images : Image ? Image._id : ''
+            images : Image ? Image._id : '',
         }
     })
     
@@ -48,13 +49,13 @@ const EditCategory = () => {
         } else {
             Api.put(`category/`, FormData.detail).then(() => {
                 setLoading(false)
-    
+                console.log(FormData.detail)
                 Swal.fire({
                     icon: 'success',
                     title: '  دسته بندی شما اضافه شد  ',
                     confirmButtonText: 'تایید'
                 })
-                history.push('/categories')
+                // history.push('/categories')
     
             })
                 .catch((err) => {
@@ -78,14 +79,16 @@ const EditCategory = () => {
         if (data.target.name === 'title') {
             setFormData((prev) => ({
                 detail: {
+                    categoryId: id ,
                     name: data.target.value,
-                    parentId: prev.detail.parentId,
+                       parentId: prev.detail.parentId,
                     images: prev.detail.images
                 }
             }))
         } else if (data.target.name === 'parent') {
             setFormData((prev) => ({
                 detail: {
+                    categoryId: id  ,
                     name: prev.detail.name,
                     parentId: data.target.value,
                     images: prev.detail.images
@@ -100,6 +103,7 @@ const EditCategory = () => {
         setFormData((prev) => (
             {
                 detail: {
+                    categoryId: id,
                     name: prev.detail.name,
                     parentId: prev.detail.parentId,
                     images: e._id,
@@ -111,10 +115,10 @@ const EditCategory = () => {
     const GetData = () => {
         Api.get('category').then((res) => {
             setCategoryList(res.result)
-            res.result.filter(item => item._id === id).map(item => {
-                console.log(item)
+            res.result.filter(item => item._id === id).map(item => {    
                 setFormData({
                     detail: {
+                        categoryId: id ,
                         name: item.name,
                         parentId: item.parentId,
                         images: item.images.map(item => {
@@ -123,6 +127,7 @@ const EditCategory = () => {
                         })
                     }
                 })
+                console.log(FormData.detail)
             })
         }).catch((err) => {
             console.log('getting data error see response : ')
@@ -130,8 +135,7 @@ const EditCategory = () => {
 
         })
     }
-
-    useEffect(() => {
+    useLayoutEffect(() => {
         let connection = false;
         if(!connection){
             GetData()
@@ -187,7 +191,6 @@ const EditCategory = () => {
                                         {
                                             
                                             CategoryList.map(item => {
-                                                console.log({item})
                                                 return (
                                                 <>
                                                 <option key={item._id} selected={item.parentId? item.parentId === FormData.detail.parentId ? 'selected' : '' : ''}  value={item._id}> {item.name} </option>

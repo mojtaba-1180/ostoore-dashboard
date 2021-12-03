@@ -40,7 +40,11 @@ const Product = () => {
             cancelButtonText: 'خیر'
         }).then((result) => {
             if (result.isConfirmed) {
-                Api.delete(`product/${id}`).then((res) => {
+                let data = JSON.stringify({
+                    "id": id
+                  });
+                  
+                Api.delete(`product/`, data).then((res) => {
                     Swal.fire(
                         'حذف شد !',
                         'محصول مورد نظر با موفقیت پاک شد ',
@@ -72,17 +76,10 @@ const Product = () => {
 
                 <td>{index + 1}</td>
                 {
-                    item.images.map(img => {
-                        Api.get('images')
-                        return (
-                            <>
-                            <   td> <img src={img} alt="عکس محصول" className="img-table" /> </td>
-                            </>
-                        )
-                    })
+                    console.log({item})
                 }
-                
-                <td>{item.name}</td>
+               <   td> <img src={item.images[0]} alt="عکس محصول" className="img-table" /> </td>
+               <td>{item.name}</td>
                 <td>{item.slug}</td>
                 <td>
                     <button className="panel_item_button" onClick={() => HandleEdit(item._id)} >
@@ -98,7 +95,7 @@ const Product = () => {
 
     return (
         <>
-            <div>
+            <div  >
                 <h2 className="page-header">
                     <div className="d-flex justify-between align-center">
                         <span className="animate">
