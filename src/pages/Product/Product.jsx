@@ -44,7 +44,7 @@ const Product = () => {
                     "id": id
                   });
                   
-                Api.delete(`product/`, data).then((res) => {
+                Api.delete(`product`, data).then((res) => {
                     Swal.fire(
                         'حذف شد !',
                         'محصول مورد نظر با موفقیت پاک شد ',

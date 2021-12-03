@@ -43,6 +43,7 @@ const AddProduct = () => {
     // Base State
     const history = useHistory();
     const [Detail, setDetail] = useState({
+        id: id,
         name: '',
         abstract: '',
         description: '',
@@ -63,7 +64,7 @@ const AddProduct = () => {
     const [SearchSize, setSearchSize] = useState(Size)
     const [Tags, setTags] = useState([])
     const [checkedCategory, setCheckedCategory] = useState([]);
-    const [checkedBrands, setCheckedBrands] = useState([]);
+    // const [checkedBrands, setCheckedBrands] = useState([]);
     const [checkedSize, setCheckedSize] = useState([]);
     const [Image, setImage] = useState([])
     const [ImageId, setImageId] = useState([])
@@ -228,9 +229,7 @@ const AddProduct = () => {
             })
             setLoading(false)
         } else {
-            Api.put(`product`,{
-                id : id
-            }, Detail).then(() => {
+            Api.put(`product`,Detail).then(() => {
                 Swal.fire({
                     icon: 'success',
                     title: ' محصول شما بروزرسانی شد  ',
@@ -262,7 +261,7 @@ const AddProduct = () => {
 
         const currentIndex = checkedCategory.indexOf(value);
         const newCheckedCategory = [...checkedCategory];
-        console.log(newCheckedCategory)
+        // console.log(newCheckedCategory)
          if (currentIndex === -1) {
             newCheckedCategory.push(value);
         } else {
@@ -284,16 +283,6 @@ size: prev.size,
         }))
     };
     const handleToggleBrands = (value) => () => {
-
-        const currentIndex = checkedBrands.indexOf(value);
-        const newChecked = [...checkedBrands];
-        // console.log(value)
-        // if (currentIndex === -1) {
-        //     newChecked.push(value);
-        // } else {
-        //     newChecked.splice(currentIndex, 1);
-        // }
-        // setCheckedBrands(newChecked);
         setDetail(prev => ({
             name: prev.name,
             abstract: prev.abstract,
@@ -303,7 +292,7 @@ size: prev.size,
             images: prev.images,
             brand: value,
             stock: prev.stock,
-size: prev.size,
+            size: prev.size,
             isDisable: prev.isDisable,
             categoryId: prev.categoryId
         }))
@@ -676,17 +665,17 @@ size: prev.size,
                     <div className="d-flex justify-between">
                         <div className="card" style={{ width: '49%' }}>
                             <label > برچسب ها  </label>
-                                {
-                                    console.log(Tags)
-                                }
+                                {/* {
+                                    console.log(Tags.filter(item => Detail.hashtags.includes(item.id)))
+                                } */}
                             <Autocomplete
                                 multiple
                                 size="small"
                                 disablePortal
                                 id="combo-tags"
-                                defaultValue={Tags.filter(item => Tags.includes(item.id))}
+                                defaultValue={Tags.filter(item => Detail.hashtags.includes(item.id))}
                                 options={Tags}
-                                onChange={(event, value) => {
+                                onChange={(event, value) => { 
                                     setDetail(prev => ({
                                         name: prev.name,
                                         abstract: prev.abstract,
@@ -801,7 +790,7 @@ size: prev.size,
                                                 <>
                                                   <RadioGroup
                                                                 name="radio-buttons-group-brand"
-                                                                defaultValue={Detail.brand}
+                                                                defaultValue="61aa5684ceb42840f3fe3258"
                                                                 >
                                                     {SearchBrands.map((item) => {
 
