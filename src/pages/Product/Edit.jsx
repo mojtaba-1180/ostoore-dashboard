@@ -228,7 +228,9 @@ const AddProduct = () => {
             })
             setLoading(false)
         } else {
-            Api.put(`product?id=${id}`, Detail).then(() => {
+            Api.put(`product`,{
+                id : id
+            }, Detail).then(() => {
                 Swal.fire({
                     icon: 'success',
                     title: ' محصول شما بروزرسانی شد  ',
@@ -674,12 +676,15 @@ size: prev.size,
                     <div className="d-flex justify-between">
                         <div className="card" style={{ width: '49%' }}>
                             <label > برچسب ها  </label>
-
+                                {
+                                    console.log(Tags)
+                                }
                             <Autocomplete
                                 multiple
                                 size="small"
                                 disablePortal
                                 id="combo-tags"
+                                defaultValue={Tags.filter(item => Tags.includes(item.id))}
                                 options={Tags}
                                 onChange={(event, value) => {
                                     setDetail(prev => ({
