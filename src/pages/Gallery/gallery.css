@@ -37,7 +37,7 @@
 
 .box:hover .action {
     opacity: 1;
-    visibility: hidden;
+    visibility: visible;
 }
 
 .box .action .btn-sm {
@@ -47,6 +47,7 @@
 
 .box .action .btn-sm.trash-btn {
     background-color: var(--main-color-red);
+    color: #fff;
 }
 
 .box .action .btn-sm.open-btn {

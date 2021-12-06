@@ -81,7 +81,37 @@ const Gallery = () => {
 
             })
     }
-
+    const HandleDeleteImage = (id) => {
+      
+        Swal.fire({
+            title: 'ایا میخواید حذف کنید ؟',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'بله' ,
+            cancelButtonText: 'خیر'
+          }).then((result) => {
+            if (result.isConfirmed) {
+                setImages(null)
+                getData()
+                Api.delete(`image/${id}`).then(res => {
+                    Swal.fire(
+                        ' حذف شد ',
+                        '',
+                        'success'
+                    )
+                })
+              
+            }
+          }).catch(err => {
+            Swal.fire(
+                '  مشکل پیش امده است ',
+                '',
+                'success'
+            )
+          })
+    }
     const HandleDelete = () => {
         uploadBtnRef.current.classList.add('disable')
         inputImg.current.value = ''
@@ -153,11 +183,8 @@ const Gallery = () => {
                                                         <img src={item.url} alt={item.name} />
                                                         <p>{item.name}</p>
                                                         <div className="action">
-                                                            <button className=" btn-sm trash-btn" onClick={() => this.HandleDelete(item._id)}>
+                                                            <button className=" btn-sm trash-btn" onClick={() => HandleDeleteImage(item._id)}>
                                                                 <i className="bx bx-trash-alt"></i>
-                                                            </button>
-                                                            <button className="btn-sm open-btn" >
-                                                                <i className="bx bx-move"></i>
                                                             </button>
                                                         </div>
                                                     </div>    
