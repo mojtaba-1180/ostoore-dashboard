@@ -7,22 +7,31 @@ import Api from '../../util/AxiosConfig'
 const Product = () => {
     const history = useHistory();
     const [product, setProduct] = useState(null);
+    const [images, setImages] = useState([])
     const getData = async () => {
-        await Api.get('product').then((res) => {
-            console.log(res)
-            setTimeout(() => {
+        await setTimeout(() => {
+             Api.get('product').then((res) => {
                 setProduct(res.result)
-            }, 500
-            )
-        }).catch((err) => {
-            console.log(err.response)
-        })
+            }).catch((err) => {
+                console.log(err)
+            })
+        },1000)
+        
     }
-    useLayoutEffect(() => {
+    const getImages = () => {
+          Api.get(`image/`).then((res) => {
+                setImages(res.result)
+          }).catch((err) => {
+              console.log(err)
+          })
+          
+      }
+      useLayoutEffect(() => {
+        getImages()
         getData()
     }, [])
 
-
+   
 
     const HandleEdit = id => {
         history.push({
@@ -40,19 +49,16 @@ const Product = () => {
             cancelButtonText: 'خیر'
         }).then((result) => {
             if (result.isConfirmed) {
-                let data = JSON.stringify({
-                    "id": id
-                  });
-                  
-                Api.delete(`product`, data).then((res) => {
+                
+                Api.delete(`product/${id}`).then((res) => {
                     Swal.fire(
                         'حذف شد !',
                         'محصول مورد نظر با موفقیت پاک شد ',
                         'success',
                         'بستن'
                     )
-                    this.setState({ product: null })
-                    this.getData()
+                    setProduct( null)
+                    getData()
                 })
                     .catch((err) => {
                         console.log(err)
@@ -73,12 +79,8 @@ const Product = () => {
     const renderBody = (item, index) => (
         <>
             <tr key={item.id} >
-
                 <td>{index + 1}</td>
-                {
-                    console.log({item})
-                }
-               <   td> <img src={item.images[0]} alt="عکس محصول" className="img-table" /> </td>
+                <td> <img src={images && item.images >= 1 ? '' :  images.filter(d => d._id === item.images[0])[0].url }  alt="عکس محصول" className="img-table" /> </td>
                <td>{item.name}</td>
                 <td>{item.slug}</td>
                 <td>

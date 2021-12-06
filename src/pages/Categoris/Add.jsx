@@ -215,9 +215,11 @@ const AddCategory = () => {
                                                 حذف عکس
                                             </button>
                                         </div>
+                                        <div className="d-flex flex-col" >
 
-                                        {Image && Image.name}
                                         <img src={Image ? Image.url : ''} alt="" width="120" />
+                                        {Image && Image.name}
+                                        </div>
                                     </div>
                                 </div>
                             </div>

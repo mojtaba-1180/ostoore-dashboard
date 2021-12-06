@@ -98,7 +98,7 @@ const Tags = () => {
             <h2 className="page-header">
                 <div className="d-flex justify-between align-center">
                     <span className="animate">
-                        برچسب ها
+                        سایز محصولات 
                     </span>
                     <span>
                         <button className="button" onClick={() => history.push('/tags/add')} >

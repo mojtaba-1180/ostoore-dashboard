@@ -1,4 +1,4 @@
-import { useState, useLayoutEffect, useRef } from 'react'
+import { useState, useLayoutEffect, useEffect } from 'react'
 import Swal from 'sweetalert2'
 import Api from '../../util/AxiosConfig'
 //Editor Required File
@@ -132,7 +132,7 @@ const AddProduct = () => {
 
             })
             setLoading(false)
-        }else if (Detail.brand === '') {
+        } else if (Detail.brand === '') {
             Swal.fire({
                 icon: 'error',
                 title: '  لطفا برند محصول را انتخاب کنید !!!  ',
@@ -140,7 +140,7 @@ const AddProduct = () => {
 
             })
             setLoading(false)
-        }else if (Detail.size === '') {
+        } else if (Detail.size === '') {
             Swal.fire({
                 icon: 'error',
                 title: '  لطفا سایز محصول را انتخاب کنید !!!  ',
@@ -148,7 +148,7 @@ const AddProduct = () => {
 
             })
             setLoading(false)
-        }else if (Detail.hashtags === '') {
+        } else if (Detail.hashtags === '') {
             Swal.fire({
                 icon: 'error',
                 title: '  لطفا برچسب  محصول را انتخاب کنید !!!  ',
@@ -156,7 +156,7 @@ const AddProduct = () => {
 
             })
             setLoading(false)
-        }else if (Detail.stock === '') {
+        } else if (Detail.stock === '') {
             Swal.fire({
                 icon: 'error',
                 title: '  لطفا موجودی محصول را وارد کنید !!!  ',
@@ -164,7 +164,7 @@ const AddProduct = () => {
 
             })
             setLoading(false)
-        }else if (Detail.description === '') {
+        } else if (Detail.description === '') {
             Swal.fire({
                 icon: 'error',
                 title: '  لطفا توضیحات محصول را وارد کنید !!!  ',
@@ -172,7 +172,7 @@ const AddProduct = () => {
 
             })
             setLoading(false)
-        }else if (Detail.abstract === '') {
+        } else if (Detail.abstract === '') {
             Swal.fire({
                 icon: 'error',
                 title: '  لطفا توضیحات کوتاه محصول را وارد کنید !!!  ',
@@ -180,7 +180,7 @@ const AddProduct = () => {
 
             })
             setLoading(false)
-        }else if (Detail.basePrice === '') {
+        } else if (Detail.basePrice === '') {
             Swal.fire({
                 icon: 'error',
                 title: '  لطفا قیمت محصول را وارد کنید !!!  ',
@@ -188,7 +188,7 @@ const AddProduct = () => {
 
             })
             setLoading(false)
-        }else if (Detail.categoryId === '') {
+        } else if (Detail.categoryId === '') {
             Swal.fire({
                 icon: 'error',
                 title: '  لطفا دسته بندی محصول را وارد کنید !!!  ',
@@ -197,8 +197,9 @@ const AddProduct = () => {
             })
             setLoading(false)
         } else {
-            console.log('chnages')
-            console.log(Detail)
+            setLoading(false)
+
+            // console.log({ Detail })
             Api.post('/product', Detail).then(() => {
                 Swal.fire({
                     icon: 'success',
@@ -232,7 +233,7 @@ const AddProduct = () => {
         const currentIndex = checkedCategory.indexOf(value);
         const newCheckedCategory = [...checkedCategory];
         console.log(newCheckedCategory)
-         if (currentIndex === -1) {
+        if (currentIndex === -1) {
             newCheckedCategory.push(value);
         } else {
             newCheckedCategory.splice(currentIndex, 1);
@@ -247,7 +248,7 @@ const AddProduct = () => {
             images: prev.images,
             brand: prev.brand,
             stock: prev.stock,
-size: prev.size,
+            size: prev.size,
             isDisable: prev.isDisable,
             categoryId: newCheckedCategory.length >= 1 ? newCheckedCategory : null,
         }))
@@ -272,7 +273,7 @@ size: prev.size,
             images: prev.images,
             brand: value,
             stock: prev.stock,
-size: prev.size,
+            size: prev.size,
             isDisable: prev.isDisable,
             categoryId: prev.categoryId
         }))
@@ -320,9 +321,15 @@ size: prev.size,
         setSearchBrands(data)
     }
     const handleImage = (e) => {
-        setOpen(false)
         setImage([...Image, e])
-        setImageId([...ImageId, e._id])
+        setImageId(prev => 
+            [
+                ...prev, e._id
+            ]
+        )
+        setOpen(false)
+    }
+    useEffect(() => {
         setDetail(prev => ({
             name: prev.name,
             abstract: prev.abstract,
@@ -332,12 +339,11 @@ size: prev.size,
             images: ImageId,
             brand: prev.brand,
             stock: prev.stock,
-size: prev.size,
+            size: prev.size,
             isDisable: prev.isDisable,
             categoryId: prev.categoryId
         }))
-
-    }
+    }, [ImageId])
     const handleChangeDetailProduct = (e, id) => {
         if (e.target.id === 'name') {
             setDetail(prev => ({
@@ -349,7 +355,7 @@ size: prev.size,
                 images: prev.images,
                 brand: prev.brand,
                 stock: prev.stock,
-size: prev.size,
+                size: prev.size,
                 isDisable: prev.isDisable,
                 categoryId: prev.categoryId
             }))
@@ -376,12 +382,12 @@ size: prev.size,
                 images: prev.images,
                 brand: prev.brand,
                 stock: prev.stock,
-size: prev.size,
+                size: prev.size,
                 isDisable: e.target.checked,
                 categoryId: prev.categoryId
             }))
         }
-         else if (e.target.id === 'brand') {
+        else if (e.target.id === 'brand') {
             setDetail(prev => ({
                 name: prev.name,
                 abstract: prev.abstract,
@@ -404,7 +410,7 @@ size: prev.size,
                 images: prev.images,
                 brand: prev.brand,
                 stock: prev.stock,
-size: prev.size,
+                size: prev.size,
                 isDisable: prev.isDisable,
                 categoryId: prev.categoryId
             }))
@@ -418,7 +424,7 @@ size: prev.size,
                 images: prev.images,
                 brand: prev.brand,
                 stock: prev.stock,
-size: prev.size,
+                size: prev.size,
                 isDisable: prev.isDisable,
                 categoryId: e.target.checked
             }))
@@ -468,12 +474,10 @@ size: prev.size,
         setImage(Image.filter(item => item._id != id))
         setImageId(ImageId.filter(item => item != id))
     }
+    
     return (
-
-
         <div>
-
-            <h2 className="page-header top-sticky">
+          <h2 className="page-header top-sticky">
                 <div className="d-flex justify-between align-center">
                     <span className="animate">
                         افزودن محصول
@@ -537,7 +541,7 @@ size: prev.size,
                                         images: prev.images,
                                         brand: prev.brand,
                                         stock: prev.stock,
-size: prev.size,
+                                        size: prev.size,
                                         isDisable: prev.isDisable,
                                         categoryId: prev.categoryId
                                     }))
@@ -571,7 +575,7 @@ size: prev.size,
                                         images: prev.images,
                                         brand: prev.brand,
                                         stock: prev.stock,
-size: prev.size,
+                                        size: prev.size,
                                         isDisable: prev.isDisable,
                                         categoryId: prev.categoryId
                                     }))
@@ -593,25 +597,25 @@ size: prev.size,
                                             <button className="button " onClick={() => { handleOpen() }}>
                                                 انتخاب عکس
                                             </button>
-                                            <button className="button bg-danger" onClick={() => { setImage(null) }}>
+                                            {/* <button className="button bg-danger" onClick={() => { setImage(null) }}>
                                                 حذف عکس
-                                            </button>
+                                            </button> */}
                                         </div>
                                         <div className="w-100 d-flex ">
                                             {
-                                                Image.length >= 1 ? Image.map(item => {
+                                                Image.length >= 1 ? Image.map((item, index) => {
                                                     return (
-                                                        <>
-                                                            <div className='d-flex flex-col justify-center align-center' style={{ margin: '10px', border: '1px solid #ccc', borderRadius: '15px', padding: '10px' }} >
+                                                        
+                                                            <div key={index} className='d-flex flex-col justify-center align-center' style={{ margin: '10px', border: '1px solid #ccc', borderRadius: '15px', padding: '10px' }} >
                                                                 <img src={item.url} alt="" width="120px" height="120px" />
                                                                 <div>
                                                                     <button onClick={() => delHandlerImage(item._id)} style={{ backgroundColor: '#f40', padding: '3px', margin: '2px', borderRadius: '10px' }}>
-                                                                        <i class='bx bx-trash-alt'></i>
+                                                                        <i className='bx bx-trash-alt'></i>
                                                                     </button>
                                                                     {item.name}
                                                                 </div>
                                                             </div>
-                                                        </>
+                                                      
                                                     )
                                                 }) : null
                                             }
@@ -647,7 +651,7 @@ size: prev.size,
                                         images: prev.images,
                                         brand: prev.brand,
                                         stock: prev.stock,
-size: prev.size,
+                                        size: prev.size,
                                         isDisable: prev.isDisable,
                                         categoryId: prev.categoryId
                                     }))
@@ -711,7 +715,7 @@ size: prev.size,
                             <input type="number" placeholder="قیمت" style={{ marginBottom: '10px' }} id="baseprice" value={Detail.basePrice} onChange={handleChangeDetailProduct} className="form-control w-100" />
                             <label > تعداد موجودی  </label>
                             <input type="number" placeholder="تعداد" id="stock" value={Detail.stock} style={{ marginBottom: '10px' }} onChange={(e) => handleChangeDetailProduct(e)} className="form-control w-100" />
-                            <div className="d-flex" style={{alignItems: 'center'}} >
+                            <div className="d-flex" style={{ alignItems: 'center' }} >
                                 <label > وضعیت  </label>
                                 <Switch
                                     checked={Detail.isDisable}
@@ -719,9 +723,9 @@ size: prev.size,
                                     onChange={handleChangeDetailProduct}
                                     inputProps={{ 'aria-label': 'controlled' }}
                                 />
-                                <div className="d-flex" style={{alignItems: 'center'}} >
+                                <div className="d-flex" style={{ alignItems: 'center' }} >
                                     <Tooltip title="  وضعیت موجودی یا ناموجودی محصول را تعیین کنید. " arrow>
-                                        <svg xmlns="http://www.w3.org/2000/svg" style={{width: '20px', height: '20px'}} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <svg xmlns="http://www.w3.org/2000/svg" style={{ width: '20px', height: '20px' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                         </svg>
                                     </Tooltip>
@@ -732,27 +736,27 @@ size: prev.size,
                         <div className=" card" style={{ width: '49%' }} >
                             <label > برند  </label>
                             <input type="text" placeholder="جستجو..." className="form-control" onChange={(e) => handleSearchBrands(e)} />
-                                <List dense sx={{ width: '100%', bgcolor: 'var(--second-bg)', marginTop: '10px', borderRadius: '10px', overflow: 'auto', maxHeight: '200px', }}>
-                                    {
-                                        SearchBrands === null ? (
+                            <List dense sx={{ width: '100%', bgcolor: 'var(--second-bg)', marginTop: '10px', borderRadius: '10px', overflow: 'auto', maxHeight: '200px', }}>
+                                {
+                                    SearchBrands === null ? (
+                                        <>
+                                            <div className="d-flex justify-center align-center flex-col " >
+                                                <BeatLoader color={'#a1a1a1'} size={10} />
+                                                در حال بارگذاری
+                                            </div>
+                                        </>
+                                    ) : SearchBrands.length === 0 ? (
+                                        <>
+                                            <div className="d-flex justify-center align-center flex-col " >
+                                                برندی موجود نیست
+                                            </div>
+                                        </>
+                                    ) :
+                                        (
                                             <>
-                                                <div className="d-flex justify-center align-center flex-col " >
-                                                    <BeatLoader color={'#a1a1a1'} size={10} />
-                                                    در حال بارگذاری
-                                                </div>
-                                            </>
-                                        ) : SearchBrands.length === 0 ? (
-                                            <>
-                                                <div className="d-flex justify-center align-center flex-col " >
-                                                    برندی موجود نیست
-                                                </div>
-                                            </>
-                                        ) :
-                                            (
-                                                <>
-                                                  <RadioGroup
-                                                                name="radio-buttons-group-brand"
-                                                                >
+                                                <RadioGroup
+                                                    name="radio-buttons-group-brand"
+                                                >
                                                     {SearchBrands.map((item) => {
 
                                                         return (
@@ -775,15 +779,15 @@ size: prev.size,
                                                             //     </ListItemButton>
                                                             // </ListItem>
 
-                                                              
-                                                                <FormControlLabel onChange={handleToggleBrands(item._id)} value={item._id} control={<Radio />} label={item.name} />
-                                                                );
-                                                            })}
-                                                            
-                                                               </RadioGroup>
-                                                </>
-                                            )}
-                                </List>
+
+                                                            <FormControlLabel onChange={handleToggleBrands(item._id)} value={item._id} control={<Radio />} label={item.name} />
+                                                        );
+                                                    })}
+
+                                                </RadioGroup>
+                                            </>
+                                        )}
+                            </List>
                         </div>
                         <div className=" card" style={{ width: '49%' }} >
                             <label > سایز  </label>

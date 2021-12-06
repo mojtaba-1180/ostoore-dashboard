@@ -15,7 +15,7 @@ const Gallery = () => {
     const [uploadBtn, setuploadBtn] = useState(false)
     const [ActiveItem, setActiveItem] = useState(1)
     const [ContentNew, setContentNew] = useState({})
-    const [Images, setImages] = useState([])
+    const [Images, setImages] = useState(null)
     const [PreviewUploadImg, setPreviewUploadImg] = useState({
         files: null,
         imageData: null
@@ -23,25 +23,15 @@ const Gallery = () => {
     const [Upload, setUpload] = useState(false)
 
     const getData = async () => {
-        console.log('geting Images...')
         await Api.get('image/').then((res) => {
             console.log(res)
             setImages(res.result)
-            // res.result.map(item => {
-            //     // console.log(getImage(item._id))
-            //     return item
-            // })
+           
         }).catch((err) => {
             console.log(err)
         })
     }
-    // const getImage = async (id) => {
-    //     await Api.get(`image/${id}`).then((res) => {
-    //         return res
-    //     }).catch((err) => {
-    //         console.log({ ErrGallery: err })
-    //     })
-    // }
+   
     const HandleListinClick = (item) => {
         setActiveItem(item)
     }
@@ -74,9 +64,6 @@ const Gallery = () => {
             const formdata = new FormData()
             formdata.append("image", PreviewUploadImg.files);
             formdata.append("name", PreviewUploadImg.files.name);
-        //     console.log(formdata)
-        //    console.log('uploading...')
-        //    console.log(uploadBtn)
       
         setuploadBtn(true)
 
@@ -85,7 +72,7 @@ const Gallery = () => {
                     'Content-Type': 'multipart/form-data'
                   }
             }).then((res) => {
-                // uploadBtnRef.current.classList.add('disable')
+     
                 setuploadBtn(true)
                 setUpload(false)
                 getData()
@@ -93,21 +80,6 @@ const Gallery = () => {
                 console.log(err)
 
             })
-
-
-            // this.setState((prev) => ({
-            //     contentNew: prev.Folder.filter(item => item.id === this.state.activeItem).map(item => {
-            //         return {
-            //             ...item,
-            //             content: [
-            //                 ...item.content,
-            //                 data
-            //             ]
-            //         }
-            //     })
-
-            // }))
-             
     }
 
     const HandleDelete = () => {
@@ -151,57 +123,20 @@ const Gallery = () => {
                 </div>
             </h2>
             <div className="row animate-top">
-                {/* <div className="col-4 col-md-12 col-sm-12">
-                    <div className="card">
-                        <div className="d-flex justify-between align-center">
-                            <span className="animate">
-                                پوشه عکس ها
-                            </span>
-                            <span>
-                                <button className="button" onClick={() => HandleAddFolder()} >
-                                    پوشه جدید
-                                </button>
-                            </span>
-                        </div>
-                       {
-                            Folder.length === 0 ? (
-                                <>
-                                    <div className="d-flex justify-center align-center flex-col " >
-                                        <PropagateLoader color={'#a1a1a1'} size={10} />
-                                    </div>
-
-                                </>
-                            ) : (
-                                <>
-                                    {
-                                        Folder.map((item, index) => (
-                                            <>
-                                                <ListingItem
-                                                    id={item.id}
-                                                    title={item.title}
-                                                    icon="bx bx-folder"
-                                                    number={item.content.length}
-                                                    active={item.id === ActiveItem}
-                                                    onClick={() => HandleListinClick(item.id)}
-                                                />
-
-                                            </>
-                                        ))
-                                    }
-                                </>
-                            )
-
-                        } 
-                    </div>
-                </div> */}
+              
                 <div className="col-12 col-md-12 col-sm-12">
-                    <div className="card" style={ Images.length === 0 ?{} :{display: 'flex', flexWrap: 'wrap'}}>
+                    <div className="card" style={ {display: 'flex', flexWrap: 'wrap'}}>
                         {
-                           Images.length === 0  ? (
+                           Images === null  ? (
+                            <>
+                             <div className="d-flex justify-center align-center flex-col " style={{width: '100%'}} >
+                             <PropagateLoader color={'#a1a1a1'} size={10} />
+                                </div>
+                            </>
+                        ) : Images.length === 0  ? (
                                 <>
-                                 <div className="d-flex justify-center align-center flex-col " >
-                                 <PropagateLoader color={'#a1a1a1'} size={10} />
-                                  
+                                 <div className="d-flex justify-center align-center flex-col  " style={{width: '100%'}} >
+                                    عکسی موجود نیست
                                     </div>
                                 </>
                             ) : (

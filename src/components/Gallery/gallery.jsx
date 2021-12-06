@@ -14,7 +14,7 @@ const GalleryModal = (props) => {
     const [uploadBtn, setuploadBtn] = useState(false)
     const [ActiveItem, setActiveItem] = useState(1)
     const [ContentNew, setContentNew] = useState({})
-    const [Images, setImages] = useState([])
+    const [Images, setImages] = useState(null)
     const [PreviewUploadImg, setPreviewUploadImg] = useState({
         files: null,
         imageData: null
@@ -152,65 +152,28 @@ const GalleryModal = (props) => {
                 </div>
             </h2>
             <div className="row animate-top">
-                {/* <div className="col-4 col-md-12 col-sm-12">
-                    <div className="card">
-                        <div className="d-flex justify-between align-center">
-                            <span className="animate">
-                                پوشه عکس ها
-                            </span>
-                            <span>
-                                <button className="button" onClick={() => HandleAddFolder()} >
-                                    پوشه جدید
-                                </button>
-                            </span>
-                        </div>
-                         {
-                            Folder.length === 0 ? (
-                                <>
-                                    <div className="d-flex justify-center align-center flex-col " >
-                                        <PropagateLoader color={'#a1a1a1'} size={10} />
-                                    </div>
-
-                                </>
-                            ) : (
-                                <>
-                                    {
-                                        Folder.map((item, index) => (
-                                            <>
-                                                <ListingItem
-                                                    id={item.id}
-                                                    title={item.title}
-                                                    icon="bx bx-folder"
-                                                    number={item.content.length}
-                                                    active={item.id === ActiveItem}
-                                                    onClick={() => HandleListinClick(item.id)}
-                                                />
-
-                                            </>
-                                        ))
-                                    }
-                                </>
-                            )
-
-                        } 
-                    </div>
-                </div> */}
+                
                 <div className="col-12 col-md-12 col-sm-12">
-                    <div className="card " style={ Images.length === 0 ?{} :{display: 'flex', flexWrap: 'wrap', height: '25rem', overflowY: 'scroll', overflowX: 'hidden'}}>
+                    <div className="card " style={{display: 'flex', flexWrap: 'wrap', height: '25rem', overflowY: 'scroll', overflowX: 'hidden'}}>
                         {
-                            Images.length === 0 ? (
+                           Images === null  ? (
+                            <>
+                             <div className="d-flex justify-center align-center flex-col " style={{width: '100%'}}  >
+                             <PropagateLoader color={'#a1a1a1'} size={10} />
+                               
+                                </div>
+                            </>
+                        ) : Images.length === 0  ? (
                                 <>
-                                    <div className="d-flex justify-center align-center flex-col " >
-                                        <PropagateLoader color={'#a1a1a1'} size={10} />
+                                 <div className="d-flex justify-center align-center flex-col " style={{width: '100%'}}  >
+                                 {/* <PropagateLoader color={'#a1a1a1'} size={10} /> */}
+                                    عکسی موجود نیست
                                     </div>
                                 </>
-                            ) : (
-
-                                <>
-                                        
+                            ) :  (
+                                <>   
                                     {
                                         Images.map((item) => {
-
                                             return (
                                                 <>
                                                 <div className={`tabs-content ${ActiveItem === item.id ? 'active' : 'active'}`} >
