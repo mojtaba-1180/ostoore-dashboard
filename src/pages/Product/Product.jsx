@@ -80,7 +80,8 @@ const Product = () => {
         <>
             <tr key={item.id} >
                 <td>{index + 1}</td>
-                <td> <img src={images && item.images >= 1 ? '' :  images.filter(d => d._id === item.images[0])[0].url }  alt="عکس محصول" className="img-table" /> </td>
+                {/* <td> <img src={images && item.images >= 1 ? '' :  images.filter(d => d._id === item.images[0])[0].url }  alt="عکس محصول" className="img-table" /> </td> */}
+                <td>{item.name}</td>
                <td>{item.name}</td>
                 <td>{item.slug}</td>
                 <td>
